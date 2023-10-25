@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>http://meekdai.com/avatar.jpg</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Wed, 25 Oct 2023 15:58:51 +0000</lastBuildDate><managingEditor>Daily</managingEditor><pubDate>Wed, 25 Oct 2023 15:58:51 +0000</pubDate><ttl>60</ttl><webMaster>Daily</webMaster><item><title>c++中实现golang中的defer功能</title><link>http://0x1042.github.io/post/c%2B%2B-zhong-shi-xian-golang-zhong-de-defer-gong-neng.html</link><description># 使用`folly`&#13;
+&#13;
+```c++&#13;
+#include &lt;folly/ScopeGuard.h&gt;&#13;
+&#13;
+auto main() -&gt; int {&#13;
+    std::string msg = "exit...";&#13;
+&#13;
+    auto guard1 = folly::makeGuard([&amp;] { std::cerr &lt;&lt; "from folly::makeGuard:" &lt;&lt; msg &lt;&lt; '\n'; });&#13;
+&#13;
+    std::cout &lt;&lt; "Hello, World!" &lt;&lt; '\n';&#13;
+    return 0;&#13;
+}&#13;
+&#13;
+```&#13;
+&#13;
+# 自定义实现&#13;
+&#13;
+```c++&#13;
+template &lt;typename Lambda&gt; &#13;
+struct Defer : Lambda {&#13;
+    ~Defer() { Lambda::operator()(); }&#13;
+};&#13;
+&#13;
+template &lt;typename Lambda&gt; &#13;
+Defer(Lambda) -&gt; Defer&lt;Lambda&gt;;&#13;
+&#13;
+auto main() -&gt; int {&#13;
+    std::string msg = "exit...";&#13;
+&#13;
+    Defer guard{[&amp;] { std::cerr &lt;&lt; msg &lt;&lt; '\n'; }};&#13;
+&#13;
+    std::cout &lt;&lt; "Hello, World!" &lt;&lt; '\n';&#13;
+    return 0;&#13;
+}&#13;
+```&#13;
+。</description><guid isPermaLink="true">http://0x1042.github.io/post/c%2B%2B-zhong-shi-xian-golang-zhong-de-defer-gong-neng.html</guid><pubDate>Wed, 25 Oct 2023 15:57:21 +0000</pubDate></item></channel></rss>

@@ -1,0 +1,24 @@
+{
+    "title":"Daily",
+    "displayTitle":"aily",
+    "subTitle":"我自倾怀，君且随意。",
+    "homeUrl":"http://0x1042.github.io",
+    "avatarUrl":"http://meekdai.com/avatar.jpg",
+    "faviconUrl":"http://meekdai.com/favicon.ico",
+    "singlePage":[
+        "link",
+        "about"
+    ],
+    "GMEEK_VERSION":"v2.4",
+    "onePageListNum":15,
+    "commentLabelColor":"#006b75",
+    "yearColorList":[
+        "#bc4c00",
+        "#0969da",
+        "#1f883d",
+        "#A333D0"
+    ],
+    "i18n":"CN",
+    "dayTheme":"light",
+    "nightTheme":"dark_colorblind"
+}

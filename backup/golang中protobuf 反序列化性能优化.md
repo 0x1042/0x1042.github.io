@@ -80,4 +80,18 @@ benchstat old.txt new.txt
 
 ```
 
+# cpp
+
+> cpp [也有类似的api](https://protobuf.dev/reference/cpp/api-docs/google.protobuf.message/#Message.DiscardUnknownFields.details)，但是实在 parse之后执行，对于反序列化性能没有帮助，但是对于缓存场景，可以降低内存的使用率
+
+```cpp
+void string_to_message(const std::string & src, tutorial::Person & dst) {
+    if (bool status = dst.ParseFromString(src); !status) {
+        LOG(ERROR) << "unmarshal fail";
+    }
+    dst.DiscardUnknownFields();
+}
+``` 
+<img width="1336" alt="image" src="https://github.com/0x1042/0x1042.github.io/assets/7525242/dd86b27b-bc50-412d-981c-e3fcebd0d605">
+
 

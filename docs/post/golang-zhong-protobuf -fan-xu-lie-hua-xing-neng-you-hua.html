@@ -139,6 +139,17 @@ go <span class="pl-c1">test</span> -bench=. -count=10  -benchtime=5s -benchmem <
 
 benchstat old.txt new.txt
 </pre></div>
+<h1 id="user-content-cpp"><a class="heading-link" href="#cpp">cpp<span aria-hidden="true" class="octicon octicon-link"></span></a></h1>
+<blockquote>
+<p>cpp <a href="https://protobuf.dev/reference/cpp/api-docs/google.protobuf.message/#Message.DiscardUnknownFields.details" rel="nofollow">也有类似的api</a>，但是实在 parse之后执行，对于反序列化性能没有帮助，但是对于缓存场景，可以降低内存的使用率</p>
+</blockquote>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">void</span> <span class="pl-en">string_to_message</span>(<span class="pl-k">const</span> std::string &amp; src, tutorial::Person &amp; dst) {
+    <span class="pl-k">if</span> (<span class="pl-k">bool</span> status = dst.<span class="pl-c1">ParseFromString</span>(src); !status) {
+        <span class="pl-c1">LOG</span>(ERROR) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>unmarshal fail<span class="pl-pds">"</span></span>;
+    }
+    dst.<span class="pl-c1">DiscardUnknownFields</span>();
+}</pre></div>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/dd86b27b-bc50-412d-981c-e3fcebd0d605"><img width="1336" alt="image" src="https://github.com/0x1042/0x1042.github.io/assets/7525242/dd86b27b-bc50-412d-981c-e3fcebd0d605" style="max-width: 100%;"></a></p>
 
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Sat, 11 Nov 2023 08:48:46 +0000</lastBuildDate><managingEditor>Daily</managingEditor><pubDate>Sat, 11 Nov 2023 08:48:46 +0000</pubDate><ttl>60</ttl><webMaster>Daily</webMaster><item><title>c++中的值类型</title><link>http://0x1042.github.io/post/c%2B%2B-zhong-de-zhi-lei-xing.html</link><description># 值类别 &#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Sat, 11 Nov 2023 14:47:34 +0000</lastBuildDate><managingEditor>Daily</managingEditor><pubDate>Sat, 11 Nov 2023 14:47:34 +0000</pubDate><ttl>60</ttl><webMaster>Daily</webMaster><item><title>一、c++中的值类型</title><link>http://0x1042.github.io/post/yi-%E3%80%81c%2B%2B-zhong-de-zhi-lei-xing.html</link><description># 值类别 &#13;
 &#13;
 - [值类别](#值类别)&#13;
   - [如何区分左值和右值](#如何区分左值和右值)&#13;
@@ -110,7 +110,7 @@ forward(_LIBCPP_LIFETIMEBOUND __libcpp_remove_reference_t&lt;_Tp&gt;&amp;&amp; _
 ```&#13;
 &#13;
 - Tp 是左值， `static_cast&lt;_Tp&amp;&amp;&gt;(__t)` 后是 T&amp; &amp;&amp;，按照引用折叠规则，`T&amp; &amp;&amp; -&gt; T&amp;`, Tp是左值 &#13;
-- Tp 是右值， `static_cast&lt;_Tp&amp;&amp;&gt;(__t)` 后是 T&amp;&amp; &amp;&amp;，按照引用折叠规则，`T&amp;&amp; &amp;&amp; -&gt; T&amp;&amp;`, Tp是右值 。</description><guid isPermaLink="true">http://0x1042.github.io/post/c%2B%2B-zhong-de-zhi-lei-xing.html</guid><pubDate>Sat, 11 Nov 2023 08:48:15 +0000</pubDate></item><item><title>struct 使用生命周期标注</title><link>http://0x1042.github.io/post/struct%20-shi-yong-sheng-ming-zhou-qi-biao-zhu.html</link><description>```rust&#13;
+- Tp 是右值， `static_cast&lt;_Tp&amp;&amp;&gt;(__t)` 后是 T&amp;&amp; &amp;&amp;，按照引用折叠规则，`T&amp;&amp; &amp;&amp; -&gt; T&amp;&amp;`, Tp是右值 。</description><guid isPermaLink="true">http://0x1042.github.io/post/yi-%E3%80%81c%2B%2B-zhong-de-zhi-lei-xing.html</guid><pubDate>Sat, 11 Nov 2023 08:48:15 +0000</pubDate></item><item><title>struct 使用生命周期标注</title><link>http://0x1042.github.io/post/struct%20-shi-yong-sheng-ming-zhou-qi-biao-zhu.html</link><description>```rust&#13;
 #[derive(Debug)]&#13;
 struct Sheep&lt;'c, 'd&gt; {&#13;
     age: &amp;'c u32,&#13;

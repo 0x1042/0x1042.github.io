@@ -1,5 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Sat, 11 Nov 2023 14:48:30 +0000</lastBuildDate><managingEditor>Daily</managingEditor><pubDate>Sat, 11 Nov 2023 14:48:30 +0000</pubDate><ttl>60</ttl><webMaster>Daily</webMaster><item><title>二、c++中的类型推导</title><link>http://0x1042.github.io/post/er-%E3%80%81c%2B%2B-zhong-de-lei-xing-tui-dao.html</link><description>- [类型推导](#类型推导)&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Sun, 12 Nov 2023 08:40:30 +0000</lastBuildDate><managingEditor>Daily</managingEditor><pubDate>Sun, 12 Nov 2023 08:40:30 +0000</pubDate><ttl>60</ttl><webMaster>Daily</webMaster><item><title>三、编译时多态</title><link>http://0x1042.github.io/post/san-%E3%80%81-bian-yi-shi-duo-tai.html</link><description># 编译时多态&#13;
+&#13;
+- [编译时多态](#编译时多态)&#13;
+- [type traits 类型萃取](#type-traits-类型萃取)&#13;
+  - [获取类型属性](#获取类型属性)&#13;
+  - [类型变换](#类型变换)&#13;
+  - [标签分发](#标签分发)&#13;
+  - [迭代器](#迭代器)&#13;
+  - [`if constexpr`](#if-constexpr)&#13;
+  - [`void_t` 元函数](#void_t-元函数)&#13;
+- [CTRTP 奇异递归模版模式](#ctrtp-奇异递归模版模式)&#13;
+  - [代码复用](#代码复用)&#13;
+  - [静态绑定](#静态绑定)&#13;
+  - [`enable_shared_from_this`](#enable_shared_from_this)&#13;
+&#13;
+&#13;
+# type traits 类型萃取&#13;
+&#13;
+&gt; c++ 通过模版实现泛型编程，从而减轻运行时开销。</description><guid isPermaLink="true">http://0x1042.github.io/post/san-%E3%80%81-bian-yi-shi-duo-tai.html</guid><pubDate>Sun, 12 Nov 2023 08:40:02 +0000</pubDate></item><item><title>二、c++中的类型推导</title><link>http://0x1042.github.io/post/er-%E3%80%81c%2B%2B-zhong-de-lei-xing-tui-dao.html</link><description>- [类型推导](#类型推导)&#13;
 - [`auto`](#auto)&#13;
 - [`decltype`](#decltype)&#13;
   - [不带括号(获取的是标识符 定义时的类型)](#不带括号获取的是标识符-定义时的类型)&#13;

@@ -1,5 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Sun, 12 Nov 2023 08:40:30 +0000</lastBuildDate><managingEditor>Daily</managingEditor><pubDate>Sun, 12 Nov 2023 08:40:30 +0000</pubDate><ttl>60</ttl><webMaster>Daily</webMaster><item><title>三、编译时多态</title><link>http://0x1042.github.io/post/san-%E3%80%81-bian-yi-shi-duo-tai.html</link><description># 编译时多态&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Fri, 17 Nov 2023 12:58:02 +0000</lastBuildDate><managingEditor>Daily</managingEditor><pubDate>Fri, 17 Nov 2023 12:58:02 +0000</pubDate><ttl>60</ttl><webMaster>Daily</webMaster><item><title>GDB 使用 </title><link>http://0x1042.github.io/post/GDB%20-shi-yong-%20.html</link><description>&#13;
+- [GDB 使用](#gdb-使用)&#13;
+  - [背景](#背景)&#13;
+  - [GDB dump线程栈](#gdb-dump线程栈)&#13;
+  - [找到负载高的线程](#找到负载高的线程)&#13;
+  - [寻找对应的行号](#寻找对应的行号)&#13;
+&#13;
+&#13;
+## 背景&#13;
+&#13;
+&gt; 线上流量没变，但是出现瞬时负载呈直线上涨，1～2分钟整个服务不可用。</description><guid isPermaLink="true">http://0x1042.github.io/post/GDB%20-shi-yong-%20.html</guid><pubDate>Fri, 17 Nov 2023 12:57:31 +0000</pubDate></item><item><title>三、编译时多态</title><link>http://0x1042.github.io/post/san-%E3%80%81-bian-yi-shi-duo-tai.html</link><description># 编译时多态&#13;
 &#13;
 - [编译时多态](#编译时多态)&#13;
 - [type traits 类型萃取](#type-traits-类型萃取)&#13;

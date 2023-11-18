@@ -86,7 +86,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <ul>
 <li><a href="#%E5%AE%89%E8%A3%85gost">安装<code>gost</code></a></li>
 <li><a href="#%E6%89%A7%E8%A1%8Cgost">执行gost</a></li>
-<li><a href="#%E8%99%9A%E6%8B%9F%E6%9C%BA">虚拟机</a></li>
+<li><a href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%85%8D%E7%BD%AE">虚拟机配置</a></li>
 </ul>
 </li>
 </ul>
@@ -100,7 +100,7 @@ go build</pre></div>
 <h2><a id="user-content-执行gost" class="anchor" aria-hidden="true" tabindex="-1" href="#执行gost"><span aria-hidden="true" class="octicon octicon-link"></span></a>执行gost</h2>
 <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span> 宿主机侧在8080端口的HTTP代理服务，使用本地的1087端口做为上级代理进行转发</span>
 ./gost -L http://:8080 -F http://127.0.0.1:1087</pre></div>
-<h2><a id="user-content-虚拟机" class="anchor" aria-hidden="true" tabindex="-1" href="#虚拟机"><span aria-hidden="true" class="octicon octicon-link"></span></a>虚拟机</h2>
+<h2><a id="user-content-虚拟机配置" class="anchor" aria-hidden="true" tabindex="-1" href="#虚拟机配置"><span aria-hidden="true" class="octicon octicon-link"></span></a>虚拟机配置</h2>
 <div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span> shell</span>
 <span class="pl-k">export</span> https_proxy=http://10.0.0.67:8080 http_proxy=http://10.0.0.67:8080
 <span class="pl-c"><span class="pl-c">#</span> git </span>

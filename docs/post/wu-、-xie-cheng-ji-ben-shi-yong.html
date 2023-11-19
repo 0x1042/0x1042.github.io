@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.org/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.ico">
+    <script>
+        if(localStorage.getItem("meek_theme")==null){}
+        else if(localStorage.getItem("meek_theme")=="dark"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";}
+        else if(localStorage.getItem("meek_theme")=="light"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";}
+    </script>
+    
+<title>五、协程基本使用</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+</head>
+<style>
+body{
+    box-sizing: border-box;
+    min-width: 200px;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 45px;
+    font-size: 16px;
+    font-family: sans-serif;
+    line-height: 1.25;
+}
+
+.avatar {transition: 0.8s;}
+.avatar:hover {transform: scale(1.15) rotate(360deg);}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-size:40px;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 767px) {body {padding: 8px;}}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1>
+    <a>五、协程基本使用</a>
+</h1>
+<div class="title-right">
+
+    <a href="/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd" d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path>
+        </svg>
+    </button></a>
+
+    <a href="https://github.com/0x1042/0x1042.github.io/issues/10" target="_blank"><button class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+        </svg>
+    </button></a>
+
+    <button class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </button>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody">
+<h1><a id="user-content-协程-入门" class="anchor" aria-hidden="true" tabindex="-1" href="#协程-入门"><span aria-hidden="true" class="octicon octicon-link"></span></a>协程 <del>入门</del>
+</h1>
+<ul>
+<li>
+<a href="#%E5%8D%8F%E7%A8%8B-%E5%85%A5%E9%97%A8">协程 <del>入门</del></a>
+<ul>
+<li><a href="#%E5%AE%9A%E4%B9%89">定义</a></li>
+<li>
+<a href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86">基本原理</a>
+<ul>
+<li><a href="#%E4%B8%80%E5%8D%8F%E7%A8%8B%E6%A0%88%E5%B8%A7%E7%BC%96%E8%AF%91%E5%99%A8%E7%94%9F%E6%88%90">一、协程栈帧(编译器生成)</a></li>
+<li><a href="#%E4%BA%8C%E5%88%9B%E5%BB%BA%E5%8D%8F%E7%A8%8B">二、创建协程</a></li>
+<li><a href="#%E4%B8%89%E5%8D%8F%E7%A8%8B%E6%81%A2%E5%A4%8D__fibonacciresume">三、协程恢复(__fibonacciResume)</a></li>
+<li><a href="#%E5%9B%9B%E9%94%80%E6%AF%81">四、销毁</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<a href="#%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8D%8F%E7%A8%8B">实现一个协程</a>
+<ul>
+<li><a href="#%E5%AE%9A%E4%B9%89-generator">定义 <code>Generator</code></a></li>
+<li><a href="#%E5%AE%9A%E4%B9%89-promise_type">定义 <code>promise_type</code></a></li>
+<li><a href="#%E5%AE%9A%E4%B9%89%E5%8D%8F%E7%A8%8B%E5%87%BD%E6%95%B0">定义协程函数</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+<h2><a id="user-content-定义" class="anchor" aria-hidden="true" tabindex="-1" href="#定义"><span aria-hidden="true" class="octicon octicon-link"></span></a>定义</h2>
+<p>c++20的协程定义是一个<strong>可暂停、可恢复</strong>的函数，具体到实现上，如果函数包含<code>co_await、co_yield、co_return</code> 关键字之一，就会被认为是协程</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/c2954b77-82a6-4a8f-b3a8-740adb8a9852"><img src="https://github.com/0x1042/0x1042.github.io/assets/7525242/c2954b77-82a6-4a8f-b3a8-740adb8a9852" alt="coroutine" style="max-width: 100%;"></a></p>
+<ul>
+<li>暂停，即意味着需要保存函数执行过程中产生的上下文</li>
+<li>恢复，调用方可以获取到这个协程在堆上的控制入口</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>关键字</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>co_await</code></td>
+<td>挂起</td>
+</tr>
+<tr>
+<td><code>co_yield</code></td>
+<td>挂起并返回值</td>
+</tr>
+<tr>
+<td><code>co_return</code></td>
+<td>结束协程</td>
+</tr>
+</tbody>
+</table>
+<h2><a id="user-content-基本原理" class="anchor" aria-hidden="true" tabindex="-1" href="#基本原理"><span aria-hidden="true" class="octicon octicon-link"></span></a>基本原理</h2>
+<p>参考 <a href="https://owent.net/2019/1904.html" title="C++20 Coroutine" rel="nofollow">C++20 Coroutine</a>,<a href="https://z3475.work/post/c20-xie-cheng-mai-xiang-yi-bu-part1-zui-jian-dan-de-xie-cheng/" title="[C++20协程]迈向异步 Part1-最简单的协程" rel="nofollow">C++20协程</a>.  核心是有编译器针对协程函数做patch，生成新的代码，区别于有栈协程，需要有对应的runtime来调度.</p>
+<p>可以在 <a href="https://cppinsights.io" rel="nofollow">cppinsights.io</a> 上打开 <code>Show coroutine transformation</code> 选项，查看详细的细节，生成的结果中有注释，是一个近似的结果</p>
+<h3><a id="user-content-一协程栈帧编译器生成" class="anchor" aria-hidden="true" tabindex="-1" href="#一协程栈帧编译器生成"><span aria-hidden="true" class="octicon octicon-link"></span></a>一、协程栈帧(编译器生成)</h3>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">struct</span> <span class="pl-en">__fibonacciFrame</span>
+{
+  <span class="pl-en">void</span> (*resume_fn)(__fibonacciFrame *);  <span class="pl-c"><span class="pl-c">//</span> 协程恢复函数 </span>
+  <span class="pl-en">void</span> (*destroy_fn)(__fibonacciFrame *); <span class="pl-c"><span class="pl-c">//</span> 协程销毁函数 </span>
+  std::coroutine_traits&lt;std::coroutine_handle&lt;promise&gt;, <span class="pl-k">int</span>&gt;::promise_type __promise; <span class="pl-c"><span class="pl-c">//</span> 协程的promise_type</span>
+  <span class="pl-k">int</span> __suspend_index;
+  <span class="pl-k">bool</span> __initial_await_suspend_called;
+  <span class="pl-k">int</span> a;
+  <span class="pl-k">int</span> i;
+  <span class="pl-k">int</span> j;
+  std::suspend_never __suspend_47_27;
+  std::suspend_always __suspend_51_9;
+  std::suspend_always __suspend_47_27_1;
+};</pre></div>
+<h3><a id="user-content-二创建协程" class="anchor" aria-hidden="true" tabindex="-1" href="#二创建协程"><span aria-hidden="true" class="octicon octicon-link"></span></a>二、创建协程</h3>
+<blockquote>
+<p>调用方调用协程函数时(<code>fibonacci()</code>)，编译器会生成类似下面的代码, 这个函数的返回值时 <code>std::coroutine_handle&lt;promise&gt;</code>,也就是上面说的 协程的控制点(句柄)
+而这个返回值是通过 协程的 promise_type 对应的 get_return_object 函数获取</p>
+</blockquote>
+<div class="highlight highlight-source-c++"><pre>std::coroutine_handle&lt;promise&gt; <span class="pl-en">fibonacci</span>(<span class="pl-k">int</span> a)
+{
+  <span class="pl-c"><span class="pl-c">/*</span> Allocate the frame including the promise <span class="pl-c">*/</span></span>
+  <span class="pl-c"><span class="pl-c">/*</span> Note: The actual parameter new is __builtin_coro_size <span class="pl-c">*/</span></span>
+  __fibonacciFrame * __f = <span class="pl-k">reinterpret_cast</span>&lt;__fibonacciFrame *&gt;(<span class="pl-k">operator</span> <span class="pl-smi">new</span>(<span class="pl-k">sizeof</span>(__fibonacciFrame)));
+  __f-&gt;<span class="pl-smi">__suspend_index</span> = <span class="pl-c1">0</span>;
+  __f-&gt;<span class="pl-smi">__initial_await_suspend_called</span> = <span class="pl-c1">false</span>;
+  __f-&gt;<span class="pl-smi">a</span> = std::forward&lt;<span class="pl-k">int</span>&gt;(a);
+  
+  <span class="pl-c"><span class="pl-c">/*</span> Construct the promise. <span class="pl-c">*/</span></span>
+  <span class="pl-k">new</span> (&amp;__f-&gt;<span class="pl-smi">__promise</span>)std::coroutine_traits&lt;std::coroutine_handle&lt;promise&gt;, <span class="pl-k">int</span>&gt;::promise_type{__f-&gt;<span class="pl-smi">a</span>};
+  
+  <span class="pl-c"><span class="pl-c">/*</span> Forward declare the resume and destroy function. <span class="pl-c">*/</span></span>
+  <span class="pl-k">void</span> <span class="pl-smi">__fibonacciResume</span>(__fibonacciFrame * __f);
+  <span class="pl-k">void</span> <span class="pl-smi">__fibonacciDestroy</span>(__fibonacciFrame * __f);
+  
+  <span class="pl-c"><span class="pl-c">/*</span> Assign the resume and destroy function pointers. <span class="pl-c">*/</span></span>
+  __f-&gt;<span class="pl-smi">resume_fn</span> = &amp;__fibonacciResume;
+  __f-&gt;<span class="pl-smi">destroy_fn</span> = &amp;__fibonacciDestroy;
+  
+  <span class="pl-c"><span class="pl-c">/*</span> Call the made up function with the coroutine body for initial suspend.</span>
+<span class="pl-c">     This function will be called subsequently by coroutine_handle&lt;&gt;::resume()</span>
+<span class="pl-c">     which calls __builtin_coro_resume(__handle_) <span class="pl-c">*/</span></span>
+  <span class="pl-c1">__fibonacciResume</span>(__f);
+  
+  
+  <span class="pl-k">return</span> __f-&gt;<span class="pl-smi">__promise</span>.<span class="pl-c1">get_return_object</span>();
+}</pre></div>
+<h3><a id="user-content-三协程恢复__fibonacciresume" class="anchor" aria-hidden="true" tabindex="-1" href="#三协程恢复__fibonacciresume"><span aria-hidden="true" class="octicon octicon-link"></span></a>三、协程恢复(__fibonacciResume)</h3>
+<blockquote>
+<p>这个是协程的核心执行逻辑，也就是编译器patch后的结果
+核心是 调用协程的promise_type相关的方法</p>
+</blockquote>
+<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">/*</span> This function invoked by coroutine_handle&lt;&gt;::resume() <span class="pl-c">*/</span></span>
+<span class="pl-k">void</span> <span class="pl-en">__fibonacciResume</span>(__fibonacciFrame * __f)
+{
+  <span class="pl-k">try</span> 
+  {
+    <span class="pl-c"><span class="pl-c">/*</span> Create a switch to get to the correct resume point <span class="pl-c">*/</span></span>
+    <span class="pl-k">switch</span>(__f-&gt;<span class="pl-smi">__suspend_index</span>) {
+      <span class="pl-k">case</span> <span class="pl-c1">0</span>: <span class="pl-k">break</span>;
+      <span class="pl-k">case</span> <span class="pl-c1">1</span>: <span class="pl-k">goto</span> __resume_fibonacci_1;
+      <span class="pl-k">case</span> <span class="pl-c1">2</span>: <span class="pl-k">goto</span> __resume_fibonacci_2;
+    }
+    
+    <span class="pl-c"><span class="pl-c">/*</span> co_await insights.cpp:47 <span class="pl-c">*/</span></span>
+    __f-&gt;<span class="pl-smi">__suspend_47_27</span> = __f-&gt;<span class="pl-smi">__promise</span>.<span class="pl-c1">initial_suspend</span>();
+    <span class="pl-k">if</span>(!__f-&gt;<span class="pl-smi">__suspend_47_27</span>.<span class="pl-c1">await_ready</span>()) {
+      __f-&gt;<span class="pl-smi">__suspend_47_27</span>.<span class="pl-c1">await_suspend</span>(std::coroutine_handle&lt;promise&gt;::<span class="pl-c1">from_address</span>(<span class="pl-k">static_cast</span>&lt;<span class="pl-k">void</span> *&gt;(__f)).<span class="pl-smi">operator</span> std::coroutine_handle&lt;<span class="pl-k">void</span>&gt;());
+      __f-&gt;<span class="pl-smi">__suspend_index</span> = <span class="pl-c1">1</span>;
+      __f-&gt;<span class="pl-smi">__initial_await_suspend_called</span> = <span class="pl-c1">true</span>;
+      <span class="pl-k">return</span>;
+    } 
+    
+    __resume_fibonacci_1:
+    __f-&gt;<span class="pl-smi">__suspend_47_27</span>.<span class="pl-c1">await_resume</span>();
+    __f-&gt;<span class="pl-smi">i</span> = <span class="pl-c1">1</span>;
+    __f-&gt;<span class="pl-smi">j</span> = __f-&gt;<span class="pl-smi">a</span>;
+    <span class="pl-k">while</span>(<span class="pl-c1">1</span>) {
+      <span class="pl-c1">std::tie</span>(__f-&gt;<span class="pl-smi">i</span>, __f-&gt;<span class="pl-smi">j</span>).<span class="pl-smi">operator</span>=(<span class="pl-c1">std::make_pair</span>(__f-&gt;<span class="pl-smi">j</span>, __f-&gt;<span class="pl-smi">i</span> + __f-&gt;<span class="pl-smi">j</span>));
+      
+      <span class="pl-c"><span class="pl-c">/*</span> co_yield insights.cpp:51 <span class="pl-c">*/</span></span>
+      __f-&gt;<span class="pl-smi">__suspend_51_9</span> = __f-&gt;<span class="pl-smi">__promise</span>.<span class="pl-c1">yield_value</span>(__f-&gt;<span class="pl-smi">j</span>);
+      <span class="pl-k">if</span>(!__f-&gt;<span class="pl-smi">__suspend_51_9</span>.<span class="pl-c1">await_ready</span>()) {
+        __f-&gt;<span class="pl-smi">__suspend_51_9</span>.<span class="pl-c1">await_suspend</span>(std::coroutine_handle&lt;promise&gt;::<span class="pl-c1">from_address</span>(<span class="pl-k">static_cast</span>&lt;<span class="pl-k">void</span> *&gt;(__f)).<span class="pl-smi">operator</span> std::coroutine_handle&lt;<span class="pl-k">void</span>&gt;());
+        __f-&gt;<span class="pl-smi">__suspend_index</span> = <span class="pl-c1">2</span>;
+        <span class="pl-k">return</span>;
+      } 
+      
+      __resume_fibonacci_2:
+      __f-&gt;<span class="pl-smi">__suspend_51_9</span>.<span class="pl-c1">await_resume</span>();
+    }
+    
+    <span class="pl-k">goto</span> __final_suspend;
+  } <span class="pl-k">catch</span>(...) {
+    <span class="pl-k">if</span>(!__f-&gt;<span class="pl-smi">__initial_await_suspend_called</span>) {
+      <span class="pl-k">throw</span> ;
+    } 
+    
+    __f-&gt;<span class="pl-smi">__promise</span>.<span class="pl-c1">unhandled_exception</span>();
+  }
+  
+  __final_suspend:
+  
+  <span class="pl-c"><span class="pl-c">/*</span> co_await insights.cpp:47 <span class="pl-c">*/</span></span>
+  __f-&gt;<span class="pl-smi">__suspend_47_27_1</span> = __f-&gt;<span class="pl-smi">__promise</span>.<span class="pl-c1">final_suspend</span>();
+  <span class="pl-k">if</span>(!__f-&gt;<span class="pl-smi">__suspend_47_27_1</span>.<span class="pl-c1">await_ready</span>()) {
+    __f-&gt;<span class="pl-smi">__suspend_47_27_1</span>.<span class="pl-c1">await_suspend</span>(std::coroutine_handle&lt;promise&gt;::<span class="pl-c1">from_address</span>(<span class="pl-k">static_cast</span>&lt;<span class="pl-k">void</span> *&gt;(__f)).<span class="pl-smi">operator</span> std::coroutine_handle&lt;<span class="pl-k">void</span>&gt;());
+  } 
+  
+  ;
+}</pre></div>
+<h3><a id="user-content-四销毁" class="anchor" aria-hidden="true" tabindex="-1" href="#四销毁"><span aria-hidden="true" class="octicon octicon-link"></span></a>四、销毁</h3>
+<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">/*</span> This function invoked by coroutine_handle&lt;&gt;::destroy() <span class="pl-c">*/</span></span>
+<span class="pl-k">void</span> <span class="pl-en">__fibonacciDestroy</span>(__fibonacciFrame * __f)
+{
+  <span class="pl-c"><span class="pl-c">/*</span> destroy all variables with dtors <span class="pl-c">*/</span></span>
+  __f-&gt;<span class="pl-en">~__fibonacciFrame</span>();
+  <span class="pl-c"><span class="pl-c">/*</span> Deallocating the coroutine frame <span class="pl-c">*/</span></span>
+  <span class="pl-c"><span class="pl-c">/*</span> Note: The actual argument to delete is __builtin_coro_frame with the promise as parameter <span class="pl-c">*/</span></span>
+  <span class="pl-k">operator</span> <span class="pl-smi">delete</span>(<span class="pl-k">static_cast</span>&lt;<span class="pl-k">void</span> *&gt;(__f));
+}</pre></div>
+<p><strong>从编译器生成的代码看，如果要自己实现协程，就需要自定义这个协程的promise_type</strong></p>
+<p><code>promise_type 必须包含一下成员函数</code></p>
+<div class="highlight highlight-source-c++"><pre>SOME_TYPE <span class="pl-en">get_return_object</span>();<span class="pl-c"><span class="pl-c">//</span>用于得到协程函数开始执行的返回值</span>
+SOME_TYPE <span class="pl-en">initial_suspend</span>();<span class="pl-c"><span class="pl-c">//</span>用于协程函数开始执行时执行暂停操作</span>
+<span class="pl-k">void</span> <span class="pl-en">return_void</span>();<span class="pl-c"><span class="pl-c">//</span>协程函数内部co_return终止返回void时执行的操作（和下面return_value同时只能有一个存在）</span>
+<span class="pl-k">void</span> <span class="pl-en">return_value</span>(SOME_TYPE);<span class="pl-c"><span class="pl-c">//</span>协程函数内部co_return终止返回非void值时执行的操作</span>
+SOME_TYPE <span class="pl-en">final_suspend</span>()<span class="pl-k">noexcept</span>;<span class="pl-c"><span class="pl-c">//</span>用于协程函数结束执行时执行暂停操作</span>
+<span class="pl-k">void</span> <span class="pl-en">unhandled_exception</span>();<span class="pl-c"><span class="pl-c">//</span>用于协程函数内部有未接住的异常时执行</span>
+<span class="pl-k">auto</span> <span class="pl-en">ield_value</span>();</pre></div>
+<h1><a id="user-content-实现一个协程" class="anchor" aria-hidden="true" tabindex="-1" href="#实现一个协程"><span aria-hidden="true" class="octicon octicon-link"></span></a>实现一个协程</h1>
+<h2><a id="user-content-定义-generator" class="anchor" aria-hidden="true" tabindex="-1" href="#定义-generator"><span aria-hidden="true" class="octicon octicon-link"></span></a>定义 <code>Generator</code>
+</h2>
+<p><strong>约束范型的类型约束是无符号整数</strong></p>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>integral = std::is_integral_v&lt;T&gt; &amp;&amp; !std::is_signed_v&lt;T&gt;;
+
+<span class="pl-k">template </span>&lt;integral T&gt;
+<span class="pl-k">struct</span> <span class="pl-en">FibPromise</span>;
+
+<span class="pl-k">template </span>&lt;integral T&gt;
+<span class="pl-k">struct</span> <span class="pl-en">FibGenerator</span> {
+    <span class="pl-k">using</span> promise_type = FibPromise&lt;T&gt;;
+
+    std::coroutine_handle&lt;promise_type&gt; handler;
+
+    <span class="pl-k">auto</span> <span class="pl-en">next</span>() -&gt; int {
+        handler.<span class="pl-c1">resume</span>();
+        <span class="pl-k">return</span> handler.<span class="pl-c1">promise</span>().<span class="pl-smi">value</span>;
+    }
+
+    <span class="pl-k">explicit</span> <span class="pl-en">FibGenerator</span>(promise_type * p)
+        : handler{std::coroutine_handle&lt;promise_type&gt;::<span class="pl-c1">from_promise</span>(*p)} {
+    }
+
+    <span class="pl-en">~FibGenerator</span>() {
+        handler.<span class="pl-c1">destroy</span>();
+    }
+};</pre></div>
+<h2><a id="user-content-定义-promise_type" class="anchor" aria-hidden="true" tabindex="-1" href="#定义-promise_type"><span aria-hidden="true" class="octicon octicon-link"></span></a>定义 <code>promise_type</code>
+</h2>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;integral T&gt;
+<span class="pl-k">struct</span> <span class="pl-en">FibPromise</span> {
+    std::exception_ptr <span class="pl-c1">exception</span>;
+
+    <span class="pl-en">FibPromise</span>() = <span class="pl-k">default</span>;
+
+    <span class="pl-en">FibPromise</span>(T val)
+        : value(val) {
+    }
+
+    FibGenerator&lt;T&gt; <span class="pl-en">get_return_object</span>() { <span class="pl-k">return</span> FibGenerator{<span class="pl-c1">this</span>}; }
+
+    <span class="pl-k">auto</span> <span class="pl-en">initial_suspend</span>() <span class="pl-k">noexcept</span> -&gt; std::suspend_always { <span class="pl-k">return</span> {}; }
+
+    <span class="pl-k">auto</span> <span class="pl-en">final_suspend</span>() <span class="pl-k">noexcept</span> -&gt; std::suspend_always { <span class="pl-k">return</span> {}; }
+
+    <span class="pl-k">auto</span> <span class="pl-en">yield_value</span>(T val) -&gt; std::suspend_always {
+        value = val;
+        <span class="pl-k">return</span> {};
+    }
+
+    <span class="pl-k">auto</span> <span class="pl-en">return_value</span>(T val) -&gt; std::suspend_always {
+        value = val;
+        <span class="pl-k">return</span> {};
+    }
+    <span class="pl-c"><span class="pl-c">//</span> void return_void() {}</span>
+
+    <span class="pl-k">void</span> <span class="pl-en">unhandled_exception</span>() { <span class="pl-c1">exception</span> = <span class="pl-c1">std::current_exception</span>(); }
+
+    T value;
+};</pre></div>
+<h2><a id="user-content-定义协程函数" class="anchor" aria-hidden="true" tabindex="-1" href="#定义协程函数"><span aria-hidden="true" class="octicon octicon-link"></span></a>定义协程函数</h2>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">inline</span> FibGenerator&lt;<span class="pl-c1">uint32_t</span>&gt; <span class="pl-en">fib</span>(<span class="pl-c1">uint32_t</span> n) {
+    <span class="pl-c1">uint32_t</span> first = <span class="pl-c1">0</span>;
+    <span class="pl-c1">uint32_t</span> second = <span class="pl-c1">1</span>;
+    <span class="pl-k">while</span> (n--) {
+        <span class="pl-k">co_yield</span> second;
+        <span class="pl-k">const</span> <span class="pl-k">auto</span> tmp = first;
+        first = second;
+        second += tmp;
+    }
+}
+
+
+<span class="pl-c"><span class="pl-c">//</span> 测试 </span>
+<span class="pl-k">void</span> <span class="pl-en">test_fib</span>() {
+    <span class="pl-k">auto</span> gen = <span class="pl-c1">fib</span>(<span class="pl-c1">10</span>);
+    <span class="pl-k">for</span> (<span class="pl-k">int</span> i = <span class="pl-c1">0</span>; i &lt; <span class="pl-c1">10</span>; i++) {
+        std::clog &lt;&lt; gen.<span class="pl-c1">next</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
+    }
+}</pre></div>
+<h1><a id="user-content-参考" class="anchor" aria-hidden="true" tabindex="-1" href="#参考"><span aria-hidden="true" class="octicon octicon-link"></span></a>参考</h1>
+
+</div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span> <a href="http://0x1042.github.io"> Daily </a><p>  <span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a></p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'post': 'M0 3.75C0 2.784.784 2 1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25Zm1.75-.25a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25ZM3.5 6.25a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1-.75-.75Zm.75 2.25h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1 0-1.5Z', 'link': 'm7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z', 'about': 'M10.561 8.073a6.005 6.005 0 0 1 3.432 5.142.75.75 0 1 1-1.498.07 4.5 4.5 0 0 0-8.99 0 .75.75 0 0 1-1.498-.07 6.004 6.004 0 0 1 3.431-5.142 3.999 3.999 0 1 1 5.123 0ZM10.5 5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z', 'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'search': 'M15.7 13.3l-3.81-3.83A5.93 5.93 0 0 0 13 6c0-3.31-2.69-6-6-6S1 2.69 1 6s2.69 6 6 6c1.3 0 2.48-.41 3.47-1.11l3.83 3.81c.19.2.45.3.7.3.25 0 .52-.09.7-.3a.996.996 0 0 0 0-1.41v.01zM7 10.7c-2.59 0-4.7-2.11-4.7-4.7 0-2.59 2.11-4.7 4.7-4.7 2.59 0 4.7 2.11 4.7 4.7 0 2.59-2.11 4.7-4.7 4.7z', 'rss': 'M2.002 2.725a.75.75 0 0 1 .797-.699C8.79 2.42 13.58 7.21 13.974 13.201a.75.75 0 0 1-1.497.098 10.502 10.502 0 0 0-9.776-9.776.747.747 0 0 1-.7-.798ZM2.84 7.05h-.002a7.002 7.002 0 0 1 6.113 6.111.75.75 0 0 1-1.49.178 5.503 5.503 0 0 0-4.8-4.8.75.75 0 0 1 .179-1.489ZM2 13a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z', 'upload': 'M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z M11.78 4.72a.749.749 0 1 1-1.06 1.06L8.75 3.811V9.5a.75.75 0 0 1-1.5 0V3.811L5.28 5.78a.749.749 0 1 1-1.06-1.06l3.25-3.25a.749.749 0 0 1 1.06 0l3.25 3.25Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z'};
+var utterancesLoad=0;
+if(localStorage.getItem("meek_theme")==null){localStorage.setItem("meek_theme","light");changeLight();}
+else if(localStorage.getItem("meek_theme")=="dark"){changeDark();}
+else if(localStorage.getItem("meek_theme")=="light"){changeLight();}
+
+function changeDark(){
+    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList["moon"]);
+    document.getElementById("themeSwitch").parentNode.style.color="#00f0ff";
+    if(utterancesLoad==1){utterancesTheme("dark-blue");}
+}
+function changeLight(){
+    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList["sun"]);
+    document.getElementById("themeSwitch").parentNode.style.color="#ff5000";
+    if(utterancesLoad==1){utterancesTheme("github-light");}
+}
+function modeSwitch(){
+    if(document.getElementsByTagName("html")[0].attributes[0].value=="light"){changeDark();localStorage.setItem("meek_theme","dark");}
+    else{changeLight();localStorage.setItem("meek_theme","light");}
+}
+function utterancesTheme(theme){
+    const message = {type: 'set-theme',theme: theme};
+    const iframe = document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+}
+
+console.log("\n %c Gmeek v2.4 %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+</script>
+
+<script>
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","0x1042/0x1042.github.io");
+    script.setAttribute("issue-term","title");
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else{script.setAttribute("theme","github-light");}
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+</script>
+
+
+
+
+</html>

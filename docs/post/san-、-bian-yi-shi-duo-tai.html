@@ -79,7 +79,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<h1 id="user-content-编译时多态"><a class="heading-link" href="#编译时多态">编译时多态<span aria-hidden="true" class="octicon octicon-link"></span></a></h1>
+<h1><a id="user-content-编译时多态" class="anchor" aria-hidden="true" tabindex="-1" href="#编译时多态"><span aria-hidden="true" class="octicon octicon-link"></span></a>编译时多态</h1>
 <ul>
 <li><a href="#%E7%BC%96%E8%AF%91%E6%97%B6%E5%A4%9A%E6%80%81">编译时多态</a></li>
 <li>
@@ -102,7 +102,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </ul>
 </li>
 </ul>
-<h1 id="user-content-type-traits-类型萃取"><a class="heading-link" href="#type-traits-类型萃取">type traits 类型萃取<span aria-hidden="true" class="octicon octicon-link"></span></a></h1>
+<h1><a id="user-content-type-traits-类型萃取" class="anchor" aria-hidden="true" tabindex="-1" href="#type-traits-类型萃取"><span aria-hidden="true" class="octicon octicon-link"></span></a>type traits 类型萃取</h1>
 <blockquote>
 <p>c++ 通过模版实现泛型编程，从而减轻运行时开销。但是同样的算法在不同的数据类型上可能有差异，使用同一套算法效率不一定是最优的。
 type_traits 定义了一些编译时 基于模版类的接口，用于查询、修改类型的特征。即可以在编译期，获取模板参数的相关属性，从而根据不同的属性实现不同的逻辑</p>
@@ -111,7 +111,7 @@ type_traits 定义了一些编译时 基于模版类的接口，用于查询、�
 <li>获取模板类型的相关属性</li>
 <li>对模板类型进行变换</li>
 </ul>
-<h2 id="user-content-获取类型属性"><a class="heading-link" href="#获取类型属性">获取类型属性<span aria-hidden="true" class="octicon octicon-link"></span></a></h2>
+<h2><a id="user-content-获取类型属性" class="anchor" aria-hidden="true" tabindex="-1" href="#获取类型属性"><span aria-hidden="true" class="octicon octicon-link"></span></a>获取类型属性</h2>
 <div class="highlight highlight-source-c++"><pre><span class="pl-k">void</span> <span class="pl-en">test_traits</span>() {
     std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>std::is_integral_v&lt;int&gt;: <span class="pl-pds">"</span></span> &lt;&lt; std::is_integral_v&lt;<span class="pl-k">int</span>&gt; &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
     std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>std::is_integral_v&lt;double&gt;: <span class="pl-pds">"</span></span> &lt;&lt; std::is_integral_v&lt;<span class="pl-k">double</span>&gt; &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
@@ -135,7 +135,7 @@ type_traits 定义了一些编译时 基于模版类的接口，用于查询、�
 <span class="pl-k">auto</span> <span class="pl-en">is_equal</span>(T lhs, T rhs) -&gt; bool {
     <span class="pl-k">return</span> <span class="pl-c1">std::fabs</span>(lhs - rhs) &lt; std::numeric_limits&lt;T&gt;::<span class="pl-c1">epsilon</span>();
 }</pre></div>
-<h2 id="user-content-类型变换"><a class="heading-link" href="#类型变换">类型变换<span aria-hidden="true" class="octicon octicon-link"></span></a></h2>
+<h2><a id="user-content-类型变换" class="anchor" aria-hidden="true" tabindex="-1" href="#类型变换"><span aria-hidden="true" class="octicon octicon-link"></span></a>类型变换</h2>
 <blockquote>
 <p>基于已有类型 应用修改得到新的类型，输出类型可以通过访问type类型成员得到结果</p>
 </blockquote>
@@ -151,7 +151,7 @@ std::clog &lt;&lt; std::is_same_v&lt;std::<span class="pl-c1">add_const_t</span>
 
 <span class="pl-c"><span class="pl-c">//</span> 增加指针</span>
 std::clog &lt;&lt; std::is_same_v&lt;std::<span class="pl-c1">add_pointer_t</span>&lt;<span class="pl-k">int</span> **&gt;, <span class="pl-k">int</span> ***&gt; &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;</pre></div>
-<h2 id="user-content-标签分发"><a class="heading-link" href="#标签分发">标签分发<span aria-hidden="true" class="octicon octicon-link"></span></a></h2>
+<h2><a id="user-content-标签分发" class="anchor" aria-hidden="true" tabindex="-1" href="#标签分发"><span aria-hidden="true" class="octicon octicon-link"></span></a>标签分发</h2>
 <div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
 <span class="pl-k">auto</span> <span class="pl-en">equal_impl</span>(T lhs, T rhs, std::true_type <span class="pl-c"><span class="pl-c">/*</span>unused<span class="pl-c">*/</span></span>) -&gt; bool {
     <span class="pl-k">return</span> <span class="pl-c1">std::fabs</span>(lhs - rhs) &lt; std::numeric_limits&lt;T&gt;::<span class="pl-c1">epsilon</span>();
@@ -166,18 +166,18 @@ std::clog &lt;&lt; std::is_same_v&lt;std::<span class="pl-c1">add_pointer_t</spa
 <span class="pl-k">auto</span> <span class="pl-en">new_equal</span>(T lhs, T rhs) -&gt; std::enable_if_t&lt;std::is_arithmetic_v&lt;T&gt;, bool&gt; {
     <span class="pl-k">return</span> <span class="pl-c1">equal_impl</span>(lhs, rhs, std::is_floating_point&lt;T&gt;{});
 }</pre></div>
-<h2 id="user-content-迭代器"><a class="heading-link" href="#迭代器">迭代器<span aria-hidden="true" class="octicon octicon-link"></span></a></h2>
+<h2><a id="user-content-迭代器" class="anchor" aria-hidden="true" tabindex="-1" href="#迭代器"><span aria-hidden="true" class="octicon octicon-link"></span></a>迭代器</h2>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/2a147d38-cd51-4130-855e-ae39930fdfbd"><img src="https://github.com/0x1042/0x1042.github.io/assets/7525242/2a147d38-cd51-4130-855e-ae39930fdfbd" alt="input_iterator" style="max-width: 100%;"></a></p>
-<h2 id="user-content-if-constexpr"><a class="heading-link" href="#if-constexpr"><code>if constexpr</code><span aria-hidden="true" class="octicon octicon-link"></span></a></h2>
+<h2><a id="user-content-if-constexpr" class="anchor" aria-hidden="true" tabindex="-1" href="#if-constexpr"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>if constexpr</code></h2>
 <blockquote>
 <p>todo</p>
 </blockquote>
-<h2 id="user-content-void_t-元函数"><a class="heading-link" href="#void_t-元函数">
-<code>void_t</code> 元函数<span aria-hidden="true" class="octicon octicon-link"></span></a></h2>
+<h2><a id="user-content-void_t-元函数" class="anchor" aria-hidden="true" tabindex="-1" href="#void_t-元函数"><span aria-hidden="true" class="octicon octicon-link"></span></a>
+<code>void_t</code> 元函数</h2>
 <blockquote>
 <p>todo</p>
 </blockquote>
-<h1 id="user-content-ctrtp-奇异递归模版模式"><a class="heading-link" href="#ctrtp-奇异递归模版模式">CTRTP 奇异递归模版模式<span aria-hidden="true" class="octicon octicon-link"></span></a></h1>
+<h1><a id="user-content-ctrtp-奇异递归模版模式" class="anchor" aria-hidden="true" tabindex="-1" href="#ctrtp-奇异递归模版模式"><span aria-hidden="true" class="octicon octicon-link"></span></a>CTRTP 奇异递归模版模式</h1>
 <blockquote>
 <p>curiously recurring template pattern。把子类作为父类的模板参数，从而让父类可以使用子类提供的方法。</p>
 </blockquote>
@@ -186,7 +186,7 @@ std::clog &lt;&lt; std::is_same_v&lt;std::<span class="pl-c1">add_pointer_t</spa
 <li>代码复用: 由于子类派生于模板基类，因此可以复用父类的方法</li>
 <li>编译时多态: 由于父类是一个模板类，能够获得传递进来的派生类，进而可以调用派生类的方法，达到多态的效果，同时避免了运行时多态的序表开销</li>
 </ul>
-<h2 id="user-content-代码复用"><a class="heading-link" href="#代码复用">代码复用<span aria-hidden="true" class="octicon octicon-link"></span></a></h2>
+<h2><a id="user-content-代码复用" class="anchor" aria-hidden="true" tabindex="-1" href="#代码复用"><span aria-hidden="true" class="octicon octicon-link"></span></a>代码复用</h2>
 <div class="highlight highlight-source-c++"><pre><span class="pl-k">struct</span> <span class="pl-en">VideoFile</span>;
 <span class="pl-k">struct</span> <span class="pl-en">TextFile</span>;
 
@@ -243,7 +243,7 @@ std::clog &lt;&lt; std::is_same_v&lt;std::<span class="pl-c1">add_pointer_t</spa
         std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>visit TextFile. <span class="pl-pds">"</span></span> &lt;&lt; <span class="pl-c1">typeid</span>(tf).<span class="pl-c1">name</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
     }
 };</pre></div>
-<h2 id="user-content-静态绑定"><a class="heading-link" href="#静态绑定">静态绑定<span aria-hidden="true" class="octicon octicon-link"></span></a></h2>
+<h2><a id="user-content-静态绑定" class="anchor" aria-hidden="true" tabindex="-1" href="#静态绑定"><span aria-hidden="true" class="octicon octicon-link"></span></a>静态绑定</h2>
 <blockquote>
 <p>编译时多态，避免时运行时虚函数的开销</p>
 </blockquote>
@@ -278,7 +278,7 @@ Cat cat;
 Dog dog;
 <span class="pl-en">play</span>(cat);
 <span class="pl-en">play</span>(dog);</pre></div>
-<h2 id="user-content-enable_shared_from_this"><a class="heading-link" href="#enable_shared_from_this"><code>enable_shared_from_this</code><span aria-hidden="true" class="octicon octicon-link"></span></a></h2>
+<h2><a id="user-content-enable_shared_from_this" class="anchor" aria-hidden="true" tabindex="-1" href="#enable_shared_from_this"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>enable_shared_from_this</code></h2>
 <blockquote>
 <p>异步编程存在一种场景，需要在类中将该类的对象注册到某个回调类或者函数中。首先不能直接将this指针传递出去，因为异步场景下生命周期不可控，回调时可能对应的对象已经释放，从而导致野指针访问。如果通过智能指针包装this指针，因为无法通过裸指针获得引用计数块信息，强行构造会导致对象的多次释放</p>
 </blockquote>

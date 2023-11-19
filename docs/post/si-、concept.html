@@ -12,7 +12,7 @@
         else if(localStorage.getItem("meek_theme")=="light"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";}
     </script>
     
-<title>一、c++中的值类型</title>
+<title>四、concept</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
@@ -53,7 +53,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <body>
     <div id="header">
 <h1>
-    <a>一、c++中的值类型</a>
+    <a>四、concept</a>
 </h1>
 <div class="title-right">
 
@@ -63,7 +63,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
         </svg>
     </button></a>
 
-    <a href="https://github.com/0x1042/0x1042.github.io/issues/4" target="_blank"><button class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/0x1042/0x1042.github.io/issues/9" target="_blank"><button class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
         </svg>
@@ -79,132 +79,214 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<h1><a id="user-content-值类别" class="anchor" aria-hidden="true" tabindex="-1" href="#值类别"><span aria-hidden="true" class="octicon octicon-link"></span></a>值类别</h1>
+<h1><a id="user-content-concept" class="anchor" aria-hidden="true" tabindex="-1" href="#concept"><span aria-hidden="true" class="octicon octicon-link"></span></a>concept</h1>
 <ul>
 <li>
-<a href="#%E5%80%BC%E7%B1%BB%E5%88%AB">值类别</a>
+<a href="#concept">concept</a>
 <ul>
-<li><a href="#%E5%A6%82%E4%BD%95%E5%8C%BA%E5%88%86%E5%B7%A6%E5%80%BC%E5%92%8C%E5%8F%B3%E5%80%BC">如何区分左值和右值</a></li>
-<li><a href="#%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%8C%B9%E9%85%8D">函数参数匹配</a></li>
-<li><a href="#%E5%80%BC%E7%B1%BB%E5%9E%8B">值类型</a></li>
-<li><a href="#%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8-universal-reference">万能引用 <strong>universal reference</strong></a></li>
-<li><a href="#%E5%BC%95%E7%94%A8%E6%8A%98%E5%8F%A0-reference-collapsing">引用折叠 <strong>reference collapsing</strong></a></li>
-<li><a href="#%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91-perfect-forward">完美转发 <strong>perfect forward</strong></a></li>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E5%AE%9A%E4%B9%89%E5%92%8C%E4%BD%BF%E7%94%A8">基本定义和使用</a></li>
+<li><a href="#%E7%BA%A6%E6%9D%9F%E8%A1%A8%E8%BE%BE%E5%BC%8F">约束表达式</a></li>
+<li><a href="#requires-%E8%A1%A8%E8%BE%BE%E5%BC%8F"><code>requires</code> 表达式</a></li>
+<li><a href="#requires-%E5%AD%90%E5%8F%A5"><code>requires</code> 子句</a></li>
+<li><a href="#concepts-header"><code>concepts</code> header</a></li>
 </ul>
 </li>
 </ul>
-<h2><a id="user-content-如何区分左值和右值" class="anchor" aria-hidden="true" tabindex="-1" href="#如何区分左值和右值"><span aria-hidden="true" class="octicon octicon-link"></span></a>如何区分左值和右值</h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">void</span> <span class="pl-en">log</span>(std::string_view message, std::source_location location) {
-    std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>file: <span class="pl-pds">"</span></span> &lt;&lt; location.<span class="pl-c1">file_name</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span>(<span class="pl-pds">'</span></span> &lt;&lt; location.<span class="pl-c1">line</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span>:<span class="pl-pds">'</span></span> &lt;&lt; location.<span class="pl-c1">column</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>) `<span class="pl-pds">"</span></span> &lt;&lt; location.<span class="pl-c1">function_name</span>()
-              &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>`: <span class="pl-pds">"</span></span> &lt;&lt; message &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
-}
-
-<span class="pl-k">void</span> <span class="pl-en">foo</span>(<span class="pl-k">int</span> &amp; <span class="pl-c"><span class="pl-c">/*</span>val<span class="pl-c">*/</span></span>) {
-    <span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>foo1<span class="pl-pds">"</span></span>);
-}
-
-<span class="pl-k">void</span> <span class="pl-en">foo</span>(<span class="pl-k">int</span> &amp;&amp; <span class="pl-c"><span class="pl-c">/*</span>val<span class="pl-c">*/</span></span>) {
-    <span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>foo2<span class="pl-pds">"</span></span>);
-}</pre></div>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">int</span> &amp;&amp; value = <span class="pl-c1">1024</span>;
-<span class="pl-en">foo</span>(value); <span class="pl-c"><span class="pl-c">//</span> 调用的是 void foo(int &amp;)</span></pre></div>
+<h2><a id="user-content-基本定义和使用" class="anchor" aria-hidden="true" tabindex="-1" href="#基本定义和使用"><span aria-hidden="true" class="octicon octicon-link"></span></a>基本定义和使用</h2>
 <ul>
-<li>匿名的临时对象是右值，具名的右值引用对象是左值</li>
-<li>如果表达式可以取地址，则为左值表达式，否则，为右值表达式</li>
-<li>表达式 value 是具名的右值引用对象，value 也可以取地址，所以 表达式value 是一个左值，匹配第一个函数</li>
+<li>基本定义</li>
 </ul>
-<h2><a id="user-content-函数参数匹配" class="anchor" aria-hidden="true" tabindex="-1" href="#函数参数匹配"><span aria-hidden="true" class="octicon octicon-link"></span></a>函数参数匹配</h2>
-<table>
-<thead>
-<tr>
-<th>参数类型</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Value&amp;</td>
-<td>只能匹配左值表达式</td>
-</tr>
-<tr>
-<td>Value&amp;&amp;</td>
-<td>只能绑定右值表达式（模板函数下单独讨论）</td>
-</tr>
-<tr>
-<td>const Value&amp;</td>
-<td>可以匹配左值和右值表达式</td>
-</tr>
-<tr>
-<td>const Value&amp;&amp;</td>
-<td>实际不使用</td>
-</tr>
-</tbody>
-</table>
-<h2><a id="user-content-值类型" class="anchor" aria-hidden="true" tabindex="-1" href="#值类型"><span aria-hidden="true" class="octicon octicon-link"></span></a>值类型</h2>
+<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span> 语法格式</span>
+<span class="pl-c"><span class="pl-c">//</span> template&lt;typename T&gt;</span>
+<span class="pl-c"><span class="pl-c">//</span> concept concept_name = constraint-expression(约束表达式);</span>
+
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>integral = std::is_integral_v&lt;T&gt;;
+
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>floating_point = std::is_floating_point_v&lt;T&gt;;
+
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>C = std::is_integral_v&lt;T&gt; || (<span class="pl-k">sizeof</span>(T) &gt; <span class="pl-c1">1</span>);
+
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T, <span class="pl-k">typename</span> U&gt;
+<span class="pl-k">concept </span>Derived = std::is_base_of_v&lt;U, T&gt;;
+</pre></div>
 <ul>
-<li>泛左值： 左值 和 将亡值</li>
-<li>右值：纯右值 和 将亡值</li>
-<li>
-<code>static_cast&lt;Value&amp;&amp;&gt;(value)</code> 是将亡值，常见的将亡值是 函数的返回值
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/0fae6f7f-bce8-41b6-ad2d-45cc312ec7b4"><img src="https://github.com/0x1042/0x1042.github.io/assets/7525242/0fae6f7f-bce8-41b6-ad2d-45cc312ec7b4" alt="types" style="max-width: 100%;"></a>
+<li>基本使用 <strong>使用<code>concept_name</code> 替换 <code>typename</code></strong>
 </li>
 </ul>
-<h2><a id="user-content-万能引用-universal-reference" class="anchor" aria-hidden="true" tabindex="-1" href="#万能引用-universal-reference"><span aria-hidden="true" class="octicon octicon-link"></span></a>万能引用 <strong>universal reference</strong>
-</h2>
-<blockquote>
-<p>如何区分 Arg&amp;&amp; 是右值引用还是万能引用？</p>
-</blockquote>
+<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span> 定义 </span>
+<span class="pl-k">class</span> <span class="pl-en">Base</span> {
+<span class="pl-k">public:</span>
+    [[nodiscard]] <span class="pl-k">auto</span> <span class="pl-en">getValue</span>() <span class="pl-k">const</span> -&gt; int32_t { <span class="pl-k">return</span> value; }
+
+    <span class="pl-k">explicit</span> <span class="pl-en">Base</span>(<span class="pl-k">const</span> <span class="pl-c1">int32_t</span> value)
+        : value(value) {
+    }
+
+<span class="pl-k">private:</span>
+    <span class="pl-c1">int32_t</span> value;
+};
+
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>DerivedBase = std::is_base_of_v&lt;Base, T&gt;;
+
+<span class="pl-c"><span class="pl-c">//</span> 使用concept_name 替换 typename</span>
+<span class="pl-k">template </span>&lt;DerivedBase T&gt;
+<span class="pl-k">auto</span> <span class="pl-en">doGetValue</span>(<span class="pl-k">const</span> T &amp; t) -&gt; int32_t {
+    <span class="pl-k">return</span> t.<span class="pl-c1">getValue</span>();
+}
+
+<span class="pl-k">class</span> <span class="pl-en">DerivedClass</span> : <span class="pl-k">public</span> <span class="pl-en">Base</span> {
+<span class="pl-k">public:</span>
+    <span class="pl-k">explicit</span> <span class="pl-en">DerivedClass</span>(<span class="pl-c1">int32_t</span> value)
+        : Base(value) {
+    }
+
+    [[nodiscard]] <span class="pl-k">auto</span> <span class="pl-en">getValue</span>() <span class="pl-k">const</span> -&gt; int32_t { <span class="pl-k">return</span> <span class="pl-c1">1024</span>; }
+};</pre></div>
+<h2><a id="user-content-约束表达式" class="anchor" aria-hidden="true" tabindex="-1" href="#约束表达式"><span aria-hidden="true" class="octicon octicon-link"></span></a>约束表达式</h2>
 <ul>
-<li><strong>如果 Arg&amp;&amp; 是模板参数或者 auto，则是万能引用，「既可以接受左值，也可以接受右值」，否则为右值引用</strong></li>
-<li><strong>万能引用在类型推导语境下，可以保留类型的cv限定符「const和volatile」和值类别</strong></li>
+<li>合取式 conjunctions，逻辑与</li>
 </ul>
-<h2><a id="user-content-引用折叠-reference-collapsing" class="anchor" aria-hidden="true" tabindex="-1" href="#引用折叠-reference-collapsing"><span aria-hidden="true" class="octicon octicon-link"></span></a>引用折叠 <strong>reference collapsing</strong>
-</h2>
-<blockquote>
-<p>为了解决 reference to reference 的问题</p>
-</blockquote>
-<p>c++ 中不允许指向引用的引用，对于指向引用的引用会被简化，推导规则如下</p>
 <div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
-<span class="pl-k">void</span> <span class="pl-en">Example</span>(T &amp;&amp; input) {}</pre></div>
+<span class="pl-k">concept </span>integral = std::is_integral_v&lt;T&gt;;
+
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>signed_int = integral&lt;T&gt; &amp;&amp; std::is_signed_v&lt;T&gt;;
+</pre></div>
 <ul>
-<li>函数形参是左值，T&amp;，传入的实参是左值，即input 是 <code>T&amp; &amp;</code>
-</li>
-<li>函数形参是左值，T&amp;，传入的实参是右值，即input 是 <code>T&amp; &amp;&amp;</code>
-</li>
-<li>函数形参是右值，T&amp;&amp;，传入的实参是左值，即input 是 <code>T&amp;&amp; &amp;</code>
-</li>
-<li>函数形参是右值，T&amp;&amp;，传入的实参是右值，即input 是 <code>T&amp;&amp; &amp;&amp;</code>
+<li>析取式 disjunctions，逻辑或</li>
+</ul>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>integral = std::is_integral_v&lt;T&gt;;
+
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>floating_point = std::is_floating_point_v&lt;T&gt;;
+
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>number = integral&lt;T&gt; || floating_point&lt;T&gt;;
+</pre></div>
+<ul>
+<li>原子约束 atomic constraints</li>
+</ul>
+<div class="highlight highlight-source-c++"><pre></pre></div>
+<h2><a id="user-content-requires-表达式" class="anchor" aria-hidden="true" tabindex="-1" href="#requires-表达式"><span aria-hidden="true" class="octicon octicon-link"></span></a>
+<code>requires</code> 表达式</h2>
+<blockquote>
+<p>除了使用<code>type traits</code> 定义概念之外，也可以使用 <code>requires</code> 表达式来表达对模板参数及其对象的特征要求
+成员函数、自由函数、关联类型等</p>
+</blockquote>
+<ul>
+<li>基本语法</li>
+</ul>
+<div class="highlight highlight-source-c++"><pre><span class="pl-en">requires</span>(可选参数列表) {
+    表达式<span class="pl-c1">1</span>
+    表达式<span class="pl-c1">2</span>
+}
+</pre></div>
+<ul>
+<li>基本约束</li>
+</ul>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>Machine = requires(T t)
+{
+    <span class="pl-c"><span class="pl-c">//</span> 要求存在同名的成员函数</span>
+    t.<span class="pl-c1">powerup</span>();
+
+    t.<span class="pl-c1">powerDown</span>();
+    <span class="pl-c"><span class="pl-c">//</span> 要求存在成员变量name</span>
+    t.<span class="pl-smi">name</span>;
+    <span class="pl-c"><span class="pl-c">//</span> 要求存在静态成员count</span>
+    T::count;
+};
+
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>Animal = requires(T t1, T t2, T t3)
+{
+    <span class="pl-c"><span class="pl-c">//</span> 要求存在 name 成员变量</span>
+    t1.<span class="pl-smi">name</span>;
+
+    <span class="pl-c"><span class="pl-c">//</span> 要求能够进行判等操作</span>
+    t1 == t2;
+
+    <span class="pl-c"><span class="pl-c">//</span> 要求能够进行 加、乘操作</span>
+    t1 + t2 * t3;
+};
+</pre></div>
+<ul>
+<li>类型约束</li>
+</ul>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>C2 = requires
+{
+    <span class="pl-c"><span class="pl-c">//</span> 要求存在类型成员 type</span>
+    <span class="pl-k">typename</span> T::type;
+
+    <span class="pl-c"><span class="pl-c">//</span> 要求能够与vector 组合，实现模板实例化</span>
+    <span class="pl-k">typename</span> std::vector&lt;T&gt;;
+};</pre></div>
+<ul>
+<li>组合约束 <strong>需要大括号括起来</strong>
 </li>
 </ul>
-<p>推导规则是： <strong>仅当两个都是右值引用时，推导为右值，其余情况为左值</strong>，也就是 <code>T&amp;&amp; &amp;&amp;</code>为右值，其他情况为左值</p>
-<h2><a id="user-content-完美转发-perfect-forward" class="anchor" aria-hidden="true" tabindex="-1" href="#完美转发-perfect-forward"><span aria-hidden="true" class="octicon octicon-link"></span></a>完美转发 <strong>perfect forward</strong>
-</h2>
-<blockquote>
-<p>在传参的过程中，保留参数的原始类型</p>
-</blockquote>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">void</span> <span class="pl-en">foo</span>(<span class="pl-k">int</span> &amp; val);
-<span class="pl-k">void</span> <span class="pl-en">foo</span>(<span class="pl-k">int</span> &amp;&amp; val);
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>C3 = requires(T t1, T t2) {
+    <span class="pl-c"><span class="pl-c">//</span> 表达式不能有异常</span>
+    { t1 = <span class="pl-c1">std::move</span>(t2) } <span class="pl-k">noexcept</span>;
 
-<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt; <span class="pl-k">void</span> <span class="pl-en">call_foo</span>(T &amp;&amp; t) {
-    <span class="pl-c1">foo</span>(std::forward&lt;T&gt;(t));
-}</pre></div>
-<p>如何实现的？</p>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">class</span> <span class="pl-en">_Tp</span>&gt;
-_LIBCPP_NODISCARD_EXT <span class="pl-k">inline</span> _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR _Tp&amp;&amp;
-<span class="pl-en">forward</span>(_LIBCPP_LIFETIMEBOUND <span class="pl-c1">__libcpp_remove_reference_t</span>&lt;_Tp&gt;&amp; <span class="pl-c1">__t</span>) _NOEXCEPT {
-  <span class="pl-k">return</span> <span class="pl-k">static_cast</span>&lt;_Tp&amp;&amp;&gt;(<span class="pl-c1">__t</span>);
+    <span class="pl-c"><span class="pl-c">//</span> 要求接口返回类型与T一致</span>
+    { t1.<span class="pl-c1">get_info</span>() } -&gt; std::same_as&lt;T&gt;;
+
+    <span class="pl-c"><span class="pl-c">//</span> 要求接口返回类型能够转换成float</span>
+    { t1.<span class="pl-c1">get_unit</span>() } -&gt; std::convertible_to&lt;<span class="pl-k">float</span>&gt;;
+};
+</pre></div>
+<ul>
+<li>嵌套约束</li>
+</ul>
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>C3 = requires {
+    requires <span class="pl-smi">sizeof</span>(T) &gt; <span class="pl-c1">4</span>;
+};</pre></div>
+<h2><a id="user-content-requires-子句" class="anchor" aria-hidden="true" tabindex="-1" href="#requires-子句"><span aria-hidden="true" class="octicon octicon-link"></span></a>
+<code>requires</code> 子句</h2>
+<blockquote>
+<p>用于判断所约束的类型在上下文中 是否可行</p>
+</blockquote>
+<p><strong>上下文</strong> 感觉是废话，concept 不就是为了简化模板编程么，肯定只能在模板编程中存在</p>
+<ol>
+<li>函数模板</li>
+<li>模板类</li>
+<li>模板类的成员函数</li>
+</ol>
+<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span> 这里是 require 子句(区别与require 表达式)</span>
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+    requires std::is_integral_v&lt;T&gt;
+<span class="pl-k">auto</span> <span class="pl-en">add</span>(T t1, T t2) -&gt; T {
+    <span class="pl-k">return</span> t1 + t2;
 }
 
-<span class="pl-k">template </span>&lt;<span class="pl-k">class</span> <span class="pl-en">_Tp</span>&gt;
-_LIBCPP_NODISCARD_EXT <span class="pl-k">inline</span> _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR _Tp&amp;&amp;
-<span class="pl-en">forward</span>(_LIBCPP_LIFETIMEBOUND <span class="pl-c1">__libcpp_remove_reference_t</span>&lt;_Tp&gt;&amp;&amp; <span class="pl-c1">__t</span>) _NOEXCEPT {
-  <span class="pl-c1">static_assert</span>(!is_lvalue_reference&lt;_Tp&gt;::value, <span class="pl-s"><span class="pl-pds">"</span>cannot forward an rvalue as an lvalue<span class="pl-pds">"</span></span>);
-  <span class="pl-k">return</span> <span class="pl-k">static_cast</span>&lt;_Tp&amp;&amp;&gt;(<span class="pl-c1">__t</span>);
-}</pre></div>
-<ul>
-<li>Tp 是左值， <code>static_cast&lt;_Tp&amp;&amp;&gt;(__t)</code> 后是 T&amp; &amp;&amp;，按照引用折叠规则，<code>T&amp; &amp;&amp; -&gt; T&amp;</code>, Tp是左值</li>
-<li>Tp 是右值， <code>static_cast&lt;_Tp&amp;&amp;&gt;(__t)</code> 后是 T&amp;&amp; &amp;&amp;，按照引用折叠规则，<code>T&amp;&amp; &amp;&amp; -&gt; T&amp;&amp;</code>, Tp是右值</li>
-</ul>
+<span class="pl-c"><span class="pl-c">//</span> 编译成功</span>
+<span class="pl-en">add</span>(<span class="pl-c1">1</span>, <span class="pl-c1">2</span>);
+<span class="pl-c"><span class="pl-c">//</span>  note: candidate template ignored: constraints not satisfied [with T = double]</span>
+<span class="pl-c"><span class="pl-c">//</span>  note: because 'std::is_integral_v&lt;double&gt;' evaluated to false</span>
+<span class="pl-c"><span class="pl-c">//</span> add(1.2, 2.2);</span></pre></div>
+<h2><a id="user-content-concepts-header" class="anchor" aria-hidden="true" tabindex="-1" href="#concepts-header"><span aria-hidden="true" class="octicon octicon-link"></span></a>
+<code>concepts</code> header</h2>
+<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span> 想同类</span>
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T, <span class="pl-k">typename</span> U&gt;
+<span class="pl-k">concept </span>same_as = std::is_same_v&lt;T, U&gt;;
+
+<span class="pl-c"><span class="pl-c">//</span> 是否是派生关系 </span>
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Base, <span class="pl-k">typename</span> Derived&gt;
+<span class="pl-k">concept </span>derived_from = std::is_base_of_v&lt;Base, Derived&gt; &amp;&amp; std::is_convertible_v&lt;std::<span class="pl-c1">add_cv_t</span>&lt;Derived *&gt;, std::<span class="pl-c1">add_cv_t</span>&lt;Base *&gt;&gt;;
+
+<span class="pl-c"><span class="pl-c">//</span> 是否可转换</span>
+<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> F, <span class="pl-k">typename</span> T&gt;
+<span class="pl-k">concept </span>convertible_to = std::is_convertible_v&lt;F, T&gt; &amp;&amp; requires(std::<span class="pl-c1">add_rvalue_reference_t</span>&lt;F&gt; (&amp;f)()) { <span class="pl-k">static_cast</span>&lt;T&gt;(<span class="pl-c1">f</span>()); };
+</pre></div>
 
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

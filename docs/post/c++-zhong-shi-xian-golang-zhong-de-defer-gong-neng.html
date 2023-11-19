@@ -79,8 +79,8 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<h1 id="user-content-使用folly"><a class="heading-link" href="#使用folly">使用<code>folly</code>
-<span aria-hidden="true" class="octicon octicon-link"></span></a></h1>
+<h1><a id="user-content-使用folly" class="anchor" aria-hidden="true" tabindex="-1" href="#使用folly"><span aria-hidden="true" class="octicon octicon-link"></span></a>使用<code>folly</code>
+</h1>
 <div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>folly/ScopeGuard.h<span class="pl-pds">&gt;</span></span>
 
 <span class="pl-k">auto</span> <span class="pl-en">main</span>() -&gt; int {
@@ -92,7 +92,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
     <span class="pl-k">return</span> <span class="pl-c1">0</span>;
 }
 </pre></div>
-<h1 id="user-content-自定义实现"><a class="heading-link" href="#自定义实现">自定义实现<span aria-hidden="true" class="octicon octicon-link"></span></a></h1>
+<h1><a id="user-content-自定义实现" class="anchor" aria-hidden="true" tabindex="-1" href="#自定义实现"><span aria-hidden="true" class="octicon octicon-link"></span></a>自定义实现</h1>
 <div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Lambda&gt; 
 <span class="pl-k">struct</span> <span class="pl-en">Defer</span> : Lambda {
     <span class="pl-en">~Defer</span>() { <span class="pl-c1">Lambda::operator</span>()(); }

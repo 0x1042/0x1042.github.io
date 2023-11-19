@@ -92,8 +92,8 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <li><a href="#decltypeauto"><code>decltype(auto)</code></a></li>
 <li><a href="#ctad-%E7%B1%BB%E6%A8%A1%E6%9D%BF%E5%8F%82%E6%95%B0%E6%8E%A8%E5%AF%BC"><code>CTAD</code> 类模板参数推导</a></li>
 </ul>
-<h1 id="user-content-类型推导"><a class="heading-link" href="#类型推导">类型推导<span aria-hidden="true" class="octicon octicon-link"></span></a></h1>
-<h1 id="user-content-auto"><a class="heading-link" href="#auto"><code>auto</code><span aria-hidden="true" class="octicon octicon-link"></span></a></h1>
+<h1><a id="user-content-类型推导" class="anchor" aria-hidden="true" tabindex="-1" href="#类型推导"><span aria-hidden="true" class="octicon octicon-link"></span></a>类型推导</h1>
+<h1><a id="user-content-auto" class="anchor" aria-hidden="true" tabindex="-1" href="#auto"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>auto</code></h1>
 <p><strong>auto 是值语义，即通过移动/拷贝构造，不会保留cv属性，如果需要保留cv属性，需要显式指定</strong></p>
 <div class="highlight highlight-source-c++"><pre><span class="pl-k">class</span> <span class="pl-en">Cat</span> {};
 
@@ -171,7 +171,7 @@ Cat&amp;&amp; rr_cat = Cat{};</pre></div>
 </tr>
 </tbody>
 </table>
-<h1 id="user-content-decltype"><a class="heading-link" href="#decltype"><code>decltype</code><span aria-hidden="true" class="octicon octicon-link"></span></a></h1>
+<h1><a id="user-content-decltype" class="anchor" aria-hidden="true" tabindex="-1" href="#decltype"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>decltype</code></h1>
 <blockquote>
 <p>作用：获取 标识符被定义时的类型或者 整体作为 表达式 时的值类别</p>
 </blockquote>
@@ -192,7 +192,7 @@ Cat&amp;&amp; rr_cat = Cat{};</pre></div>
     Student &amp; st_ref = student;
     Student &amp;&amp; st_tmp = {};
 }</pre></div>
-<h2 id="user-content-不带括号获取的是标识符-定义时的类型"><a class="heading-link" href="#不带括号获取的是标识符-定义时的类型">不带括号(获取的是标识符 定义时的类型)<span aria-hidden="true" class="octicon octicon-link"></span></a></h2>
+<h2><a id="user-content-不带括号获取的是标识符-定义时的类型" class="anchor" aria-hidden="true" tabindex="-1" href="#不带括号获取的是标识符-定义时的类型"><span aria-hidden="true" class="octicon octicon-link"></span></a>不带括号(获取的是标识符 定义时的类型)</h2>
 <table>
 <thead>
 <tr>
@@ -231,7 +231,7 @@ Cat&amp;&amp; rr_cat = Cat{};</pre></div>
 </tr>
 </tbody>
 </table>
-<h2 id="user-content-带括号-获取表达式的值类别"><a class="heading-link" href="#带括号-获取表达式的值类别">带括号 获取表达式的值类别<span aria-hidden="true" class="octicon octicon-link"></span></a></h2>
+<h2><a id="user-content-带括号-获取表达式的值类别" class="anchor" aria-hidden="true" tabindex="-1" href="#带括号-获取表达式的值类别"><span aria-hidden="true" class="octicon octicon-link"></span></a>带括号 获取表达式的值类别</h2>
 <table>
 <thead>
 <tr>
@@ -295,7 +295,7 @@ Cat&amp;&amp; rr_cat = Cat{};</pre></div>
 <li>
 <code>T10</code> x++作为表达式是右值</li>
 </ul>
-<h1 id="user-content-decltypeauto"><a class="heading-link" href="#decltypeauto"><code>decltype(auto)</code><span aria-hidden="true" class="octicon octicon-link"></span></a></h1>
+<h1><a id="user-content-decltypeauto" class="anchor" aria-hidden="true" tabindex="-1" href="#decltypeauto"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>decltype(auto)</code></h1>
 <blockquote>
 <p>默认使用<code>auto</code>时，丢失了引用性和<code>cv</code>属性，若指明了 <code>const</code>属性，则导致结果始终为<code>const</code>，若采用引用，则需要显示指定<code>auto&amp;</code> 或者 <code>auto&amp;&amp;</code>,这又会导致只能表现为 引用语义。<code>decltype(auto)</code> 用于精确获取等号右边类型的场景.</p>
 </blockquote>
@@ -346,8 +346,8 @@ Cat&amp;&amp; rr_cat = Cat{};</pre></div>
     std::cerr &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>typeof t4:<span class="pl-pds">"</span></span> &lt;&lt; <span class="pl-c1">typeid</span>(T4).<span class="pl-c1">name</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
 }</pre></div>
 <p><strong><code>std::declval()</code> 只能在<code>decltype</code>或<code>sizeof</code>等非求值上下文中，当类模版参数不可构造或者构造函数是私有的时，可以使用std::declval() 构造实例，等同<code>using CallResult = decltype(F{}(Args{}...));</code></strong></p>
-<h1 id="user-content-ctad-类模板参数推导"><a class="heading-link" href="#ctad-类模板参数推导">
-<code>CTAD</code> 类模板参数推导<span aria-hidden="true" class="octicon octicon-link"></span></a></h1>
+<h1><a id="user-content-ctad-类模板参数推导" class="anchor" aria-hidden="true" tabindex="-1" href="#ctad-类模板参数推导"><span aria-hidden="true" class="octicon octicon-link"></span></a>
+<code>CTAD</code> 类模板参数推导</h1>
 <blockquote>
 <p>全称是 Class Template Args Deduction, 编译器通过模板参数推导其构造函数的模板参数类型，简化类型定义</p>
 </blockquote>

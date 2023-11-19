@@ -9,7 +9,7 @@
         "link",
         "about"
     ],
-    "GMEEK_VERSION":"v2.6",
+    "GMEEK_VERSION":"v2.4",
     "onePageListNum":15,
     "commentLabelColor":"#006b75",
     "yearColorList":[
@@ -20,6 +20,6 @@
     ],
     "i18n":"CN",
     "dayTheme":"light",
-    "urlMode":"issue",
+    "urlMode":"pinyin",
     "nightTheme":"dark_colorblind"
 }

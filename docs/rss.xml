@@ -1,5 +1,26 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Sun, 19 Nov 2023 05:47:00 +0000</lastBuildDate><managingEditor>Daily</managingEditor><pubDate>Sun, 19 Nov 2023 05:47:00 +0000</pubDate><ttl>60</ttl><webMaster>Daily</webMaster><item><title>六、协程实现细节</title><link>http://0x1042.github.io/post/liu-%E3%80%81-xie-cheng-shi-xian-xi-jie.html</link><description># 协程实现细节&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Sun, 26 Nov 2023 10:44:58 +0000</lastBuildDate><managingEditor>Daily</managingEditor><pubDate>Sun, 26 Nov 2023 10:44:58 +0000</pubDate><ttl>60</ttl><webMaster>Daily</webMaster><item><title>七、`constexpr` </title><link>http://0x1042.github.io/post/qi-%E3%80%81%60constexpr%60%20.html</link><description># constexpr 元编程&#13;
+&#13;
+- [constexpr 元编程](#constexpr-元编程)&#13;
+  - [`constexpr` 变量](#constexpr-变量)&#13;
+  - [`constinit` 初始化](#constinit-初始化)&#13;
+  - [`constexpr` 函数](#constexpr-函数)&#13;
+  - [`consteval` 函数](#consteval-函数)&#13;
+- [`if constexpr`](#if-constexpr)&#13;
+- [折叠表达式](#折叠表达式)&#13;
+  - [右折叠](#右折叠)&#13;
+  - [左折叠](#左折叠)&#13;
+- [令人头大的`const`](#令人头大的const)&#13;
+  - [`int const* ptr`](#int-const-ptr)&#13;
+  - [`int * const ptr`](#int--const-ptr)&#13;
+  - [终极CASE](#终极case)&#13;
+&#13;
+## `constexpr` 变量&#13;
+&#13;
+**与`const`变量的区别？**&#13;
+&#13;
+- `constexpr` 需要保证表达式可在编译时求值，否则会出现编译错误 &#13;
+- `const` 表达式拥有常量性。</description><guid isPermaLink="true">http://0x1042.github.io/post/qi-%E3%80%81%60constexpr%60%20.html</guid><pubDate>Sun, 26 Nov 2023 10:44:29 +0000</pubDate></item><item><title>六、协程实现细节</title><link>http://0x1042.github.io/post/liu-%E3%80%81-xie-cheng-shi-xian-xi-jie.html</link><description># 协程实现细节&#13;
 &#13;
 - [协程实现细节](#协程实现细节)&#13;
 - [协程的生命周期](#协程的生命周期)&#13;

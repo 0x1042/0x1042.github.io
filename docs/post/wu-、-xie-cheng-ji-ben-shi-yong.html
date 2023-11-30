@@ -17,26 +17,14 @@
 
 </head>
 <style>
-body{
-    box-sizing: border-box;
-    min-width: 200px;
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 45px;
-    font-size: 16px;
-    font-family: sans-serif;
-    line-height: 1.25;
-}
-
-.avatar {transition: 0.8s;}
-.avatar:hover {transform: scale(1.15) rotate(360deg);}
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
 #header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
 #footer {margin-top:64px; text-align: center;font-size: small;}
 
 </style>
 
 <style>
-h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-size:40px;}
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
 .title-right{display:flex;margin:auto 0 0 auto;}
 .title-right .circle{padding: 14px 16px;margin-right:8px;}
 #postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
@@ -44,7 +32,10 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 #cmButton{height:48px;margin-top:48px;}
 #comments{margin-top:64px;}
 .g-emoji{font-size:24px;}
-@media (max-width: 767px) {body {padding: 8px;}}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
 </style>
 
 
@@ -52,9 +43,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 
 <body>
     <div id="header">
-<h1>
-    <a>五、协程基本使用</a>
-</h1>
+<span class="postTitle">五、协程基本使用</span>
 <div class="title-right">
 
     <a href="/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
@@ -79,15 +68,12 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<h1><a id="user-content-协程-入门" class="anchor" aria-hidden="true" tabindex="-1" href="#协程-入门"><span aria-hidden="true" class="octicon octicon-link"></span></a>协程 <del>入门</del>
-</h1>
+<h1>协程 <del>入门</del></h1>
 <ul>
-<li>
-<a href="#%E5%8D%8F%E7%A8%8B-%E5%85%A5%E9%97%A8">协程 <del>入门</del></a>
+<li><a href="#%E5%8D%8F%E7%A8%8B-%E5%85%A5%E9%97%A8">协程 <del>入门</del></a>
 <ul>
 <li><a href="#%E5%AE%9A%E4%B9%89">定义</a></li>
-<li>
-<a href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86">基本原理</a>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86">基本原理</a>
 <ul>
 <li><a href="#%E4%B8%80%E5%8D%8F%E7%A8%8B%E6%A0%88%E5%B8%A7%E7%BC%96%E8%AF%91%E5%99%A8%E7%94%9F%E6%88%90">一、协程栈帧(编译器生成)</a></li>
 <li><a href="#%E4%BA%8C%E5%88%9B%E5%BB%BA%E5%8D%8F%E7%A8%8B">二、创建协程</a></li>
@@ -97,24 +83,23 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </li>
 </ul>
 </li>
-<li>
-<a href="#%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8D%8F%E7%A8%8B">实现一个协程</a>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8D%8F%E7%A8%8B">实现一个协程</a>
 <ul>
-<li><a href="#%E5%AE%9A%E4%B9%89-generator">定义 <code>Generator</code></a></li>
-<li><a href="#%E5%AE%9A%E4%B9%89-promise_type">定义 <code>promise_type</code></a></li>
+<li><a href="#%E5%AE%9A%E4%B9%89-generator">定义 <code class="notranslate">Generator</code></a></li>
+<li><a href="#%E5%AE%9A%E4%B9%89-promise_type">定义 <code class="notranslate">promise_type</code></a></li>
 <li><a href="#%E5%AE%9A%E4%B9%89%E5%8D%8F%E7%A8%8B%E5%87%BD%E6%95%B0">定义协程函数</a></li>
 </ul>
 </li>
 <li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
 </ul>
-<h2><a id="user-content-定义" class="anchor" aria-hidden="true" tabindex="-1" href="#定义"><span aria-hidden="true" class="octicon octicon-link"></span></a>定义</h2>
-<p>c++20的协程定义是一个<strong>可暂停、可恢复</strong>的函数，具体到实现上，如果函数包含<code>co_await、co_yield、co_return</code> 关键字之一，就会被认为是协程</p>
+<h2>定义</h2>
+<p>c++20的协程定义是一个<strong>可暂停、可恢复</strong>的函数，具体到实现上，如果函数包含<code class="notranslate">co_await、co_yield、co_return</code> 关键字之一，就会被认为是协程</p>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/c2954b77-82a6-4a8f-b3a8-740adb8a9852"><img src="https://github.com/0x1042/0x1042.github.io/assets/7525242/c2954b77-82a6-4a8f-b3a8-740adb8a9852" alt="coroutine" style="max-width: 100%;"></a></p>
 <ul>
 <li>暂停，即意味着需要保存函数执行过程中产生的上下文</li>
 <li>恢复，调用方可以获取到这个协程在堆上的控制入口</li>
 </ul>
-<table>
+<table role="table">
 <thead>
 <tr>
 <th>关键字</th>
@@ -123,24 +108,24 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </thead>
 <tbody>
 <tr>
-<td><code>co_await</code></td>
+<td><code class="notranslate">co_await</code></td>
 <td>挂起</td>
 </tr>
 <tr>
-<td><code>co_yield</code></td>
+<td><code class="notranslate">co_yield</code></td>
 <td>挂起并返回值</td>
 </tr>
 <tr>
-<td><code>co_return</code></td>
+<td><code class="notranslate">co_return</code></td>
 <td>结束协程</td>
 </tr>
 </tbody>
 </table>
-<h2><a id="user-content-基本原理" class="anchor" aria-hidden="true" tabindex="-1" href="#基本原理"><span aria-hidden="true" class="octicon octicon-link"></span></a>基本原理</h2>
+<h2>基本原理</h2>
 <p>参考 <a href="https://owent.net/2019/1904.html" title="C++20 Coroutine" rel="nofollow">C++20 Coroutine</a>,<a href="https://z3475.work/post/c20-xie-cheng-mai-xiang-yi-bu-part1-zui-jian-dan-de-xie-cheng/" title="[C++20协程]迈向异步 Part1-最简单的协程" rel="nofollow">C++20协程</a>.  核心是有编译器针对协程函数做patch，生成新的代码，区别于有栈协程，需要有对应的runtime来调度.</p>
-<p>可以在 <a href="https://cppinsights.io" rel="nofollow">cppinsights.io</a> 上打开 <code>Show coroutine transformation</code> 选项，查看详细的细节，生成的结果中有注释，是一个近似的结果</p>
-<h3><a id="user-content-一协程栈帧编译器生成" class="anchor" aria-hidden="true" tabindex="-1" href="#一协程栈帧编译器生成"><span aria-hidden="true" class="octicon octicon-link"></span></a>一、协程栈帧(编译器生成)</h3>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">struct</span> <span class="pl-en">__fibonacciFrame</span>
+<p>可以在 <a href="https://cppinsights.io" rel="nofollow">cppinsights.io</a> 上打开 <code class="notranslate">Show coroutine transformation</code> 选项，查看详细的细节，生成的结果中有注释，是一个近似的结果</p>
+<h3>一、协程栈帧(编译器生成)</h3>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">struct</span> <span class="pl-en">__fibonacciFrame</span>
 {
   <span class="pl-en">void</span> (*resume_fn)(__fibonacciFrame *);  <span class="pl-c"><span class="pl-c">//</span> 协程恢复函数 </span>
   <span class="pl-en">void</span> (*destroy_fn)(__fibonacciFrame *); <span class="pl-c"><span class="pl-c">//</span> 协程销毁函数 </span>
@@ -154,12 +139,12 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
   std::suspend_always __suspend_51_9;
   std::suspend_always __suspend_47_27_1;
 };</pre></div>
-<h3><a id="user-content-二创建协程" class="anchor" aria-hidden="true" tabindex="-1" href="#二创建协程"><span aria-hidden="true" class="octicon octicon-link"></span></a>二、创建协程</h3>
+<h3>二、创建协程</h3>
 <blockquote>
-<p>调用方调用协程函数时(<code>fibonacci()</code>)，编译器会生成类似下面的代码, 这个函数的返回值时 <code>std::coroutine_handle&lt;promise&gt;</code>,也就是上面说的 协程的控制点(句柄)
+<p>调用方调用协程函数时(<code class="notranslate">fibonacci()</code>)，编译器会生成类似下面的代码, 这个函数的返回值时 <code class="notranslate">std::coroutine_handle&lt;promise&gt;</code>,也就是上面说的 协程的控制点(句柄)<br>
 而这个返回值是通过 协程的 promise_type 对应的 get_return_object 函数获取</p>
 </blockquote>
-<div class="highlight highlight-source-c++"><pre>std::coroutine_handle&lt;promise&gt; <span class="pl-en">fibonacci</span>(<span class="pl-k">int</span> a)
+<div class="highlight highlight-source-c++"><pre class="notranslate">std::coroutine_handle&lt;promise&gt; <span class="pl-en">fibonacci</span>(<span class="pl-k">int</span> a)
 {
   <span class="pl-c"><span class="pl-c">/*</span> Allocate the frame including the promise <span class="pl-c">*/</span></span>
   <span class="pl-c"><span class="pl-c">/*</span> Note: The actual parameter new is __builtin_coro_size <span class="pl-c">*/</span></span>
@@ -187,12 +172,12 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
   
   <span class="pl-k">return</span> __f-&gt;<span class="pl-smi">__promise</span>.<span class="pl-c1">get_return_object</span>();
 }</pre></div>
-<h3><a id="user-content-三协程恢复__fibonacciresume" class="anchor" aria-hidden="true" tabindex="-1" href="#三协程恢复__fibonacciresume"><span aria-hidden="true" class="octicon octicon-link"></span></a>三、协程恢复(__fibonacciResume)</h3>
+<h3>三、协程恢复(__fibonacciResume)</h3>
 <blockquote>
-<p>这个是协程的核心执行逻辑，也就是编译器patch后的结果
+<p>这个是协程的核心执行逻辑，也就是编译器patch后的结果<br>
 核心是 调用协程的promise_type相关的方法</p>
 </blockquote>
-<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">/*</span> This function invoked by coroutine_handle&lt;&gt;::resume() <span class="pl-c">*/</span></span>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">/*</span> This function invoked by coroutine_handle&lt;&gt;::resume() <span class="pl-c">*/</span></span>
 <span class="pl-k">void</span> <span class="pl-en">__fibonacciResume</span>(__fibonacciFrame * __f)
 {
   <span class="pl-k">try</span> 
@@ -251,8 +236,8 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
   
   ;
 }</pre></div>
-<h3><a id="user-content-四销毁" class="anchor" aria-hidden="true" tabindex="-1" href="#四销毁"><span aria-hidden="true" class="octicon octicon-link"></span></a>四、销毁</h3>
-<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">/*</span> This function invoked by coroutine_handle&lt;&gt;::destroy() <span class="pl-c">*/</span></span>
+<h3>四、销毁</h3>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">/*</span> This function invoked by coroutine_handle&lt;&gt;::destroy() <span class="pl-c">*/</span></span>
 <span class="pl-k">void</span> <span class="pl-en">__fibonacciDestroy</span>(__fibonacciFrame * __f)
 {
   <span class="pl-c"><span class="pl-c">/*</span> destroy all variables with dtors <span class="pl-c">*/</span></span>
@@ -262,19 +247,18 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
   <span class="pl-k">operator</span> <span class="pl-smi">delete</span>(<span class="pl-k">static_cast</span>&lt;<span class="pl-k">void</span> *&gt;(__f));
 }</pre></div>
 <p><strong>从编译器生成的代码看，如果要自己实现协程，就需要自定义这个协程的promise_type</strong></p>
-<p><code>promise_type 必须包含一下成员函数</code></p>
-<div class="highlight highlight-source-c++"><pre>SOME_TYPE <span class="pl-en">get_return_object</span>();<span class="pl-c"><span class="pl-c">//</span>用于得到协程函数开始执行的返回值</span>
+<p><code class="notranslate">promise_type 必须包含一下成员函数</code></p>
+<div class="highlight highlight-source-c++"><pre class="notranslate">SOME_TYPE <span class="pl-en">get_return_object</span>();<span class="pl-c"><span class="pl-c">//</span>用于得到协程函数开始执行的返回值</span>
 SOME_TYPE <span class="pl-en">initial_suspend</span>();<span class="pl-c"><span class="pl-c">//</span>用于协程函数开始执行时执行暂停操作</span>
 <span class="pl-k">void</span> <span class="pl-en">return_void</span>();<span class="pl-c"><span class="pl-c">//</span>协程函数内部co_return终止返回void时执行的操作（和下面return_value同时只能有一个存在）</span>
 <span class="pl-k">void</span> <span class="pl-en">return_value</span>(SOME_TYPE);<span class="pl-c"><span class="pl-c">//</span>协程函数内部co_return终止返回非void值时执行的操作</span>
 SOME_TYPE <span class="pl-en">final_suspend</span>()<span class="pl-k">noexcept</span>;<span class="pl-c"><span class="pl-c">//</span>用于协程函数结束执行时执行暂停操作</span>
 <span class="pl-k">void</span> <span class="pl-en">unhandled_exception</span>();<span class="pl-c"><span class="pl-c">//</span>用于协程函数内部有未接住的异常时执行</span>
 <span class="pl-k">auto</span> <span class="pl-en">ield_value</span>();</pre></div>
-<h1><a id="user-content-实现一个协程" class="anchor" aria-hidden="true" tabindex="-1" href="#实现一个协程"><span aria-hidden="true" class="octicon octicon-link"></span></a>实现一个协程</h1>
-<h2><a id="user-content-定义-generator" class="anchor" aria-hidden="true" tabindex="-1" href="#定义-generator"><span aria-hidden="true" class="octicon octicon-link"></span></a>定义 <code>Generator</code>
-</h2>
+<h1>实现一个协程</h1>
+<h2>定义 <code class="notranslate">Generator</code></h2>
 <p><strong>约束范型的类型约束是无符号整数</strong></p>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
 <span class="pl-k">concept </span>integral = std::is_integral_v&lt;T&gt; &amp;&amp; !std::is_signed_v&lt;T&gt;;
 
 <span class="pl-k">template </span>&lt;integral T&gt;
@@ -299,9 +283,8 @@ SOME_TYPE <span class="pl-en">final_suspend</span>()<span class="pl-k">noexcept<
         handler.<span class="pl-c1">destroy</span>();
     }
 };</pre></div>
-<h2><a id="user-content-定义-promise_type" class="anchor" aria-hidden="true" tabindex="-1" href="#定义-promise_type"><span aria-hidden="true" class="octicon octicon-link"></span></a>定义 <code>promise_type</code>
-</h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;integral T&gt;
+<h2>定义 <code class="notranslate">promise_type</code></h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;integral T&gt;
 <span class="pl-k">struct</span> <span class="pl-en">FibPromise</span> {
     std::exception_ptr <span class="pl-c1">exception</span>;
 
@@ -332,8 +315,8 @@ SOME_TYPE <span class="pl-en">final_suspend</span>()<span class="pl-k">noexcept<
 
     T value;
 };</pre></div>
-<h2><a id="user-content-定义协程函数" class="anchor" aria-hidden="true" tabindex="-1" href="#定义协程函数"><span aria-hidden="true" class="octicon octicon-link"></span></a>定义协程函数</h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">inline</span> FibGenerator&lt;<span class="pl-c1">uint32_t</span>&gt; <span class="pl-en">fib</span>(<span class="pl-c1">uint32_t</span> n) {
+<h2>定义协程函数</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">inline</span> FibGenerator&lt;<span class="pl-c1">uint32_t</span>&gt; <span class="pl-en">fib</span>(<span class="pl-c1">uint32_t</span> n) {
     <span class="pl-c1">uint32_t</span> first = <span class="pl-c1">0</span>;
     <span class="pl-c1">uint32_t</span> second = <span class="pl-c1">1</span>;
     <span class="pl-k">while</span> (n--) {
@@ -352,13 +335,15 @@ SOME_TYPE <span class="pl-en">final_suspend</span>()<span class="pl-k">noexcept<
         std::clog &lt;&lt; gen.<span class="pl-c1">next</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
     }
 }</pre></div>
-<h1><a id="user-content-参考" class="anchor" aria-hidden="true" tabindex="-1" href="#参考"><span aria-hidden="true" class="octicon octicon-link"></span></a>参考</h1>
-
+<h1>参考</h1>
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
 </div>
-    <div id="footer">Copyright © <span id="year"></span> <a href="http://0x1042.github.io"> Daily </a><p>  <span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a></p>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a>
+</p>
 
 <script>
 if(""!=""){
@@ -402,7 +387,7 @@ function utterancesTheme(theme){
     iframe.contentWindow.postMessage(message, 'https://utteranc.es');
 }
 
-console.log("\n %c Gmeek v2.4 %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+console.log("\n %c Gmeek main %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
 </script>
 
 <script>

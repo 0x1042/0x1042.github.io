@@ -17,26 +17,14 @@
 
 </head>
 <style>
-body{
-    box-sizing: border-box;
-    min-width: 200px;
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 45px;
-    font-size: 16px;
-    font-family: sans-serif;
-    line-height: 1.25;
-}
-
-.avatar {transition: 0.8s;}
-.avatar:hover {transform: scale(1.15) rotate(360deg);}
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
 #header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
 #footer {margin-top:64px; text-align: center;font-size: small;}
 
 </style>
 
 <style>
-h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-size:40px;}
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
 .title-right{display:flex;margin:auto 0 0 auto;}
 .title-right .circle{padding: 14px 16px;margin-right:8px;}
 #postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
@@ -44,7 +32,10 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 #cmButton{height:48px;margin-top:48px;}
 #comments{margin-top:64px;}
 .g-emoji{font-size:24px;}
-@media (max-width: 767px) {body {padding: 8px;}}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
 </style>
 
 
@@ -52,9 +43,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 
 <body>
     <div id="header">
-<h1>
-    <a>虚拟机使用宿主机代理</a>
-</h1>
+<span class="postTitle">虚拟机使用宿主机代理</span>
 <div class="title-right">
 
     <a href="/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
@@ -79,38 +68,38 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<h1><a id="user-content-mac-虚拟机使用代理" class="anchor" aria-hidden="true" tabindex="-1" href="#mac-虚拟机使用代理"><span aria-hidden="true" class="octicon octicon-link"></span></a>mac 虚拟机使用代理</h1>
+<h1>mac 虚拟机使用代理</h1>
 <ul>
-<li>
-<a href="#mac-%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86">mac 虚拟机使用代理</a>
+<li><a href="#mac-%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86">mac 虚拟机使用代理</a>
 <ul>
-<li><a href="#%E5%AE%89%E8%A3%85gost">安装<code>gost</code></a></li>
+<li><a href="#%E5%AE%89%E8%A3%85gost">安装<code class="notranslate">gost</code></a></li>
 <li><a href="#%E6%89%A7%E8%A1%8Cgost">执行gost</a></li>
 <li><a href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%85%8D%E7%BD%AE">虚拟机配置</a></li>
 </ul>
 </li>
 </ul>
-<h2><a id="user-content-安装gost" class="anchor" aria-hidden="true" tabindex="-1" href="#安装gost"><span aria-hidden="true" class="octicon octicon-link"></span></a>安装<code>gost</code>
-</h2>
-<div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span> 安装gost </span>
+<h2>安装<code class="notranslate">gost</code></h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装gost </span>
 
 git clone https://github.com/go-gost/gost.git
 <span class="pl-c1">cd</span> gost/cmd/gost
 go build</pre></div>
-<h2><a id="user-content-执行gost" class="anchor" aria-hidden="true" tabindex="-1" href="#执行gost"><span aria-hidden="true" class="octicon octicon-link"></span></a>执行gost</h2>
-<div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span> 宿主机侧在8080端口的HTTP代理服务，使用本地的1087端口做为上级代理进行转发</span>
+<h2>执行gost</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 宿主机侧在8080端口的HTTP代理服务，使用本地的1087端口做为上级代理进行转发</span>
 ./gost -L http://:8080 -F http://127.0.0.1:1087</pre></div>
-<h2><a id="user-content-虚拟机配置" class="anchor" aria-hidden="true" tabindex="-1" href="#虚拟机配置"><span aria-hidden="true" class="octicon octicon-link"></span></a>虚拟机配置</h2>
-<div class="highlight highlight-source-shell"><pre><span class="pl-c"><span class="pl-c">#</span> shell</span>
+<h2>虚拟机配置</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> shell</span>
 <span class="pl-k">export</span> https_proxy=http://10.0.0.67:8080 http_proxy=http://10.0.0.67:8080
 <span class="pl-c"><span class="pl-c">#</span> git </span>
 git config --global http.proxy <span class="pl-s"><span class="pl-pds">'</span>http://10.0.0.67:8080<span class="pl-pds">'</span></span></pre></div>
-
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
 </div>
-    <div id="footer">Copyright © <span id="year"></span> <a href="http://0x1042.github.io"> Daily </a><p>  <span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a></p>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a>
+</p>
 
 <script>
 if(""!=""){
@@ -154,7 +143,7 @@ function utterancesTheme(theme){
     iframe.contentWindow.postMessage(message, 'https://utteranc.es');
 }
 
-console.log("\n %c Gmeek v2.4 %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+console.log("\n %c Gmeek main %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
 </script>
 
 <script>

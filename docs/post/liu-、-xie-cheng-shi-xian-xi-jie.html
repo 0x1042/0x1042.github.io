@@ -17,26 +17,14 @@
 
 </head>
 <style>
-body{
-    box-sizing: border-box;
-    min-width: 200px;
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 45px;
-    font-size: 16px;
-    font-family: sans-serif;
-    line-height: 1.25;
-}
-
-.avatar {transition: 0.8s;}
-.avatar:hover {transform: scale(1.15) rotate(360deg);}
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
 #header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
 #footer {margin-top:64px; text-align: center;font-size: small;}
 
 </style>
 
 <style>
-h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-size:40px;}
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
 .title-right{display:flex;margin:auto 0 0 auto;}
 .title-right .circle{padding: 14px 16px;margin-right:8px;}
 #postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
@@ -44,7 +32,10 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 #cmButton{height:48px;margin-top:48px;}
 #comments{margin-top:64px;}
 .g-emoji{font-size:24px;}
-@media (max-width: 767px) {body {padding: 8px;}}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
 </style>
 
 
@@ -52,9 +43,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 
 <body>
     <div id="header">
-<h1>
-    <a>六、协程实现细节</a>
-</h1>
+<span class="postTitle">六、协程实现细节</span>
 <div class="title-right">
 
     <a href="/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
@@ -79,42 +68,40 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<h1><a id="user-content-协程实现细节" class="anchor" aria-hidden="true" tabindex="-1" href="#协程实现细节"><span aria-hidden="true" class="octicon octicon-link"></span></a>协程实现细节</h1>
+<h1>协程实现细节</h1>
 <ul>
 <li><a href="#%E5%8D%8F%E7%A8%8B%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82">协程实现细节</a></li>
-<li>
-<a href="#%E5%8D%8F%E7%A8%8B%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">协程的生命周期</a>
+<li><a href="#%E5%8D%8F%E7%A8%8B%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">协程的生命周期</a>
 <ul>
-<li><a href="#promise_type"><code>promise_type</code></a></li>
+<li><a href="#promise_type"><code class="notranslate">promise_type</code></a></li>
 <li><a href="#%E5%8D%8F%E7%A8%8B%E7%B1%BB">协程类</a></li>
-<li><a href="#coroutine_handle"><code>coroutine_handle</code></a></li>
+<li><a href="#coroutine_handle"><code class="notranslate">coroutine_handle</code></a></li>
 </ul>
 </li>
-<li>
-<a href="#%E5%8D%8F%E7%A8%8B%E7%9A%84%E8%B0%83%E5%BA%A6">协程的调度</a>
+<li><a href="#%E5%8D%8F%E7%A8%8B%E7%9A%84%E8%B0%83%E5%BA%A6">协程的调度</a>
 <ul>
-<li><a href="#co_await"><code>co_await</code></a></li>
-<li><a href="#co_yield"><code>co_yield</code></a></li>
+<li><a href="#co_await"><code class="notranslate">co_await</code></a></li>
+<li><a href="#co_yield"><code class="notranslate">co_yield</code></a></li>
 </ul>
 </li>
 </ul>
-<h1><a id="user-content-协程的生命周期" class="anchor" aria-hidden="true" tabindex="-1" href="#协程的生命周期"><span aria-hidden="true" class="octicon octicon-link"></span></a>协程的生命周期</h1>
+<h1>协程的生命周期</h1>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/f155fdff-fff4-49eb-88cb-500b55bd63ea"><img src="https://github.com/0x1042/0x1042.github.io/assets/7525242/f155fdff-fff4-49eb-88cb-500b55bd63ea" alt="call_routine" style="max-width: 100%;"></a></p>
 <ol>
-<li>调用函数在<strong>堆</strong>上，创建协程帧(<code>coroutine_frame</code>)，里面包含了协程的<code>promise_type</code>,协程的实参，当前保存的局部变量，协程内部状态如挂起点. 由编译器实现</li>
-<li>创建协程帧之后，会返回给调用者<code>coroutine_handle</code>,也叫协程句柄，是控制协程的唯一入口，可以被传递到其他地方</li>
+<li>调用函数在<strong>堆</strong>上，创建协程帧(<code class="notranslate">coroutine_frame</code>)，里面包含了协程的<code class="notranslate">promise_type</code>,协程的实参，当前保存的局部变量，协程内部状态如挂起点. 由编译器实现</li>
+<li>创建协程帧之后，会返回给调用者<code class="notranslate">coroutine_handle</code>,也叫协程句柄，是控制协程的唯一入口，可以被传递到其他地方</li>
 <li>调用被调用协程，协程开始执行</li>
-<li>被调用协程执行到某个特定点，通过<code>co_await/co_yield</code> 将当前协程休眠，调用者恢复原本的执行流程继续执行剩余代码</li>
-<li>协程恢复者（比如另一个线程）通过<code>coroutine_handle</code>的恢复函数<code>resume</code> 恢复协程执行</li>
-<li>协程在恢复者上继续执行，结束后通过 <code>coroutine_handle</code> 销毁协程帧。</li>
+<li>被调用协程执行到某个特定点，通过<code class="notranslate">co_await/co_yield</code> 将当前协程休眠，调用者恢复原本的执行流程继续执行剩余代码</li>
+<li>协程恢复者（比如另一个线程）通过<code class="notranslate">coroutine_handle</code>的恢复函数<code class="notranslate">resume</code> 恢复协程执行</li>
+<li>协程在恢复者上继续执行，结束后通过 <code class="notranslate">coroutine_handle</code> 销毁协程帧。</li>
 </ol>
 <p>** 这里的协程并不是常规函数在栈上执行，他们的状态在堆上（一开始创建的协程帧）**</p>
-<h2><a id="user-content-promise_type" class="anchor" aria-hidden="true" tabindex="-1" href="#promise_type"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>promise_type</code></h2>
+<h2><code class="notranslate">promise_type</code></h2>
 <blockquote>
 <p>与标准库的promise 不是一回事</p>
 </blockquote>
-<p>按照<code>concept</code>的概念，约束如下</p>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> P, <span class="pl-k">typename</span> V&gt;
+<p>按照<code class="notranslate">concept</code>的概念，约束如下</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> P, <span class="pl-k">typename</span> V&gt;
 <span class="pl-k">concept </span>PromiseType = requires(P p) {
     { p.<span class="pl-c1">get_return_object</span>() } -&gt; Coroutine&lt;P&gt;;
     { p.<span class="pl-c1">initial_suspend</span>() } -&gt; Awaiter; <span class="pl-c"><span class="pl-c">//</span> 第一个挂起点</span>
@@ -126,7 +113,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
     <span class="pl-c1">requires</span>(
         <span class="pl-c1">requires</span>(V v) { p.<span class="pl-c1">return_value</span>(v); } || requires { p.<span class="pl-c1">return_void</span>(); });
 };</pre></div>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">struct</span> <span class="pl-en">PromiseType</span> {
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">struct</span> <span class="pl-en">PromiseType</span> {
     <span class="pl-c"><span class="pl-c">//</span> 第一个挂起点</span>
     <span class="pl-en">initial_suspend</span>()
     <span class="pl-c"><span class="pl-c">//</span> 最后一个挂起点</span>
@@ -141,11 +128,11 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
     <span class="pl-c"><span class="pl-c">//</span> 如果coroutine里面有co_yield</span>
     <span class="pl-en">yield_value</span>()
 }<span class="pl-ii"></span></pre></div>
-<h2><a id="user-content-协程类" class="anchor" aria-hidden="true" tabindex="-1" href="#协程类"><span aria-hidden="true" class="octicon octicon-link"></span></a>协程类</h2>
+<h2>协程类</h2>
 <blockquote>
 <p>一个协程类，必须满足一下约束</p>
 </blockquote>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">struct</span> <span class="pl-en">Coroutine</span> {
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">struct</span> <span class="pl-en">Coroutine</span> {
     <span class="pl-c"><span class="pl-c">//</span> 必须满足上述的约束 </span>
     <span class="pl-k">typename</span> promise_type pt;
     <span class="pl-c"><span class="pl-c">//</span> 外部操作协程时使用 可以挂起/恢复协程</span>
@@ -154,39 +141,41 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
     <span class="pl-k">typename</span> coroutine_state cs;
 };
 </pre></div>
-<h2><a id="user-content-coroutine_handle" class="anchor" aria-hidden="true" tabindex="-1" href="#coroutine_handle"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>coroutine_handle</code></h2>
-<h1><a id="user-content-协程的调度" class="anchor" aria-hidden="true" tabindex="-1" href="#协程的调度"><span aria-hidden="true" class="octicon octicon-link"></span></a>协程的调度</h1>
-<h2><a id="user-content-co_await" class="anchor" aria-hidden="true" tabindex="-1" href="#co_await"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>co_await</code></h2>
+<h2><code class="notranslate">coroutine_handle</code></h2>
+<h1>协程的调度</h1>
+<h2><code class="notranslate">co_await</code></h2>
 <blockquote>
-<p><code>co_await</code> / <code>co_yield</code></p>
+<p><code class="notranslate">co_await</code> / <code class="notranslate">co_yield</code></p>
 </blockquote>
-<p><code>co_await</code> 操作符用于休眠协程，并将控制权返还给协程调用者.</p>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">co_await</span> expr;</pre></div>
-<p><code>expr</code>(表达式)需要满足的条件如下:</p>
+<p><code class="notranslate">co_await</code> 操作符用于休眠协程，并将控制权返还给协程调用者.</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">co_await</span> expr;</pre></div>
+<p><code class="notranslate">expr</code>(表达式)需要满足的条件如下:</p>
 <ol>
-<li>表达式类型定义了 <code>co_await</code>操作符重载</li>
-<li>可以通过当前协程的 <code>promise_type::await_transform</code> 转换为定义了 <code>co_await</code> 操作符的类型</li>
-<li>只能出现在函数体的执行表达式中，不能出现在异常处理、声明语句、简单声明表达式、默认参数和带 <code>static</code> 和 <code>thread_local</code> 的局部变量定义中</li>
+<li>表达式类型定义了 <code class="notranslate">co_await</code>操作符重载</li>
+<li>可以通过当前协程的 <code class="notranslate">promise_type::await_transform</code> 转换为定义了 <code class="notranslate">co_await</code> 操作符的类型</li>
+<li>只能出现在函数体的执行表达式中，不能出现在异常处理、声明语句、简单声明表达式、默认参数和带 <code class="notranslate">static</code> 和 <code class="notranslate">thread_local</code> 的局部变量定义中</li>
 </ol>
 <p><strong>表达式的转换过程</strong></p>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/d9d9d23a-0a5f-4e64-8204-0a9e1090d101"><img src="https://github.com/0x1042/0x1042.github.io/assets/7525242/d9d9d23a-0a5f-4e64-8204-0a9e1090d101" alt="co_await" style="max-width: 100%;"></a></p>
-<p>也就是<code>co_await expr</code> 最终产生一个 <code>Awaiter</code>对象，<code>Awaiter</code>对象的执行逻辑如下</p>
+<p>也就是<code class="notranslate">co_await expr</code> 最终产生一个 <code class="notranslate">Awaiter</code>对象，<code class="notranslate">Awaiter</code>对象的执行逻辑如下</p>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/4cb5c8b0-5e92-4569-8cd3-6b423cf2a515"><img src="https://github.com/0x1042/0x1042.github.io/assets/7525242/4cb5c8b0-5e92-4569-8cd3-6b423cf2a515" alt="awaiter" style="max-width: 100%;"></a></p>
-<h2><a id="user-content-co_yield" class="anchor" aria-hidden="true" tabindex="-1" href="#co_yield"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>co_yield</code></h2>
+<h2><code class="notranslate">co_yield</code></h2>
 <blockquote>
-<p><code>co_await</code> 的语法糖, 用于生成器场景： 通过生成或者其他数据源来生成某种序列</p>
+<p><code class="notranslate">co_await</code> 的语法糖, 用于生成器场景： 通过生成或者其他数据源来生成某种序列</p>
 </blockquote>
-<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span> 这两个是相等的</span>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 这两个是相等的</span>
 <span class="pl-k">co_yield</span> expr;
 
 <span class="pl-k">co_await</span> promise.yield_value(expr);
 </pre></div>
-
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
 </div>
-    <div id="footer">Copyright © <span id="year"></span> <a href="http://0x1042.github.io"> Daily </a><p>  <span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a></p>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a>
+</p>
 
 <script>
 if(""!=""){
@@ -230,7 +219,7 @@ function utterancesTheme(theme){
     iframe.contentWindow.postMessage(message, 'https://utteranc.es');
 }
 
-console.log("\n %c Gmeek v2.4 %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+console.log("\n %c Gmeek main %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
 </script>
 
 <script>

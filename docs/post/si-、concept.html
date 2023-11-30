@@ -17,26 +17,14 @@
 
 </head>
 <style>
-body{
-    box-sizing: border-box;
-    min-width: 200px;
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 45px;
-    font-size: 16px;
-    font-family: sans-serif;
-    line-height: 1.25;
-}
-
-.avatar {transition: 0.8s;}
-.avatar:hover {transform: scale(1.15) rotate(360deg);}
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
 #header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
 #footer {margin-top:64px; text-align: center;font-size: small;}
 
 </style>
 
 <style>
-h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-size:40px;}
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
 .title-right{display:flex;margin:auto 0 0 auto;}
 .title-right .circle{padding: 14px 16px;margin-right:8px;}
 #postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
@@ -44,7 +32,10 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 #cmButton{height:48px;margin-top:48px;}
 #comments{margin-top:64px;}
 .g-emoji{font-size:24px;}
-@media (max-width: 767px) {body {padding: 8px;}}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
 </style>
 
 
@@ -52,9 +43,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 
 <body>
     <div id="header">
-<h1>
-    <a>四、concept</a>
-</h1>
+<span class="postTitle">四、concept</span>
 <div class="title-right">
 
     <a href="/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
@@ -79,24 +68,23 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<h1><a id="user-content-concept" class="anchor" aria-hidden="true" tabindex="-1" href="#concept"><span aria-hidden="true" class="octicon octicon-link"></span></a>concept</h1>
+<h1>concept</h1>
 <ul>
-<li>
-<a href="#concept">concept</a>
+<li><a href="#concept">concept</a>
 <ul>
 <li><a href="#%E5%9F%BA%E6%9C%AC%E5%AE%9A%E4%B9%89%E5%92%8C%E4%BD%BF%E7%94%A8">基本定义和使用</a></li>
 <li><a href="#%E7%BA%A6%E6%9D%9F%E8%A1%A8%E8%BE%BE%E5%BC%8F">约束表达式</a></li>
-<li><a href="#requires-%E8%A1%A8%E8%BE%BE%E5%BC%8F"><code>requires</code> 表达式</a></li>
-<li><a href="#requires-%E5%AD%90%E5%8F%A5"><code>requires</code> 子句</a></li>
-<li><a href="#concepts-header"><code>concepts</code> header</a></li>
+<li><a href="#requires-%E8%A1%A8%E8%BE%BE%E5%BC%8F"><code class="notranslate">requires</code> 表达式</a></li>
+<li><a href="#requires-%E5%AD%90%E5%8F%A5"><code class="notranslate">requires</code> 子句</a></li>
+<li><a href="#concepts-header"><code class="notranslate">concepts</code> header</a></li>
 </ul>
 </li>
 </ul>
-<h2><a id="user-content-基本定义和使用" class="anchor" aria-hidden="true" tabindex="-1" href="#基本定义和使用"><span aria-hidden="true" class="octicon octicon-link"></span></a>基本定义和使用</h2>
+<h2>基本定义和使用</h2>
 <ul>
 <li>基本定义</li>
 </ul>
-<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span> 语法格式</span>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 语法格式</span>
 <span class="pl-c"><span class="pl-c">//</span> template&lt;typename T&gt;</span>
 <span class="pl-c"><span class="pl-c">//</span> concept concept_name = constraint-expression(约束表达式);</span>
 
@@ -113,10 +101,9 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <span class="pl-k">concept </span>Derived = std::is_base_of_v&lt;U, T&gt;;
 </pre></div>
 <ul>
-<li>基本使用 <strong>使用<code>concept_name</code> 替换 <code>typename</code></strong>
-</li>
+<li>基本使用 <strong>使用<code class="notranslate">concept_name</code> 替换 <code class="notranslate">typename</code></strong></li>
 </ul>
-<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span> 定义 </span>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 定义 </span>
 <span class="pl-k">class</span> <span class="pl-en">Base</span> {
 <span class="pl-k">public:</span>
     [[nodiscard]] <span class="pl-k">auto</span> <span class="pl-en">getValue</span>() <span class="pl-k">const</span> -&gt; int32_t { <span class="pl-k">return</span> value; }
@@ -146,11 +133,11 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 
     [[nodiscard]] <span class="pl-k">auto</span> <span class="pl-en">getValue</span>() <span class="pl-k">const</span> -&gt; int32_t { <span class="pl-k">return</span> <span class="pl-c1">1024</span>; }
 };</pre></div>
-<h2><a id="user-content-约束表达式" class="anchor" aria-hidden="true" tabindex="-1" href="#约束表达式"><span aria-hidden="true" class="octicon octicon-link"></span></a>约束表达式</h2>
+<h2>约束表达式</h2>
 <ul>
 <li>合取式 conjunctions，逻辑与</li>
 </ul>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
 <span class="pl-k">concept </span>integral = std::is_integral_v&lt;T&gt;;
 
 <span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
@@ -159,7 +146,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <ul>
 <li>析取式 disjunctions，逻辑或</li>
 </ul>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
 <span class="pl-k">concept </span>integral = std::is_integral_v&lt;T&gt;;
 
 <span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
@@ -171,17 +158,16 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <ul>
 <li>原子约束 atomic constraints</li>
 </ul>
-<div class="highlight highlight-source-c++"><pre></pre></div>
-<h2><a id="user-content-requires-表达式" class="anchor" aria-hidden="true" tabindex="-1" href="#requires-表达式"><span aria-hidden="true" class="octicon octicon-link"></span></a>
-<code>requires</code> 表达式</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"></pre></div>
+<h2><code class="notranslate">requires</code> 表达式</h2>
 <blockquote>
-<p>除了使用<code>type traits</code> 定义概念之外，也可以使用 <code>requires</code> 表达式来表达对模板参数及其对象的特征要求
+<p>除了使用<code class="notranslate">type traits</code> 定义概念之外，也可以使用 <code class="notranslate">requires</code> 表达式来表达对模板参数及其对象的特征要求<br>
 成员函数、自由函数、关联类型等</p>
 </blockquote>
 <ul>
 <li>基本语法</li>
 </ul>
-<div class="highlight highlight-source-c++"><pre><span class="pl-en">requires</span>(可选参数列表) {
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-en">requires</span>(可选参数列表) {
     表达式<span class="pl-c1">1</span>
     表达式<span class="pl-c1">2</span>
 }
@@ -189,7 +175,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <ul>
 <li>基本约束</li>
 </ul>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
 <span class="pl-k">concept </span>Machine = requires(T t)
 {
     <span class="pl-c"><span class="pl-c">//</span> 要求存在同名的成员函数</span>
@@ -218,7 +204,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <ul>
 <li>类型约束</li>
 </ul>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
 <span class="pl-k">concept </span>C2 = requires
 {
     <span class="pl-c"><span class="pl-c">//</span> 要求存在类型成员 type</span>
@@ -228,10 +214,9 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
     <span class="pl-k">typename</span> std::vector&lt;T&gt;;
 };</pre></div>
 <ul>
-<li>组合约束 <strong>需要大括号括起来</strong>
-</li>
+<li>组合约束 <strong>需要大括号括起来</strong></li>
 </ul>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
 <span class="pl-k">concept </span>C3 = requires(T t1, T t2) {
     <span class="pl-c"><span class="pl-c">//</span> 表达式不能有异常</span>
     { t1 = <span class="pl-c1">std::move</span>(t2) } <span class="pl-k">noexcept</span>;
@@ -246,12 +231,11 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <ul>
 <li>嵌套约束</li>
 </ul>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
 <span class="pl-k">concept </span>C3 = requires {
     requires <span class="pl-smi">sizeof</span>(T) &gt; <span class="pl-c1">4</span>;
 };</pre></div>
-<h2><a id="user-content-requires-子句" class="anchor" aria-hidden="true" tabindex="-1" href="#requires-子句"><span aria-hidden="true" class="octicon octicon-link"></span></a>
-<code>requires</code> 子句</h2>
+<h2><code class="notranslate">requires</code> 子句</h2>
 <blockquote>
 <p>用于判断所约束的类型在上下文中 是否可行</p>
 </blockquote>
@@ -261,7 +245,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <li>模板类</li>
 <li>模板类的成员函数</li>
 </ol>
-<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span> 这里是 require 子句(区别与require 表达式)</span>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 这里是 require 子句(区别与require 表达式)</span>
 <span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
     requires std::is_integral_v&lt;T&gt;
 <span class="pl-k">auto</span> <span class="pl-en">add</span>(T t1, T t2) -&gt; T {
@@ -273,9 +257,8 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <span class="pl-c"><span class="pl-c">//</span>  note: candidate template ignored: constraints not satisfied [with T = double]</span>
 <span class="pl-c"><span class="pl-c">//</span>  note: because 'std::is_integral_v&lt;double&gt;' evaluated to false</span>
 <span class="pl-c"><span class="pl-c">//</span> add(1.2, 2.2);</span></pre></div>
-<h2><a id="user-content-concepts-header" class="anchor" aria-hidden="true" tabindex="-1" href="#concepts-header"><span aria-hidden="true" class="octicon octicon-link"></span></a>
-<code>concepts</code> header</h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span> 想同类</span>
+<h2><code class="notranslate">concepts</code> header</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 想同类</span>
 <span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T, <span class="pl-k">typename</span> U&gt;
 <span class="pl-k">concept </span>same_as = std::is_same_v&lt;T, U&gt;;
 
@@ -287,12 +270,14 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> F, <span class="pl-k">typename</span> T&gt;
 <span class="pl-k">concept </span>convertible_to = std::is_convertible_v&lt;F, T&gt; &amp;&amp; requires(std::<span class="pl-c1">add_rvalue_reference_t</span>&lt;F&gt; (&amp;f)()) { <span class="pl-k">static_cast</span>&lt;T&gt;(<span class="pl-c1">f</span>()); };
 </pre></div>
-
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
 </div>
-    <div id="footer">Copyright © <span id="year"></span> <a href="http://0x1042.github.io"> Daily </a><p>  <span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a></p>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a>
+</p>
 
 <script>
 if(""!=""){
@@ -336,7 +321,7 @@ function utterancesTheme(theme){
     iframe.contentWindow.postMessage(message, 'https://utteranc.es');
 }
 
-console.log("\n %c Gmeek v2.4 %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+console.log("\n %c Gmeek main %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
 </script>
 
 <script>

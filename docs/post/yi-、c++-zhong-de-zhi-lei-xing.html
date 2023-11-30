@@ -17,26 +17,14 @@
 
 </head>
 <style>
-body{
-    box-sizing: border-box;
-    min-width: 200px;
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 45px;
-    font-size: 16px;
-    font-family: sans-serif;
-    line-height: 1.25;
-}
-
-.avatar {transition: 0.8s;}
-.avatar:hover {transform: scale(1.15) rotate(360deg);}
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
 #header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
 #footer {margin-top:64px; text-align: center;font-size: small;}
 
 </style>
 
 <style>
-h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-size:40px;}
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
 .title-right{display:flex;margin:auto 0 0 auto;}
 .title-right .circle{padding: 14px 16px;margin-right:8px;}
 #postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
@@ -44,7 +32,10 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 #cmButton{height:48px;margin-top:48px;}
 #comments{margin-top:64px;}
 .g-emoji{font-size:24px;}
-@media (max-width: 767px) {body {padding: 8px;}}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
 </style>
 
 
@@ -52,9 +43,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 
 <body>
     <div id="header">
-<h1>
-    <a>一、c++中的值类型</a>
-</h1>
+<span class="postTitle">一、c++中的值类型</span>
 <div class="title-right">
 
     <a href="/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
@@ -79,10 +68,9 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<h1><a id="user-content-值类别" class="anchor" aria-hidden="true" tabindex="-1" href="#值类别"><span aria-hidden="true" class="octicon octicon-link"></span></a>值类别</h1>
+<h1>值类别</h1>
 <ul>
-<li>
-<a href="#%E5%80%BC%E7%B1%BB%E5%88%AB">值类别</a>
+<li><a href="#%E5%80%BC%E7%B1%BB%E5%88%AB">值类别</a>
 <ul>
 <li><a href="#%E5%A6%82%E4%BD%95%E5%8C%BA%E5%88%86%E5%B7%A6%E5%80%BC%E5%92%8C%E5%8F%B3%E5%80%BC">如何区分左值和右值</a></li>
 <li><a href="#%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%8C%B9%E9%85%8D">函数参数匹配</a></li>
@@ -93,8 +81,8 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </ul>
 </li>
 </ul>
-<h2><a id="user-content-如何区分左值和右值" class="anchor" aria-hidden="true" tabindex="-1" href="#如何区分左值和右值"><span aria-hidden="true" class="octicon octicon-link"></span></a>如何区分左值和右值</h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">void</span> <span class="pl-en">log</span>(std::string_view message, std::source_location location) {
+<h2>如何区分左值和右值</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">void</span> <span class="pl-en">log</span>(std::string_view message, std::source_location location) {
     std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>file: <span class="pl-pds">"</span></span> &lt;&lt; location.<span class="pl-c1">file_name</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span>(<span class="pl-pds">'</span></span> &lt;&lt; location.<span class="pl-c1">line</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span>:<span class="pl-pds">'</span></span> &lt;&lt; location.<span class="pl-c1">column</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>) `<span class="pl-pds">"</span></span> &lt;&lt; location.<span class="pl-c1">function_name</span>()
               &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>`: <span class="pl-pds">"</span></span> &lt;&lt; message &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
 }
@@ -106,15 +94,15 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <span class="pl-k">void</span> <span class="pl-en">foo</span>(<span class="pl-k">int</span> &amp;&amp; <span class="pl-c"><span class="pl-c">/*</span>val<span class="pl-c">*/</span></span>) {
     <span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>foo2<span class="pl-pds">"</span></span>);
 }</pre></div>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">int</span> &amp;&amp; value = <span class="pl-c1">1024</span>;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">int</span> &amp;&amp; value = <span class="pl-c1">1024</span>;
 <span class="pl-en">foo</span>(value); <span class="pl-c"><span class="pl-c">//</span> 调用的是 void foo(int &amp;)</span></pre></div>
 <ul>
 <li>匿名的临时对象是右值，具名的右值引用对象是左值</li>
 <li>如果表达式可以取地址，则为左值表达式，否则，为右值表达式</li>
 <li>表达式 value 是具名的右值引用对象，value 也可以取地址，所以 表达式value 是一个左值，匹配第一个函数</li>
 </ul>
-<h2><a id="user-content-函数参数匹配" class="anchor" aria-hidden="true" tabindex="-1" href="#函数参数匹配"><span aria-hidden="true" class="octicon octicon-link"></span></a>函数参数匹配</h2>
-<table>
+<h2>函数参数匹配</h2>
+<table role="table">
 <thead>
 <tr>
 <th>参数类型</th>
@@ -140,17 +128,14 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </tr>
 </tbody>
 </table>
-<h2><a id="user-content-值类型" class="anchor" aria-hidden="true" tabindex="-1" href="#值类型"><span aria-hidden="true" class="octicon octicon-link"></span></a>值类型</h2>
+<h2>值类型</h2>
 <ul>
 <li>泛左值： 左值 和 将亡值</li>
 <li>右值：纯右值 和 将亡值</li>
-<li>
-<code>static_cast&lt;Value&amp;&amp;&gt;(value)</code> 是将亡值，常见的将亡值是 函数的返回值
-<a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/0fae6f7f-bce8-41b6-ad2d-45cc312ec7b4"><img src="https://github.com/0x1042/0x1042.github.io/assets/7525242/0fae6f7f-bce8-41b6-ad2d-45cc312ec7b4" alt="types" style="max-width: 100%;"></a>
-</li>
+<li><code class="notranslate">static_cast&lt;Value&amp;&amp;&gt;(value)</code> 是将亡值，常见的将亡值是 函数的返回值<br>
+<a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/0fae6f7f-bce8-41b6-ad2d-45cc312ec7b4"><img src="https://github.com/0x1042/0x1042.github.io/assets/7525242/0fae6f7f-bce8-41b6-ad2d-45cc312ec7b4" alt="types" style="max-width: 100%;"></a></li>
 </ul>
-<h2><a id="user-content-万能引用-universal-reference" class="anchor" aria-hidden="true" tabindex="-1" href="#万能引用-universal-reference"><span aria-hidden="true" class="octicon octicon-link"></span></a>万能引用 <strong>universal reference</strong>
-</h2>
+<h2>万能引用 <strong>universal reference</strong></h2>
 <blockquote>
 <p>如何区分 Arg&amp;&amp; 是右值引用还是万能引用？</p>
 </blockquote>
@@ -158,38 +143,32 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <li><strong>如果 Arg&amp;&amp; 是模板参数或者 auto，则是万能引用，「既可以接受左值，也可以接受右值」，否则为右值引用</strong></li>
 <li><strong>万能引用在类型推导语境下，可以保留类型的cv限定符「const和volatile」和值类别</strong></li>
 </ul>
-<h2><a id="user-content-引用折叠-reference-collapsing" class="anchor" aria-hidden="true" tabindex="-1" href="#引用折叠-reference-collapsing"><span aria-hidden="true" class="octicon octicon-link"></span></a>引用折叠 <strong>reference collapsing</strong>
-</h2>
+<h2>引用折叠 <strong>reference collapsing</strong></h2>
 <blockquote>
 <p>为了解决 reference to reference 的问题</p>
 </blockquote>
 <p>c++ 中不允许指向引用的引用，对于指向引用的引用会被简化，推导规则如下</p>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
 <span class="pl-k">void</span> <span class="pl-en">Example</span>(T &amp;&amp; input) {}</pre></div>
 <ul>
-<li>函数形参是左值，T&amp;，传入的实参是左值，即input 是 <code>T&amp; &amp;</code>
-</li>
-<li>函数形参是左值，T&amp;，传入的实参是右值，即input 是 <code>T&amp; &amp;&amp;</code>
-</li>
-<li>函数形参是右值，T&amp;&amp;，传入的实参是左值，即input 是 <code>T&amp;&amp; &amp;</code>
-</li>
-<li>函数形参是右值，T&amp;&amp;，传入的实参是右值，即input 是 <code>T&amp;&amp; &amp;&amp;</code>
-</li>
+<li>函数形参是左值，T&amp;，传入的实参是左值，即input 是 <code class="notranslate">T&amp; &amp;</code></li>
+<li>函数形参是左值，T&amp;，传入的实参是右值，即input 是 <code class="notranslate">T&amp; &amp;&amp;</code></li>
+<li>函数形参是右值，T&amp;&amp;，传入的实参是左值，即input 是 <code class="notranslate">T&amp;&amp; &amp;</code></li>
+<li>函数形参是右值，T&amp;&amp;，传入的实参是右值，即input 是 <code class="notranslate">T&amp;&amp; &amp;&amp;</code></li>
 </ul>
-<p>推导规则是： <strong>仅当两个都是右值引用时，推导为右值，其余情况为左值</strong>，也就是 <code>T&amp;&amp; &amp;&amp;</code>为右值，其他情况为左值</p>
-<h2><a id="user-content-完美转发-perfect-forward" class="anchor" aria-hidden="true" tabindex="-1" href="#完美转发-perfect-forward"><span aria-hidden="true" class="octicon octicon-link"></span></a>完美转发 <strong>perfect forward</strong>
-</h2>
+<p>推导规则是： <strong>仅当两个都是右值引用时，推导为右值，其余情况为左值</strong>，也就是 <code class="notranslate">T&amp;&amp; &amp;&amp;</code>为右值，其他情况为左值</p>
+<h2>完美转发 <strong>perfect forward</strong></h2>
 <blockquote>
 <p>在传参的过程中，保留参数的原始类型</p>
 </blockquote>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">void</span> <span class="pl-en">foo</span>(<span class="pl-k">int</span> &amp; val);
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">void</span> <span class="pl-en">foo</span>(<span class="pl-k">int</span> &amp; val);
 <span class="pl-k">void</span> <span class="pl-en">foo</span>(<span class="pl-k">int</span> &amp;&amp; val);
 
 <span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt; <span class="pl-k">void</span> <span class="pl-en">call_foo</span>(T &amp;&amp; t) {
     <span class="pl-c1">foo</span>(std::forward&lt;T&gt;(t));
 }</pre></div>
 <p>如何实现的？</p>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">class</span> <span class="pl-en">_Tp</span>&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">class</span> <span class="pl-en">_Tp</span>&gt;
 _LIBCPP_NODISCARD_EXT <span class="pl-k">inline</span> _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR _Tp&amp;&amp;
 <span class="pl-en">forward</span>(_LIBCPP_LIFETIMEBOUND <span class="pl-c1">__libcpp_remove_reference_t</span>&lt;_Tp&gt;&amp; <span class="pl-c1">__t</span>) _NOEXCEPT {
   <span class="pl-k">return</span> <span class="pl-k">static_cast</span>&lt;_Tp&amp;&amp;&gt;(<span class="pl-c1">__t</span>);
@@ -202,15 +181,17 @@ _LIBCPP_NODISCARD_EXT <span class="pl-k">inline</span> _LIBCPP_HIDE_FROM_ABI _LI
   <span class="pl-k">return</span> <span class="pl-k">static_cast</span>&lt;_Tp&amp;&amp;&gt;(<span class="pl-c1">__t</span>);
 }</pre></div>
 <ul>
-<li>Tp 是左值， <code>static_cast&lt;_Tp&amp;&amp;&gt;(__t)</code> 后是 T&amp; &amp;&amp;，按照引用折叠规则，<code>T&amp; &amp;&amp; -&gt; T&amp;</code>, Tp是左值</li>
-<li>Tp 是右值， <code>static_cast&lt;_Tp&amp;&amp;&gt;(__t)</code> 后是 T&amp;&amp; &amp;&amp;，按照引用折叠规则，<code>T&amp;&amp; &amp;&amp; -&gt; T&amp;&amp;</code>, Tp是右值</li>
+<li>Tp 是左值， <code class="notranslate">static_cast&lt;_Tp&amp;&amp;&gt;(__t)</code> 后是 T&amp; &amp;&amp;，按照引用折叠规则，<code class="notranslate">T&amp; &amp;&amp; -&gt; T&amp;</code>, Tp是左值</li>
+<li>Tp 是右值， <code class="notranslate">static_cast&lt;_Tp&amp;&amp;&gt;(__t)</code> 后是 T&amp;&amp; &amp;&amp;，按照引用折叠规则，<code class="notranslate">T&amp;&amp; &amp;&amp; -&gt; T&amp;&amp;</code>, Tp是右值</li>
 </ul>
-
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
 </div>
-    <div id="footer">Copyright © <span id="year"></span> <a href="http://0x1042.github.io"> Daily </a><p>  <span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a></p>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a>
+</p>
 
 <script>
 if(""!=""){
@@ -254,7 +235,7 @@ function utterancesTheme(theme){
     iframe.contentWindow.postMessage(message, 'https://utteranc.es');
 }
 
-console.log("\n %c Gmeek v2.4 %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+console.log("\n %c Gmeek main %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
 </script>
 
 <script>

@@ -17,26 +17,14 @@
 
 </head>
 <style>
-body{
-    box-sizing: border-box;
-    min-width: 200px;
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 45px;
-    font-size: 16px;
-    font-family: sans-serif;
-    line-height: 1.25;
-}
-
-.avatar {transition: 0.8s;}
-.avatar:hover {transform: scale(1.15) rotate(360deg);}
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
 #header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
 #footer {margin-top:64px; text-align: center;font-size: small;}
 
 </style>
 
 <style>
-h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-size:40px;}
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
 .title-right{display:flex;margin:auto 0 0 auto;}
 .title-right .circle{padding: 14px 16px;margin-right:8px;}
 #postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
@@ -44,7 +32,10 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 #cmButton{height:48px;margin-top:48px;}
 #comments{margin-top:64px;}
 .g-emoji{font-size:24px;}
-@media (max-width: 767px) {body {padding: 8px;}}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
 </style>
 
 
@@ -52,9 +43,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 
 <body>
     <div id="header">
-<h1>
-    <a>七、`constexpr` </a>
-</h1>
+<span class="postTitle">七、`constexpr` </span>
 <div class="title-right">
 
     <a href="/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
@@ -79,55 +68,51 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<h1><a id="user-content-constexpr-元编程" class="anchor" aria-hidden="true" tabindex="-1" href="#constexpr-元编程"><span aria-hidden="true" class="octicon octicon-link"></span></a>constexpr 元编程</h1>
+<h1>constexpr 元编程</h1>
 <ul>
-<li>
-<a href="#constexpr-%E5%85%83%E7%BC%96%E7%A8%8B">constexpr 元编程</a>
+<li><a href="#constexpr-%E5%85%83%E7%BC%96%E7%A8%8B">constexpr 元编程</a>
 <ul>
-<li><a href="#constexpr-%E5%8F%98%E9%87%8F"><code>constexpr</code> 变量</a></li>
-<li><a href="#constinit-%E5%88%9D%E5%A7%8B%E5%8C%96"><code>constinit</code> 初始化</a></li>
-<li><a href="#constexpr-%E5%87%BD%E6%95%B0"><code>constexpr</code> 函数</a></li>
-<li><a href="#consteval-%E5%87%BD%E6%95%B0"><code>consteval</code> 函数</a></li>
+<li><a href="#constexpr-%E5%8F%98%E9%87%8F"><code class="notranslate">constexpr</code> 变量</a></li>
+<li><a href="#constinit-%E5%88%9D%E5%A7%8B%E5%8C%96"><code class="notranslate">constinit</code> 初始化</a></li>
+<li><a href="#constexpr-%E5%87%BD%E6%95%B0"><code class="notranslate">constexpr</code> 函数</a></li>
+<li><a href="#consteval-%E5%87%BD%E6%95%B0"><code class="notranslate">consteval</code> 函数</a></li>
 </ul>
 </li>
-<li><a href="#if-constexpr"><code>if constexpr</code></a></li>
-<li>
-<a href="#%E6%8A%98%E5%8F%A0%E8%A1%A8%E8%BE%BE%E5%BC%8F">折叠表达式</a>
+<li><a href="#if-constexpr"><code class="notranslate">if constexpr</code></a></li>
+<li><a href="#%E6%8A%98%E5%8F%A0%E8%A1%A8%E8%BE%BE%E5%BC%8F">折叠表达式</a>
 <ul>
 <li><a href="#%E5%8F%B3%E6%8A%98%E5%8F%A0">右折叠</a></li>
 <li><a href="#%E5%B7%A6%E6%8A%98%E5%8F%A0">左折叠</a></li>
 </ul>
 </li>
-<li>
-<a href="#%E4%BB%A4%E4%BA%BA%E5%A4%B4%E5%A4%A7%E7%9A%84const">令人头大的<code>const</code></a>
+<li><a href="#%E4%BB%A4%E4%BA%BA%E5%A4%B4%E5%A4%A7%E7%9A%84const">令人头大的<code class="notranslate">const</code></a>
 <ul>
-<li><a href="#int-const-ptr"><code>int const* ptr</code></a></li>
-<li><a href="#int--const-ptr"><code>int * const ptr</code></a></li>
+<li><a href="#int-const-ptr"><code class="notranslate">int const* ptr</code></a></li>
+<li><a href="#int--const-ptr"><code class="notranslate">int * const ptr</code></a></li>
 <li><a href="#%E7%BB%88%E6%9E%81case">终极CASE</a></li>
 </ul>
 </li>
 </ul>
-<h2><a id="user-content-constexpr-变量" class="anchor" aria-hidden="true" tabindex="-1" href="#constexpr-变量"><span aria-hidden="true" class="octicon octicon-link"></span></a>
-<code>constexpr</code> 变量</h2>
-<p><strong>与<code>const</code>变量的区别？</strong></p>
+<h2><code class="notranslate">constexpr</code> 变量</h2>
+<p><strong>与<code class="notranslate">const</code>变量的区别？</strong></p>
 <ul>
 <li>
-<p><code>constexpr</code> 需要保证表达式可在编译时求值，否则会出现编译错误</p>
+<p><code class="notranslate">constexpr</code> 需要保证表达式可在编译时求值，否则会出现编译错误</p>
 </li>
 <li>
-<p><code>const</code> 表达式拥有常量性。若能咋编译时求值，也可以用于编译时计算上下文，否则将用于运行时求值</p>
+<p><code class="notranslate">const</code> 表达式拥有常量性。若能咋编译时求值，也可以用于编译时计算上下文，否则将用于运行时求值</p>
 <ul>
 <li>数组下标</li>
 <li>模板参数</li>
 <li>静态断言</li>
-<li>初始化<code>constexpr</code>常量等</li>
+<li>初始化<code class="notranslate">constexpr</code>常量等</li>
 </ul>
 </li>
 <li>
-<p><code>const</code>只能用于非静态成员的函数而不是所有函数,它保证成员函数不修改任何非静态数据。</p>
+<p><code class="notranslate">const</code>只能用于非静态成员的函数而不是所有函数,它保证成员函数不修改任何非静态数据。</p>
 </li>
 </ul>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">constexpr</span> <span class="pl-k">double</span> PI = <span class="pl-c1">3.141592653</span>;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">constexpr</span> <span class="pl-k">double</span> PI = <span class="pl-c1">3.141592653</span>;
 
 <span class="pl-k">template </span>&lt;<span class="pl-k">char</span> c&gt;
 <span class="pl-k">constexpr</span> <span class="pl-k">bool</span> is_digit = (c &gt;= <span class="pl-s"><span class="pl-pds">'</span>0<span class="pl-pds">'</span></span> &amp;&amp; c &lt;= <span class="pl-s"><span class="pl-pds">'</span>9<span class="pl-pds">'</span></span>);
@@ -146,25 +131,23 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
     <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>is_digit:c:<span class="pl-pds">"</span></span> &lt;&lt; local4::is_digit&lt;<span class="pl-s"><span class="pl-pds">'</span>c<span class="pl-pds">'</span></span>&gt;;
     <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>is_digit:7:<span class="pl-pds">"</span></span> &lt;&lt; local4::is_digit&lt;<span class="pl-s"><span class="pl-pds">'</span>7<span class="pl-pds">'</span></span>&gt;;
 }</pre></div>
-<h2><a id="user-content-constinit-初始化" class="anchor" aria-hidden="true" tabindex="-1" href="#constinit-初始化"><span aria-hidden="true" class="octicon octicon-link"></span></a>
-<code>constinit</code> 初始化</h2>
+<h2><code class="notranslate">constinit</code> 初始化</h2>
 <blockquote>
 <p>constinit的作用在于显式地指定变量的初始化方式为静态初始化。所有使用constinit声明的变量，其生命周期必须为静态生命周期或线程本地（Thread-local）生命周期（即不能为局部变量），其初始化表达式必须是一个常量表达式</p>
 </blockquote>
-<p><code>constexpr</code> 定义的变量被要求可以在编译时求值，它们需要拥有常量的属性。而<code>constinit</code> 定义的变量同样要求在编译时能对表达式求值，但是仍然保留了可变的属性.</p>
-<p><code>C++</code>中各个编译单元的全局变量在运行时的初始化顺序是不固定的，若这些全局变量存在依赖关系，初始化的结果是未定义的. 常规的解决方案是使用函数的局部静态变量来代替全局变量，将直接的依赖关系转换成函数间的依赖关系，从而使用函数的调用关系来确保局部静态变量的初始化顺序.</p>
-<p><code>constinit</code> 要求全局生命周期的变量能够在编译时初始化，既可以解决初始化顺序不固定的问题，同时也节约了运行时开销.</p>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">consteval</span> <span class="pl-k">auto</span> <span class="pl-en">foo</span>() -&gt; double {
+<p><code class="notranslate">constexpr</code> 定义的变量被要求可以在编译时求值，它们需要拥有常量的属性。而<code class="notranslate">constinit</code> 定义的变量同样要求在编译时能对表达式求值，但是仍然保留了可变的属性.</p>
+<p><code class="notranslate">C++</code>中各个编译单元的全局变量在运行时的初始化顺序是不固定的，若这些全局变量存在依赖关系，初始化的结果是未定义的. 常规的解决方案是使用函数的局部静态变量来代替全局变量，将直接的依赖关系转换成函数间的依赖关系，从而使用函数的调用关系来确保局部静态变量的初始化顺序.</p>
+<p><code class="notranslate">constinit</code> 要求全局生命周期的变量能够在编译时初始化，既可以解决初始化顺序不固定的问题，同时也节约了运行时开销.</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">consteval</span> <span class="pl-k">auto</span> <span class="pl-en">foo</span>() -&gt; double {
     <span class="pl-k">return</span> PI;
 }
 
 <span class="pl-k">constinit</span> <span class="pl-k">int</span> a = <span class="pl-c1">10</span>;
 <span class="pl-k">constinit</span> <span class="pl-k">double</span> <span class="pl-bu">pi</span> = foo();
 <span class="pl-k">constinit</span> <span class="pl-k">thread_local</span> <span class="pl-k">int</span> c = <span class="pl-c1">20</span>;</pre></div>
-<h2><a id="user-content-constexpr-函数" class="anchor" aria-hidden="true" tabindex="-1" href="#constexpr-函数"><span aria-hidden="true" class="octicon octicon-link"></span></a>
-<code>constexpr</code> 函数</h2>
-<p>表示函数<strong>可能</strong>在编译时求值.同时，<code>constexpr</code> 函数修饰的函数意味着它是<code>inline</code>的</p>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<h2><code class="notranslate">constexpr</code> 函数</h2>
+<p>表示函数<strong>可能</strong>在编译时求值.同时，<code class="notranslate">constexpr</code> 函数修饰的函数意味着它是<code class="notranslate">inline</code>的</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
 <span class="pl-k">concept </span>number = std::is_integral_v&lt;T&gt; || std::is_floating_point_v&lt;T&gt;;
 
 <span class="pl-k">template </span>&lt;number T&gt;
@@ -176,10 +159,9 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
     }
     <span class="pl-k">return</span> low;
 }</pre></div>
-<h2><a id="user-content-consteval-函数" class="anchor" aria-hidden="true" tabindex="-1" href="#consteval-函数"><span aria-hidden="true" class="octicon octicon-link"></span></a>
-<code>consteval</code> 函数</h2>
+<h2><code class="notranslate">consteval</code> 函数</h2>
 <p>表示函数<strong>必须</strong>能在编译时求值，否则报错</p>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
 <span class="pl-k">concept </span>number = std::is_integral_v&lt;T&gt; || std::is_floating_point_v&lt;T&gt;;
 
 <span class="pl-k">template </span>&lt;number T&gt;
@@ -197,11 +179,11 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
     <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>min int value:<span class="pl-pds">"</span></span> &lt;&lt; <span class="pl-c1">min</span>({<span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span>, <span class="pl-c1">4</span>, <span class="pl-c1">5</span>, <span class="pl-c1">6</span>});
     <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>min float value:<span class="pl-pds">"</span></span> &lt;&lt; <span class="pl-c1">min</span>({<span class="pl-c1">1.1</span>, <span class="pl-c1">2.2</span>, <span class="pl-c1">3.3</span>, <span class="pl-c1">4.4</span>, <span class="pl-c1">5.5</span>, <span class="pl-c1">6.6</span>});
 }</pre></div>
-<h1><a id="user-content-if-constexpr" class="anchor" aria-hidden="true" tabindex="-1" href="#if-constexpr"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>if constexpr</code></h1>
+<h1><code class="notranslate">if constexpr</code></h1>
 <blockquote>
-<p>可以替代之前的 <code>std::enable_if</code></p>
+<p>可以替代之前的 <code class="notranslate">std::enable_if</code></p>
 </blockquote>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">class</span> <span class="pl-en">T</span>&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">class</span> <span class="pl-en">T</span>&gt;
 <span class="pl-k">constexpr</span> <span class="pl-k">auto</span> <span class="pl-en">absolute</span>(T arg) -&gt; T {
     <span class="pl-k">return</span> arg &lt; <span class="pl-c1">0</span> ? -arg : arg;
 }
@@ -224,12 +206,12 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 
     <span class="pl-k">return</span> a == b;
 }</pre></div>
-<h1><a id="user-content-折叠表达式" class="anchor" aria-hidden="true" tabindex="-1" href="#折叠表达式"><span aria-hidden="true" class="octicon octicon-link"></span></a>折叠表达式</h1>
+<h1>折叠表达式</h1>
 <blockquote>
-<p>用于简化一部分需要模板递归才能实现的循环功能 ，从语法上分为左折叠和右折叠
+<p>用于简化一部分需要模板递归才能实现的循环功能 ，从语法上分为左折叠和右折叠<br>
 语义是，对参数包中的值进行迭代，每次迭代将当前的值与累计值急性二元操作求值，求值的结果作为下一次累计值进行二元迭代</p>
 </blockquote>
-<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span> 右折叠 </span>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 右折叠 </span>
 (pack op ...[op init])
 
 <span class="pl-c"><span class="pl-c">//</span> 左折叠</span>
@@ -239,8 +221,8 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <li>op： 二元操作符</li>
 <li>init: 可选的初始累计值</li>
 </ul>
-<h2><a id="user-content-右折叠" class="anchor" aria-hidden="true" tabindex="-1" href="#右折叠"><span aria-hidden="true" class="octicon octicon-link"></span></a>右折叠</h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">/*</span>*</span>
+<h2>右折叠</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">/*</span>*</span>
 <span class="pl-c"> * @brief 右折叠</span>
 <span class="pl-c"> * </span>
 <span class="pl-c"> * @tparam IS 参数包</span>
@@ -250,16 +232,15 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <span class="pl-k">template </span>&lt;<span class="pl-c1">size_t</span>... IS&gt;
 <span class="pl-k">constexpr</span> <span class="pl-k">int</span> rsum = (IS + ... + <span class="pl-c1">0</span>);
 </pre></div>
-<h2><a id="user-content-左折叠" class="anchor" aria-hidden="true" tabindex="-1" href="#左折叠"><span aria-hidden="true" class="octicon octicon-link"></span></a>左折叠</h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">/*</span>*</span>
+<h2>左折叠</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">/*</span>*</span>
 <span class="pl-c"> * @brief 左折叠</span>
 <span class="pl-c"> * </span>
 <span class="pl-c"> * @tparam IS </span>
 <span class="pl-c"> <span class="pl-c">*/</span></span>
 <span class="pl-k">template </span>&lt;<span class="pl-c1">size_t</span>... IS&gt;
 <span class="pl-k">constexpr</span> <span class="pl-k">int</span> lsum = (<span class="pl-c1">0</span> + ... + IS);</pre></div>
-<h1><a id="user-content-令人头大的const" class="anchor" aria-hidden="true" tabindex="-1" href="#令人头大的const"><span aria-hidden="true" class="octicon octicon-link"></span></a>令人头大的<code>const</code>
-</h1>
+<h1>令人头大的<code class="notranslate">const</code></h1>
 <blockquote>
 <p>以变量名开始顺时针旋转</p>
 </blockquote>
@@ -269,47 +250,38 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 <li><a href="https://stackoverflow.com/questions/1143262/what-is-the-difference-between-const-int-const-int-const-and-int-const" rel="nofollow">what-is-the-difference-between-const-int-const-int-const-and-int-const</a></li>
 </ul>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/efdc995b-7391-4675-8c01-b66720f32021"><img width="736" alt="const" src="https://github.com/0x1042/0x1042.github.io/assets/7525242/efdc995b-7391-4675-8c01-b66720f32021" style="max-width: 100%;"></a></p>
-<h2><a id="user-content-int-const-ptr" class="anchor" aria-hidden="true" tabindex="-1" href="#int-const-ptr"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>int const* ptr</code></h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">int</span> <span class="pl-k">const</span>* ptr;</pre></div>
+<h2><code class="notranslate">int const* ptr</code></h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">int</span> <span class="pl-k">const</span>* ptr;</pre></div>
 <ul>
-<li>
-<code>ptr</code> 右时针旋转，首先遇到<code>*</code>，<code>ptr</code>是一个指针</li>
-<li>然后，<code>const</code>右时针旋转，遇到<code>int</code>
-</li>
-<li>所以，<code>ptr</code> 是一个指向 <code>const int</code> 的 指针</li>
-<li>与<code>const int* ptr</code> 含义一样</li>
+<li><code class="notranslate">ptr</code> 右时针旋转，首先遇到<code class="notranslate">*</code>，<code class="notranslate">ptr</code>是一个指针</li>
+<li>然后，<code class="notranslate">const</code>右时针旋转，遇到<code class="notranslate">int</code></li>
+<li>所以，<code class="notranslate">ptr</code> 是一个指向 <code class="notranslate">const int</code> 的 指针</li>
+<li>与<code class="notranslate">const int* ptr</code> 含义一样</li>
 </ul>
-<h2><a id="user-content-int--const-ptr" class="anchor" aria-hidden="true" tabindex="-1" href="#int--const-ptr"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>int * const ptr</code></h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">int</span> * <span class="pl-k">const</span> ptr;</pre></div>
+<h2><code class="notranslate">int * const ptr</code></h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">int</span> * <span class="pl-k">const</span> ptr;</pre></div>
 <ul>
-<li>
-<code>ptr</code> 右时针旋转，遇到<code>const</code>, <code>ptr</code>是一个<code>const</code> 变量</li>
-<li>
-<code>*</code> 右时针旋转，遇到<code>int</code>
-</li>
-<li>所以，<code>ptr</code> 是一个 <code>const </code>指针，指向 <code>int</code> 变量</li>
+<li><code class="notranslate">ptr</code> 右时针旋转，遇到<code class="notranslate">const</code>, <code class="notranslate">ptr</code>是一个<code class="notranslate">const</code> 变量</li>
+<li><code class="notranslate">*</code> 右时针旋转，遇到<code class="notranslate">int</code></li>
+<li>所以，<code class="notranslate">ptr</code> 是一个 <code class="notranslate">const </code>指针，指向 <code class="notranslate">int</code> 变量</li>
 </ul>
-<h2><a id="user-content-终极case" class="anchor" aria-hidden="true" tabindex="-1" href="#终极case"><span aria-hidden="true" class="octicon octicon-link"></span></a>终极CASE</h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">void</span> (*<span class="pl-en">signal</span>(<span class="pl-k">int</span>, <span class="pl-k">void</span> (*fp)(<span class="pl-k">int</span>)))(<span class="pl-k">int</span>);</pre></div>
+<h2>终极CASE</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">void</span> (*<span class="pl-en">signal</span>(<span class="pl-k">int</span>, <span class="pl-k">void</span> (*fp)(<span class="pl-k">int</span>)))(<span class="pl-k">int</span>);</pre></div>
 <ol>
-<li>
-<code>signal</code> 是一个函数，它接受两个参数，一个是整数 <code>(int)</code>，另一个是一个函数指针 <code>(void (*fp)(int))</code>
-</li>
-<li>
-<code>int</code>, 表示第一个参数是一个整数</li>
-<li>
-<code>void (*fp)(int)</code>, 表示第二个参数是一个函数指针，该指针指向一个函数，该函数接受一个整数参数并返回<code>void</code>
-</li>
-<li>整个声明最外层的返回类型是 void (*) (int)，表示 <code>signal</code> 函数返回一个函数指针</li>
-<li>这个函数指针指向一个函数，该函数接受一个整数参数并返回 <code>void</code>
-</li>
+<li><code class="notranslate">signal</code> 是一个函数，它接受两个参数，一个是整数 <code class="notranslate">(int)</code>，另一个是一个函数指针 <code class="notranslate">(void (*fp)(int))</code></li>
+<li><code class="notranslate">int</code>, 表示第一个参数是一个整数</li>
+<li><code class="notranslate">void (*fp)(int)</code>, 表示第二个参数是一个函数指针，该指针指向一个函数，该函数接受一个整数参数并返回<code class="notranslate">void</code></li>
+<li>整个声明最外层的返回类型是 void (*) (int)，表示 <code class="notranslate">signal</code> 函数返回一个函数指针</li>
+<li>这个函数指针指向一个函数，该函数接受一个整数参数并返回 <code class="notranslate">void</code></li>
 </ol>
-
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
 </div>
-    <div id="footer">Copyright © <span id="year"></span> <a href="http://0x1042.github.io"> Daily </a><p>  <span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a></p>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a>
+</p>
 
 <script>
 if(""!=""){
@@ -353,7 +325,7 @@ function utterancesTheme(theme){
     iframe.contentWindow.postMessage(message, 'https://utteranc.es');
 }
 
-console.log("\n %c Gmeek v2.4 %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+console.log("\n %c Gmeek main %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
 </script>
 
 <script>

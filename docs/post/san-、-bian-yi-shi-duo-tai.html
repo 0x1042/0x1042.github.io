@@ -17,26 +17,14 @@
 
 </head>
 <style>
-body{
-    box-sizing: border-box;
-    min-width: 200px;
-    max-width: 900px;
-    margin: 20px auto;
-    padding: 45px;
-    font-size: 16px;
-    font-family: sans-serif;
-    line-height: 1.25;
-}
-
-.avatar {transition: 0.8s;}
-.avatar:hover {transform: scale(1.15) rotate(360deg);}
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
 #header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
 #footer {margin-top:64px; text-align: center;font-size: small;}
 
 </style>
 
 <style>
-h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-size:40px;}
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
 .title-right{display:flex;margin:auto 0 0 auto;}
 .title-right .circle{padding: 14px 16px;margin-right:8px;}
 #postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
@@ -44,7 +32,10 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 #cmButton{height:48px;margin-top:48px;}
 #comments{margin-top:64px;}
 .g-emoji{font-size:24px;}
-@media (max-width: 767px) {body {padding: 8px;}}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
 </style>
 
 
@@ -52,9 +43,7 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 
 <body>
     <div id="header">
-<h1>
-    <a>三、编译时多态</a>
-</h1>
+<span class="postTitle">三、编译时多态</span>
 <div class="title-right">
 
     <a href="/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
@@ -79,40 +68,38 @@ h1 a:not([href]){color:inherit;text-decoration:none;vertical-align: bottom;font-
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody">
-<h1><a id="user-content-编译时多态" class="anchor" aria-hidden="true" tabindex="-1" href="#编译时多态"><span aria-hidden="true" class="octicon octicon-link"></span></a>编译时多态</h1>
+<h1>编译时多态</h1>
 <ul>
 <li><a href="#%E7%BC%96%E8%AF%91%E6%97%B6%E5%A4%9A%E6%80%81">编译时多态</a></li>
-<li>
-<a href="#type-traits-%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96">type traits 类型萃取</a>
+<li><a href="#type-traits-%E7%B1%BB%E5%9E%8B%E8%90%83%E5%8F%96">type traits 类型萃取</a>
 <ul>
 <li><a href="#%E8%8E%B7%E5%8F%96%E7%B1%BB%E5%9E%8B%E5%B1%9E%E6%80%A7">获取类型属性</a></li>
 <li><a href="#%E7%B1%BB%E5%9E%8B%E5%8F%98%E6%8D%A2">类型变换</a></li>
 <li><a href="#%E6%A0%87%E7%AD%BE%E5%88%86%E5%8F%91">标签分发</a></li>
 <li><a href="#%E8%BF%AD%E4%BB%A3%E5%99%A8">迭代器</a></li>
-<li><a href="#if-constexpr"><code>if constexpr</code></a></li>
-<li><a href="#void_t-%E5%85%83%E5%87%BD%E6%95%B0"><code>void_t</code> 元函数</a></li>
+<li><a href="#if-constexpr"><code class="notranslate">if constexpr</code></a></li>
+<li><a href="#void_t-%E5%85%83%E5%87%BD%E6%95%B0"><code class="notranslate">void_t</code> 元函数</a></li>
 </ul>
 </li>
-<li>
-<a href="#ctrtp-%E5%A5%87%E5%BC%82%E9%80%92%E5%BD%92%E6%A8%A1%E7%89%88%E6%A8%A1%E5%BC%8F">CTRTP 奇异递归模版模式</a>
+<li><a href="#ctrtp-%E5%A5%87%E5%BC%82%E9%80%92%E5%BD%92%E6%A8%A1%E7%89%88%E6%A8%A1%E5%BC%8F">CTRTP 奇异递归模版模式</a>
 <ul>
 <li><a href="#%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%94%A8">代码复用</a></li>
 <li><a href="#%E9%9D%99%E6%80%81%E7%BB%91%E5%AE%9A">静态绑定</a></li>
-<li><a href="#enable_shared_from_this"><code>enable_shared_from_this</code></a></li>
+<li><a href="#enable_shared_from_this"><code class="notranslate">enable_shared_from_this</code></a></li>
 </ul>
 </li>
 </ul>
-<h1><a id="user-content-type-traits-类型萃取" class="anchor" aria-hidden="true" tabindex="-1" href="#type-traits-类型萃取"><span aria-hidden="true" class="octicon octicon-link"></span></a>type traits 类型萃取</h1>
+<h1>type traits 类型萃取</h1>
 <blockquote>
-<p>c++ 通过模版实现泛型编程，从而减轻运行时开销。但是同样的算法在不同的数据类型上可能有差异，使用同一套算法效率不一定是最优的。
+<p>c++ 通过模版实现泛型编程，从而减轻运行时开销。但是同样的算法在不同的数据类型上可能有差异，使用同一套算法效率不一定是最优的。<br>
 type_traits 定义了一些编译时 基于模版类的接口，用于查询、修改类型的特征。即可以在编译期，获取模板参数的相关属性，从而根据不同的属性实现不同的逻辑</p>
 </blockquote>
 <ul>
 <li>获取模板类型的相关属性</li>
 <li>对模板类型进行变换</li>
 </ul>
-<h2><a id="user-content-获取类型属性" class="anchor" aria-hidden="true" tabindex="-1" href="#获取类型属性"><span aria-hidden="true" class="octicon octicon-link"></span></a>获取类型属性</h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">void</span> <span class="pl-en">test_traits</span>() {
+<h2>获取类型属性</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">void</span> <span class="pl-en">test_traits</span>() {
     std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>std::is_integral_v&lt;int&gt;: <span class="pl-pds">"</span></span> &lt;&lt; std::is_integral_v&lt;<span class="pl-k">int</span>&gt; &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
     std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>std::is_integral_v&lt;double&gt;: <span class="pl-pds">"</span></span> &lt;&lt; std::is_integral_v&lt;<span class="pl-k">double</span>&gt; &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
     std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>std::is_floating_point_v&lt;float&gt;: <span class="pl-pds">"</span></span> &lt;&lt; std::is_floating_point_v&lt;<span class="pl-k">float</span>&gt; &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
@@ -121,12 +108,12 @@ type_traits 定义了一些编译时 基于模版类的接口，用于查询、�
     std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>std::is_same_v&lt;int64_t, float&gt;:<span class="pl-pds">"</span></span> &lt;&lt; std::is_same_v&lt;<span class="pl-c1">int64_t</span>, <span class="pl-k">float</span>&gt; &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
 }</pre></div>
 <blockquote>
-<p>std::enable_if_t 接受两个模板参数
-第一个bool类型的值
-当条件为真时，输出的类型成员type的结果为第二个模板参数，否则没有类成员type
+<p>std::enable_if_t 接受两个模板参数<br>
+第一个bool类型的值<br>
+当条件为真时，输出的类型成员type的结果为第二个模板参数，否则没有类成员type<br>
 也就是当第一个值是false时，enable_if 没有定义成员类型type</p>
 </blockquote>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T, std::<span class="pl-c1">enable_if_t</span>&lt;std::is_integral_v&lt;T&gt;&gt; * = <span class="pl-c1">nullptr</span>&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T, std::<span class="pl-c1">enable_if_t</span>&lt;std::is_integral_v&lt;T&gt;&gt; * = <span class="pl-c1">nullptr</span>&gt;
 <span class="pl-k">auto</span> <span class="pl-en">is_equal</span>(T lhs, T rhs) -&gt; bool {
     <span class="pl-k">return</span> lhs == rhs;
 }
@@ -135,11 +122,11 @@ type_traits 定义了一些编译时 基于模版类的接口，用于查询、�
 <span class="pl-k">auto</span> <span class="pl-en">is_equal</span>(T lhs, T rhs) -&gt; bool {
     <span class="pl-k">return</span> <span class="pl-c1">std::fabs</span>(lhs - rhs) &lt; std::numeric_limits&lt;T&gt;::<span class="pl-c1">epsilon</span>();
 }</pre></div>
-<h2><a id="user-content-类型变换" class="anchor" aria-hidden="true" tabindex="-1" href="#类型变换"><span aria-hidden="true" class="octicon octicon-link"></span></a>类型变换</h2>
+<h2>类型变换</h2>
 <blockquote>
 <p>基于已有类型 应用修改得到新的类型，输出类型可以通过访问type类型成员得到结果</p>
 </blockquote>
-<div class="highlight highlight-source-c++"><pre><span class="pl-c"><span class="pl-c">//</span> cpp11</span>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> cpp11</span>
 std::clog &lt;&lt; std::is_same_v&lt;<span class="pl-k">typename</span> std::remove_const&lt;<span class="pl-k">const</span> <span class="pl-k">int</span>&gt;::type, <span class="pl-k">int</span>&gt; &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
 
 <span class="pl-c"><span class="pl-c">//</span> cpp14</span>
@@ -151,8 +138,8 @@ std::clog &lt;&lt; std::is_same_v&lt;std::<span class="pl-c1">add_const_t</span>
 
 <span class="pl-c"><span class="pl-c">//</span> 增加指针</span>
 std::clog &lt;&lt; std::is_same_v&lt;std::<span class="pl-c1">add_pointer_t</span>&lt;<span class="pl-k">int</span> **&gt;, <span class="pl-k">int</span> ***&gt; &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;</pre></div>
-<h2><a id="user-content-标签分发" class="anchor" aria-hidden="true" tabindex="-1" href="#标签分发"><span aria-hidden="true" class="octicon octicon-link"></span></a>标签分发</h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<h2>标签分发</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
 <span class="pl-k">auto</span> <span class="pl-en">equal_impl</span>(T lhs, T rhs, std::true_type <span class="pl-c"><span class="pl-c">/*</span>unused<span class="pl-c">*/</span></span>) -&gt; bool {
     <span class="pl-k">return</span> <span class="pl-c1">std::fabs</span>(lhs - rhs) &lt; std::numeric_limits&lt;T&gt;::<span class="pl-c1">epsilon</span>();
 }
@@ -166,18 +153,17 @@ std::clog &lt;&lt; std::is_same_v&lt;std::<span class="pl-c1">add_pointer_t</spa
 <span class="pl-k">auto</span> <span class="pl-en">new_equal</span>(T lhs, T rhs) -&gt; std::enable_if_t&lt;std::is_arithmetic_v&lt;T&gt;, bool&gt; {
     <span class="pl-k">return</span> <span class="pl-c1">equal_impl</span>(lhs, rhs, std::is_floating_point&lt;T&gt;{});
 }</pre></div>
-<h2><a id="user-content-迭代器" class="anchor" aria-hidden="true" tabindex="-1" href="#迭代器"><span aria-hidden="true" class="octicon octicon-link"></span></a>迭代器</h2>
+<h2>迭代器</h2>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/2a147d38-cd51-4130-855e-ae39930fdfbd"><img src="https://github.com/0x1042/0x1042.github.io/assets/7525242/2a147d38-cd51-4130-855e-ae39930fdfbd" alt="input_iterator" style="max-width: 100%;"></a></p>
-<h2><a id="user-content-if-constexpr" class="anchor" aria-hidden="true" tabindex="-1" href="#if-constexpr"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>if constexpr</code></h2>
+<h2><code class="notranslate">if constexpr</code></h2>
 <blockquote>
 <p>todo</p>
 </blockquote>
-<h2><a id="user-content-void_t-元函数" class="anchor" aria-hidden="true" tabindex="-1" href="#void_t-元函数"><span aria-hidden="true" class="octicon octicon-link"></span></a>
-<code>void_t</code> 元函数</h2>
+<h2><code class="notranslate">void_t</code> 元函数</h2>
 <blockquote>
 <p>todo</p>
 </blockquote>
-<h1><a id="user-content-ctrtp-奇异递归模版模式" class="anchor" aria-hidden="true" tabindex="-1" href="#ctrtp-奇异递归模版模式"><span aria-hidden="true" class="octicon octicon-link"></span></a>CTRTP 奇异递归模版模式</h1>
+<h1>CTRTP 奇异递归模版模式</h1>
 <blockquote>
 <p>curiously recurring template pattern。把子类作为父类的模板参数，从而让父类可以使用子类提供的方法。</p>
 </blockquote>
@@ -186,8 +172,8 @@ std::clog &lt;&lt; std::is_same_v&lt;std::<span class="pl-c1">add_pointer_t</spa
 <li>代码复用: 由于子类派生于模板基类，因此可以复用父类的方法</li>
 <li>编译时多态: 由于父类是一个模板类，能够获得传递进来的派生类，进而可以调用派生类的方法，达到多态的效果，同时避免了运行时多态的序表开销</li>
 </ul>
-<h2><a id="user-content-代码复用" class="anchor" aria-hidden="true" tabindex="-1" href="#代码复用"><span aria-hidden="true" class="octicon octicon-link"></span></a>代码复用</h2>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">struct</span> <span class="pl-en">VideoFile</span>;
+<h2>代码复用</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">struct</span> <span class="pl-en">VideoFile</span>;
 <span class="pl-k">struct</span> <span class="pl-en">TextFile</span>;
 
 <span class="pl-k">class</span> <span class="pl-en">Visitor</span> {
@@ -216,10 +202,10 @@ std::clog &lt;&lt; std::is_same_v&lt;std::<span class="pl-c1">add_pointer_t</spa
     }
 };
 </pre></div>
-<p><strong>问题：每个XXXFile需要重写Elem的accept方法，而实现是固定的，如何将这部分实现放在Elem中呢</strong>
+<p><strong>问题：每个XXXFile需要重写Elem的accept方法，而实现是固定的，如何将这部分实现放在Elem中呢</strong><br>
 <strong>this指针是当前类的指针类型，如果放在基类，就会变成基类的指针，丢失实际的类型信息，无法进行绑定</strong></p>
-<p>修改实现如下，将子类作为父类的模板参数，在实现中使用<code>static_cast</code> 转换</p>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Derived&gt;
+<p>修改实现如下，将子类作为父类的模板参数，在实现中使用<code class="notranslate">static_cast</code> 转换</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Derived&gt;
 <span class="pl-k">struct</span> <span class="pl-en">Elem</span> {
     <span class="pl-k">virtual</span> <span class="pl-k">void</span> <span class="pl-en">accept</span>(Visitor &amp; visit) {
         visit.<span class="pl-c1">visit</span>(<span class="pl-k">static_cast</span>&lt;Derived &amp;&gt;(*<span class="pl-c1">this</span>));
@@ -243,11 +229,11 @@ std::clog &lt;&lt; std::is_same_v&lt;std::<span class="pl-c1">add_pointer_t</spa
         std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>visit TextFile. <span class="pl-pds">"</span></span> &lt;&lt; <span class="pl-c1">typeid</span>(tf).<span class="pl-c1">name</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
     }
 };</pre></div>
-<h2><a id="user-content-静态绑定" class="anchor" aria-hidden="true" tabindex="-1" href="#静态绑定"><span aria-hidden="true" class="octicon octicon-link"></span></a>静态绑定</h2>
+<h2>静态绑定</h2>
 <blockquote>
 <p>编译时多态，避免时运行时虚函数的开销</p>
 </blockquote>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Derived&gt;
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Derived&gt;
 <span class="pl-k">struct</span> <span class="pl-en">Animal</span> {
     <span class="pl-k">void</span> <span class="pl-en">bark</span>() {
         <span class="pl-k">static_cast</span>&lt;Derived &amp;&gt;(*<span class="pl-c1">this</span>).<span class="pl-c1">bark_impl</span>();
@@ -278,12 +264,12 @@ Cat cat;
 Dog dog;
 <span class="pl-en">play</span>(cat);
 <span class="pl-en">play</span>(dog);</pre></div>
-<h2><a id="user-content-enable_shared_from_this" class="anchor" aria-hidden="true" tabindex="-1" href="#enable_shared_from_this"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>enable_shared_from_this</code></h2>
+<h2><code class="notranslate">enable_shared_from_this</code></h2>
 <blockquote>
 <p>异步编程存在一种场景，需要在类中将该类的对象注册到某个回调类或者函数中。首先不能直接将this指针传递出去，因为异步场景下生命周期不可控，回调时可能对应的对象已经释放，从而导致野指针访问。如果通过智能指针包装this指针，因为无法通过裸指针获得引用计数块信息，强行构造会导致对象的多次释放</p>
 </blockquote>
-<p><code>enable_shared_from_this</code> 是标准库提供的一个模板基类，通过奇异递归模板模式，在父类中存储子类的指针信息与引用计数信息，并提供对应的接口获得智能指针。</p>
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">struct</span> <span class="pl-en">Callback</span> : std::enable_shared_from_this&lt;Callback&gt; {
+<p><code class="notranslate">enable_shared_from_this</code> 是标准库提供的一个模板基类，通过奇异递归模板模式，在父类中存储子类的指针信息与引用计数信息，并提供对应的接口获得智能指针。</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">struct</span> <span class="pl-en">Callback</span> : std::enable_shared_from_this&lt;Callback&gt; {
     <span class="pl-k">void</span> <span class="pl-en">post</span>() {
         executor.<span class="pl-c1">submit</span>(
             [obj = <span class="pl-c1">weak_from_this</span>()]() {
@@ -294,12 +280,14 @@ Dog dog;
             });
     }
 };</pre></div>
-
 </div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
 </div>
-    <div id="footer">Copyright © <span id="year"></span> <a href="http://0x1042.github.io"> Daily </a><p>  <span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a></p>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a>
+</p>
 
 <script>
 if(""!=""){
@@ -343,7 +331,7 @@ function utterancesTheme(theme){
     iframe.contentWindow.postMessage(message, 'https://utteranc.es');
 }
 
-console.log("\n %c Gmeek v2.4 %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+console.log("\n %c Gmeek main %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
 </script>
 
 <script>

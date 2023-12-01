@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.org/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.ico">
+    <script>
+        if(localStorage.getItem("meek_theme")==null){}
+        else if(localStorage.getItem("meek_theme")=="dark"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";}
+        else if(localStorage.getItem("meek_theme")=="light"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";}
+    </script>
+    
+<title>智能指针以及new</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<span class="postTitle">智能指针以及new</span>
+<div class="title-right">
+
+    <a href="/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd" d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path>
+        </svg>
+    </button></a>
+
+    <a href="https://github.com/0x1042/0x1042.github.io/issues/14" target="_blank"><button class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd" d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path>
+        </svg>
+    </button></a>
+
+    <button class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </button>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody">
+<h1>智能指针自定义deleter</h1>
+<ul>
+<li><a href="#%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88%E8%87%AA%E5%AE%9A%E4%B9%89deleter">智能指针自定义deleter</a>
+<ul>
+<li><a href="#%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88">函数指针</a></li>
+<li><a href="#%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1">函数对象</a></li>
+<li><a href="#lambda%E5%87%BD%E6%95%B0"><code class="notranslate">lambda</code>函数</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AF%B9%E8%B1%A1%E6%B1%A0">对象池</a></li>
+<li><a href="#new"><code class="notranslate">new</code></a>
+<ul>
+<li><a href="#new-operator-%E6%98%AF%E5%85%B3%E9%94%AE%E5%AD%97"><code class="notranslate">new operator</code> 是关键字</a></li>
+<li><a href="#operator-new-%E6%98%AF%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0"><code class="notranslate">operator new</code> 是一个函数</a></li>
+<li><a href="#placement-new-%E6%98%AFoperator-new%E7%9A%84%E9%87%8D%E8%BD%BD"><code class="notranslate">placement new</code> 是<code class="notranslate">operator new</code>的重载</a></li>
+</ul>
+</li>
+</ul>
+<h2>函数指针</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">void</span> <span class="pl-en">deleteVec</span>(<span class="pl-k">int</span> * ptr) {
+    <span class="pl-k">delete[]</span> ptr;
+}
+
+<span class="pl-en">TEST_CASE</span>(<span class="pl-s"><span class="pl-pds">"</span>test deleter<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>[fb_pointer]<span class="pl-pds">"</span></span>) {
+    std::unique_ptr&lt;<span class="pl-k">int</span>, <span class="pl-c1">decltype</span>(&amp;deleteVec)&gt; <span class="pl-c1">my_ptr</span>(<span class="pl-k">new</span> <span class="pl-k">int</span>[<span class="pl-c1">5</span>], deleteVec);
+}</pre></div>
+<h2>函数对象</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">struct</span> <span class="pl-en">CustomDeleter</span> {
+    <span class="pl-k">void</span> <span class="pl-en">operator</span>()(T * t) <span class="pl-k">const</span> {
+        <span class="pl-k">delete</span> t;
+        std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>CustomDeleter run... delete type is <span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;T&gt;().<span class="pl-smi">name</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
+    }
+};
+
+<span class="pl-en">TEST_CASE</span>(<span class="pl-s"><span class="pl-pds">"</span>test deleter<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>[fb_obj]<span class="pl-pds">"</span></span>) {
+    std::unique_ptr&lt;<span class="pl-k">int</span>, CustomDeleter&lt;<span class="pl-k">int</span>&gt;&gt; <span class="pl-c1">int_ptr</span>(<span class="pl-k">new</span> <span class="pl-k">int</span>);
+    std::unique_ptr&lt;<span class="pl-k">double</span>, CustomDeleter&lt;<span class="pl-k">double</span>&gt;&gt; <span class="pl-c1">double_ptr</span>(<span class="pl-k">new</span> <span class="pl-k">double</span>);
+}</pre></div>
+<h2><code class="notranslate">lambda</code>函数</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-en">TEST_CASE</span>(<span class="pl-s"><span class="pl-pds">"</span>test deleter<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>[lambda]<span class="pl-pds">"</span></span>) {
+    <span class="pl-k">auto</span> deleter = [](<span class="pl-k">int</span> * ptr) {
+        <span class="pl-k">delete[]</span> ptr;
+        std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> delete by lambda ...<span class="pl-pds">"</span></span> &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
+    };
+    std::unique_ptr&lt;<span class="pl-k">int</span>, <span class="pl-c1">decltype</span>(deleter)&gt; <span class="pl-c1">arr</span>(<span class="pl-k">new</span> <span class="pl-k">int</span>[<span class="pl-c1">5</span>], deleter);
+}</pre></div>
+<h1>对象池</h1>
+<ul>
+<li>要缓存的对象</li>
+</ul>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">class</span> <span class="pl-en">Object</span> {
+<span class="pl-k">public:</span>
+    <span class="pl-en">Object</span>(<span class="pl-k">const</span> Object &amp;) = <span class="pl-k">default</span>;
+    <span class="pl-en">Object</span>(Object &amp;&amp;) = <span class="pl-k">delete</span>;
+    <span class="pl-k">auto</span> <span class="pl-k">operator</span>=(<span class="pl-k">const</span> Object &amp;) -&gt; Object &amp; = <span class="pl-k">default</span>;
+    <span class="pl-k">auto</span> <span class="pl-k">operator</span>=(Object &amp;&amp;) -&gt; Object &amp; = <span class="pl-k">delete</span>;
+    <span class="pl-k">explicit</span> <span class="pl-en">Object</span>(<span class="pl-k">int</span> id) : id(id) { std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Object <span class="pl-pds">"</span></span> &lt;&lt; id &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> is created.<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>; }
+
+    <span class="pl-en">~Object</span>() { std::cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>Object <span class="pl-pds">"</span></span> &lt;&lt; id &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> is destroyed.<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>; }
+
+    <span class="pl-k">void</span> <span class="pl-en">doSomething</span>() <span class="pl-k">const</span>;
+
+    [[nodiscard]] <span class="pl-k">auto</span> <span class="pl-en">getId</span>() <span class="pl-k">const</span> -&gt; int;
+    <span class="pl-k">void</span> <span class="pl-en">setId</span>(<span class="pl-k">int</span> id_);
+
+<span class="pl-k">private:</span>
+    <span class="pl-k">int</span> id;
+};</pre></div>
+<ul>
+<li>定义对象池</li>
+</ul>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> pool.h </span>
+<span class="pl-k">class</span> <span class="pl-en">ObjectPool</span> {
+<span class="pl-k">public:</span>
+    <span class="pl-k">struct</span> <span class="pl-en">ObjectDeleter</span> {
+        <span class="pl-k">void</span> <span class="pl-en">operator</span>()(Object * obj) {
+            std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>fake delete <span class="pl-pds">"</span></span> &lt;&lt; obj-&gt;<span class="pl-c1">getId</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
+            obj-&gt;<span class="pl-c1">setId</span>(<span class="pl-c1">0</span>);
+            pool.<span class="pl-c1">push_back</span>(obj);
+        }
+    };
+
+    <span class="pl-k">static</span> <span class="pl-k">auto</span> <span class="pl-en">acquire</span>() -&gt; std::unique_ptr&lt;Object, ObjectDeleter&gt;;
+
+    <span class="pl-k">static</span> <span class="pl-k">auto</span> <span class="pl-en">size</span>() -&gt; size_t;
+
+<span class="pl-k">private:</span>
+    <span class="pl-k">inline</span> <span class="pl-k">static</span> std::vector&lt;Object *&gt; pool; <span class="pl-c"><span class="pl-c">//</span> 对象池</span>
+};
+
+<span class="pl-c"><span class="pl-c">//</span> pool.cpp</span>
+<span class="pl-k">auto</span> <span class="pl-en">ObjectPool::acquire</span>() -&gt; std::unique_ptr&lt;Object, ObjectDeleter&gt; {
+    <span class="pl-k">if</span> (pool.<span class="pl-c1">empty</span>()) {
+        <span class="pl-c"><span class="pl-c">//</span> return std::unique_ptr&lt;Object, ObjectDeleter&gt;(new Object(0), ObjectDeleter());</span>
+        <span class="pl-k">return</span> {<span class="pl-k">new</span> <span class="pl-c1">Object</span>(<span class="pl-c1">0</span>), <span class="pl-c1">ObjectDeleter</span>()};
+    }
+    Object * obj = pool.<span class="pl-c1">back</span>();
+    pool.<span class="pl-c1">pop_back</span>();
+    <span class="pl-c"><span class="pl-c">//</span> return std::unique_ptr&lt;Object, ObjectDeleter&gt;(obj, ObjectDeleter());</span>
+    <span class="pl-k">return</span> {obj, <span class="pl-c1">ObjectDeleter</span>()};
+}
+
+<span class="pl-k">auto</span> <span class="pl-en">ObjectPool::size</span>() -&gt; size_t {
+    <span class="pl-k">return</span> pool.<span class="pl-c1">size</span>();
+}</pre></div>
+<h1><code class="notranslate">new</code></h1>
+<h2><code class="notranslate">new operator</code> 是关键字</h2>
+<p>就是<code class="notranslate">new</code> 关键字 <code class="notranslate">T *t = new T();</code> 背后包含两个动作</p>
+<ol>
+<li>调用 <code class="notranslate">operator new</code> 分配内存 ,并返回指向该对象的指针</li>
+<li>调用<code class="notranslate">T</code>的构造函数</li>
+<li>不可被重载</li>
+</ol>
+<h2><code class="notranslate">operator new</code> 是一个函数</h2>
+<p>是一个动态内存分配的函数</p>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">void</span>* <span class="pl-k">operator</span> <span class="pl-k">new</span>(std::<span class="pl-c1">size_t</span> size);</pre></div>
+<ul>
+<li>只分配所要求的空间，不调用相关对象的构造函数</li>
+<li>当无法满足所要求分配的空间时
+<ul>
+<li>如果有<code class="notranslate">new_handler</code>，则调用<code class="notranslate">new_handler</code></li>
+<li>否则如果没要求不抛出异常（以nothrow参数表达），则执行bad_alloc异常，否则</li>
+<li>否则返回0</li>
+</ul>
+</li>
+<li>可以被重载，重载时，返回类型必须声明为<code class="notranslate">void*</code></li>
+<li>第一个参数类型必须为表达要求分配空间的大小（字节），类型为size_t,可以有其他参数</li>
+</ul>
+<h2><code class="notranslate">placement new</code> 是<code class="notranslate">operator new</code>的重载</h2>
+<blockquote>
+<p>原型</p>
+</blockquote>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">void</span> *<span class="pl-k">operator</span> <span class="pl-k">new</span>( <span class="pl-c1">size_t</span>, <span class="pl-k">void</span> * p ) <span class="pl-k">throw</span>() { <span class="pl-k">return</span> p; }</pre></div>
+<ol>
+<li>是重载<code class="notranslate">operator new</code>的一个标准、全局的版本，它不能够被自定义的版本代替(不像普通版本的operator new和operator delete能够被替换)</li>
+<li>执行忽略<code class="notranslate">size_t</code>参数，只返回第二个参数。</li>
+<li>其结果是允许用户把一个对象放到一个特定的地方，达到调用构造函数的效果</li>
+<li>和其他普通的<code class="notranslate">new</code>不同的是，它在括号里多了另外一个参数</li>
+<li>它并不分配内存，只是返回指向已经分配好的某段内存的一个指针。因此不能删除它，但需要调用对象的析构函数</li>
+</ol>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-en">TEST_CASE</span>(<span class="pl-s"><span class="pl-pds">"</span>test deleter<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>[operator new]<span class="pl-pds">"</span></span>) {
+    <span class="pl-c"><span class="pl-c">//</span> 分配内存</span>
+    <span class="pl-k">char</span> buffer[<span class="pl-k">sizeof</span>(pool::Object)];
+
+    <span class="pl-c"><span class="pl-c">//</span> 使用 placement new 在已分配的内存上构造对象</span>
+    pool::Object * obj = <span class="pl-k">new</span> (buffer) <span class="pl-c1">pool::Object</span>(<span class="pl-c1">1024</span>);
+
+    <span class="pl-c"><span class="pl-c">//</span> 注意：在使用了 placement new 后，应该手动调用对象的析构函数</span>
+    obj-&gt;<span class="pl-en">~Object</span>();
+}</pre></div>
+</div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'post': 'M0 3.75C0 2.784.784 2 1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25Zm1.75-.25a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25ZM3.5 6.25a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1-.75-.75Zm.75 2.25h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1 0-1.5Z', 'link': 'm7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z', 'about': 'M10.561 8.073a6.005 6.005 0 0 1 3.432 5.142.75.75 0 1 1-1.498.07 4.5 4.5 0 0 0-8.99 0 .75.75 0 0 1-1.498-.07 6.004 6.004 0 0 1 3.431-5.142 3.999 3.999 0 1 1 5.123 0ZM10.5 5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z', 'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'search': 'M15.7 13.3l-3.81-3.83A5.93 5.93 0 0 0 13 6c0-3.31-2.69-6-6-6S1 2.69 1 6s2.69 6 6 6c1.3 0 2.48-.41 3.47-1.11l3.83 3.81c.19.2.45.3.7.3.25 0 .52-.09.7-.3a.996.996 0 0 0 0-1.41v.01zM7 10.7c-2.59 0-4.7-2.11-4.7-4.7 0-2.59 2.11-4.7 4.7-4.7 2.59 0 4.7 2.11 4.7 4.7 0 2.59-2.11 4.7-4.7 4.7z', 'rss': 'M2.002 2.725a.75.75 0 0 1 .797-.699C8.79 2.42 13.58 7.21 13.974 13.201a.75.75 0 0 1-1.497.098 10.502 10.502 0 0 0-9.776-9.776.747.747 0 0 1-.7-.798ZM2.84 7.05h-.002a7.002 7.002 0 0 1 6.113 6.111.75.75 0 0 1-1.49.178 5.503 5.503 0 0 0-4.8-4.8.75.75 0 0 1 .179-1.489ZM2 13a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z', 'upload': 'M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z M11.78 4.72a.749.749 0 1 1-1.06 1.06L8.75 3.811V9.5a.75.75 0 0 1-1.5 0V3.811L5.28 5.78a.749.749 0 1 1-1.06-1.06l3.25-3.25a.749.749 0 0 1 1.06 0l3.25 3.25Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z'};
+var utterancesLoad=0;
+if(localStorage.getItem("meek_theme")==null){localStorage.setItem("meek_theme","light");changeLight();}
+else if(localStorage.getItem("meek_theme")=="dark"){changeDark();}
+else if(localStorage.getItem("meek_theme")=="light"){changeLight();}
+
+function changeDark(){
+    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList["moon"]);
+    document.getElementById("themeSwitch").parentNode.style.color="#00f0ff";
+    if(utterancesLoad==1){utterancesTheme("dark-blue");}
+}
+function changeLight(){
+    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList["sun"]);
+    document.getElementById("themeSwitch").parentNode.style.color="#ff5000";
+    if(utterancesLoad==1){utterancesTheme("github-light");}
+}
+function modeSwitch(){
+    if(document.getElementsByTagName("html")[0].attributes[0].value=="light"){changeDark();localStorage.setItem("meek_theme","dark");}
+    else{changeLight();localStorage.setItem("meek_theme","light");}
+}
+function utterancesTheme(theme){
+    const message = {type: 'set-theme',theme: theme};
+    const iframe = document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+}
+
+console.log("\n %c Gmeek main %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+</script>
+
+<script>
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","0x1042/0x1042.github.io");
+    script.setAttribute("issue-term","title");
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else{script.setAttribute("theme","github-light");}
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+</script>
+
+
+
+
+</html>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light">
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="content-type" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="我自倾怀，君且随意。">
     <link href="//cdn.staticfile.org/Primer/21.0.7/primer.css" rel="stylesheet" />
     <link rel="icon" href="https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.ico">
     <script>
@@ -46,7 +47,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="postTitle">五、协程基本使用</span>
 <div class="title-right">
 
-    <a href="/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
+    <a href="http://0x1042.github.io"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
             <path id="pathHome" fill-rule="evenodd" d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path>
         </svg>
@@ -128,7 +129,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">struct</span> <span class="pl-en">__fibonacciFrame</span>
 {
   <span class="pl-en">void</span> (*resume_fn)(__fibonacciFrame *);  <span class="pl-c"><span class="pl-c">//</span> 协程恢复函数 </span>
-  <span class="pl-en">void</span> (*destroy_fn)(__fibonacciFrame *); <span class="pl-c"><span class="pl-c">//</span> 协程销毁函数 </span>
+  <span class="pl-k">void</span> (*destroy_fn)(__fibonacciFrame *); <span class="pl-c"><span class="pl-c">//</span> 协程销毁函数 </span>
   std::coroutine_traits&lt;std::coroutine_handle&lt;promise&gt;, <span class="pl-k">int</span>&gt;::promise_type __promise; <span class="pl-c"><span class="pl-c">//</span> 协程的promise_type</span>
   <span class="pl-k">int</span> __suspend_index;
   <span class="pl-k">bool</span> __initial_await_suspend_called;
@@ -250,11 +251,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <p><code class="notranslate">promise_type 必须包含一下成员函数</code></p>
 <div class="highlight highlight-source-c++"><pre class="notranslate">SOME_TYPE <span class="pl-en">get_return_object</span>();<span class="pl-c"><span class="pl-c">//</span>用于得到协程函数开始执行的返回值</span>
 SOME_TYPE <span class="pl-en">initial_suspend</span>();<span class="pl-c"><span class="pl-c">//</span>用于协程函数开始执行时执行暂停操作</span>
-<span class="pl-k">void</span> <span class="pl-en">return_void</span>();<span class="pl-c"><span class="pl-c">//</span>协程函数内部co_return终止返回void时执行的操作（和下面return_value同时只能有一个存在）</span>
-<span class="pl-k">void</span> <span class="pl-en">return_value</span>(SOME_TYPE);<span class="pl-c"><span class="pl-c">//</span>协程函数内部co_return终止返回非void值时执行的操作</span>
+void <span class="pl-en">return_void</span>();<span class="pl-c"><span class="pl-c">//</span>协程函数内部co_return终止返回void时执行的操作（和下面return_value同时只能有一个存在）</span>
+void <span class="pl-en">return_value</span>(SOME_TYPE);<span class="pl-c"><span class="pl-c">//</span>协程函数内部co_return终止返回非void值时执行的操作</span>
 SOME_TYPE <span class="pl-en">final_suspend</span>()<span class="pl-k">noexcept</span>;<span class="pl-c"><span class="pl-c">//</span>用于协程函数结束执行时执行暂停操作</span>
-<span class="pl-k">void</span> <span class="pl-en">unhandled_exception</span>();<span class="pl-c"><span class="pl-c">//</span>用于协程函数内部有未接住的异常时执行</span>
-<span class="pl-k">auto</span> <span class="pl-en">ield_value</span>();</pre></div>
+void <span class="pl-en">unhandled_exception</span>();<span class="pl-c"><span class="pl-c">//</span>用于协程函数内部有未接住的异常时执行</span>
+auto <span class="pl-en">ield_value</span>();</pre></div>
 <h1>实现一个协程</h1>
 <h2>定义 <code class="notranslate">Generator</code></h2>
 <p><strong>约束范型的类型约束是无符号整数</strong></p>
@@ -329,7 +330,7 @@ SOME_TYPE <span class="pl-en">final_suspend</span>()<span class="pl-k">noexcept<
 
 
 <span class="pl-c"><span class="pl-c">//</span> 测试 </span>
-<span class="pl-k">void</span> <span class="pl-en">test_fib</span>() {
+void <span class="pl-en">test_fib</span>() {
     <span class="pl-k">auto</span> gen = <span class="pl-c1">fib</span>(<span class="pl-c1">10</span>);
     <span class="pl-k">for</span> (<span class="pl-k">int</span> i = <span class="pl-c1">0</span>; i &lt; <span class="pl-c1">10</span>; i++) {
         std::clog &lt;&lt; gen.<span class="pl-c1">next</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
@@ -342,7 +343,7 @@ SOME_TYPE <span class="pl-en">final_suspend</span>()<span class="pl-k">noexcept<
 </div>
     <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
 <p>
-<span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
 </p>
 
 <script>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light">
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="content-type" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="我自倾怀，君且随意。">
     <link href="//cdn.staticfile.org/Primer/21.0.7/primer.css" rel="stylesheet" />
     <link rel="icon" href="https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.ico">
     <script>
@@ -46,7 +47,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="postTitle">智能指针以及new</span>
 <div class="title-right">
 
-    <a href="/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
+    <a href="http://0x1042.github.io"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
             <path id="pathHome" fill-rule="evenodd" d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path>
         </svg>
@@ -141,7 +142,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>定义对象池</li>
 </ul>
 <div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> pool.h </span>
-<span class="pl-k">class</span> <span class="pl-en">ObjectPool</span> {
+class ObjectPool {
 <span class="pl-k">public:</span>
     <span class="pl-k">struct</span> <span class="pl-en">ObjectDeleter</span> {
         <span class="pl-k">void</span> <span class="pl-en">operator</span>()(Object * obj) {
@@ -151,16 +152,16 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         }
     };
 
-    <span class="pl-k">static</span> <span class="pl-k">auto</span> <span class="pl-en">acquire</span>() -&gt; std::unique_ptr&lt;Object, ObjectDeleter&gt;;
+    <span class="pl-k">static</span> <span class="pl-k">auto</span> <span class="pl-smi">acquire</span>() -&gt; std::unique_ptr&lt;Object, ObjectDeleter&gt;;
 
-    <span class="pl-k">static</span> <span class="pl-k">auto</span> <span class="pl-en">size</span>() -&gt; size_t;
+    <span class="pl-k">static</span> <span class="pl-k">auto</span> <span class="pl-smi">size</span>() -&gt; <span class="pl-c1">size_t</span>;
 
 <span class="pl-k">private:</span>
     <span class="pl-k">inline</span> <span class="pl-k">static</span> std::vector&lt;Object *&gt; pool; <span class="pl-c"><span class="pl-c">//</span> 对象池</span>
 };
 
 <span class="pl-c"><span class="pl-c">//</span> pool.cpp</span>
-<span class="pl-k">auto</span> <span class="pl-en">ObjectPool::acquire</span>() -&gt; std::unique_ptr&lt;Object, ObjectDeleter&gt; {
+auto <span class="pl-smi">ObjectPool::acquire</span>() -&gt; std::unique_ptr&lt;Object, ObjectDeleter&gt; {
     <span class="pl-k">if</span> (pool.<span class="pl-c1">empty</span>()) {
         <span class="pl-c"><span class="pl-c">//</span> return std::unique_ptr&lt;Object, ObjectDeleter&gt;(new Object(0), ObjectDeleter());</span>
         <span class="pl-k">return</span> {<span class="pl-k">new</span> <span class="pl-c1">Object</span>(<span class="pl-c1">0</span>), <span class="pl-c1">ObjectDeleter</span>()};
@@ -171,7 +172,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-k">return</span> {obj, <span class="pl-c1">ObjectDeleter</span>()};
 }
 
-<span class="pl-k">auto</span> <span class="pl-en">ObjectPool::size</span>() -&gt; size_t {
+<span class="pl-k">auto</span> <span class="pl-smi">ObjectPool::size</span>() -&gt; <span class="pl-c1">size_t</span> {
     <span class="pl-k">return</span> pool.<span class="pl-c1">size</span>();
 }</pre></div>
 <h1><code class="notranslate">new</code></h1>
@@ -225,7 +226,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
 <p>
-<span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
 </p>
 
 <script>

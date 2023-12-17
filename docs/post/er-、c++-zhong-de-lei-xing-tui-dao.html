@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light">
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="content-type" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="我自倾怀，君且随意。">
     <link href="//cdn.staticfile.org/Primer/21.0.7/primer.css" rel="stylesheet" />
     <link rel="icon" href="https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.ico">
     <script>
@@ -46,7 +47,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="postTitle">二、c++中的类型推导</span>
 <div class="title-right">
 
-    <a href="/"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
+    <a href="http://0x1042.github.io"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
             <path id="pathHome" fill-rule="evenodd" d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path>
         </svg>
@@ -283,16 +284,16 @@ Cat&amp;&amp; rr_cat = Cat{};</pre></div>
 <p>默认使用<code class="notranslate">auto</code>时，丢失了引用性和<code class="notranslate">cv</code>属性，若指明了 <code class="notranslate">const</code>属性，则导致结果始终为<code class="notranslate">const</code>，若采用引用，则需要显示指定<code class="notranslate">auto&amp;</code> 或者 <code class="notranslate">auto&amp;&amp;</code>,这又会导致只能表现为 引用语义。<code class="notranslate">decltype(auto)</code> 用于精确获取等号右边类型的场景.</p>
 </blockquote>
 <div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> Student s1;</span>
-<span class="pl-en">decltype</span>(student) s1 = {<span class="pl-c1">1</span>, <span class="pl-s"><span class="pl-pds">"</span>李四<span class="pl-pds">"</span></span>};
+decltype(student) s1 = {<span class="pl-c1">1</span>, <span class="pl-s"><span class="pl-pds">"</span>李四<span class="pl-pds">"</span></span>};
 <span class="pl-c"><span class="pl-c">//</span> uint32_t s3;</span>
-<span class="pl-en">decltype</span>(student.id) s3 = 1024;
+decltype(student.id) s3 = <span class="pl-c1">1024</span>;
 
 <span class="pl-c"><span class="pl-c">//</span> 无需再声明每一种类型</span>
-<span class="pl-en">decltype</span>(<span class="pl-k">auto</span>) name1 = "王五";
+decltype(<span class="pl-k">auto</span>) name1 = <span class="pl-s"><span class="pl-pds">"</span>王五<span class="pl-pds">"</span></span>;
 <span class="pl-en">decltype</span>(<span class="pl-k">auto</span>) name2 = std::string(<span class="pl-s"><span class="pl-pds">"</span>王五<span class="pl-pds">"</span></span>);
 
 <span class="pl-c"><span class="pl-c">//</span> stud_type 是Student&amp;</span>
-<span class="pl-en">decltype</span>(<span class="pl-k">auto</span>) stud_type = (student);</pre></div>
+decltype(<span class="pl-k">auto</span>) stud_type = (student);</pre></div>
 <ul>
 <li><code class="notranslate">std::forward</code> 用于精确保留参数的类型</li>
 <li><code class="notranslate">decltype(auto)</code> 可以精确获取函数的返回值</li>
@@ -331,7 +332,7 @@ Cat&amp;&amp; rr_cat = Cat{};</pre></div>
 <p>全称是 Class Template Args Deduction, 编译器通过模板参数推导其构造函数的模板参数类型，简化类型定义</p>
 </blockquote>
 <div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> p1 与 p2 等价，但是p1 的定义更简单</span>
-<span class="pl-k">auto</span> p1 = std::make_pair(<span class="pl-c1">1</span>, <span class="pl-c1">3.14</span>);
+auto p1 = std::make_pair(<span class="pl-c1">1</span>, <span class="pl-c1">3.14</span>);
 <span class="pl-k">auto</span> p2 = std::make_pair&lt;<span class="pl-k">int</span>, <span class="pl-k">double</span>&gt;(<span class="pl-c1">1</span>, <span class="pl-c1">3.14</span>);</pre></div>
 <p><strong>自定义推导规则</strong></p>
 <ul>
@@ -359,7 +360,7 @@ MyPair <span class="pl-en">p3</span>(<span class="pl-c1">3.14</span>, <span clas
 <p>解决办法</p>
 <div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c"><span class="pl-c">//</span> 自定义类型推导</span>
 <span class="pl-c"><span class="pl-c">//</span> 告诉编译器，对于MyPair(X,Y)方式构造程序时，自行推导出 模板类 MyPair&lt;X,Y&gt; </span>
-<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> F, <span class="pl-k">typename</span> S&gt;
+template &lt;<span class="pl-k">typename</span> F, <span class="pl-k">typename</span> S&gt;
 <span class="pl-en">MyPair</span>(F, S) -&gt; MyPair&lt;F, S&gt;;</pre></div>
 </li>
 </ul>
@@ -369,7 +370,7 @@ MyPair <span class="pl-en">p3</span>(<span class="pl-c1">3.14</span>, <span clas
 </div>
     <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
 <p>
-<span id="runday"></span>Powered by <a href="https://github.com/Meekdai/Gmeek" target="_blank">Gmeek</a>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
 </p>
 
 <script>

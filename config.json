@@ -21,5 +21,7 @@
     "i18n":"CN",
     "dayTheme":"light",
     "urlMode":"pinyin",
+    "style":"",
+    "script":"",
     "nightTheme":"dark_colorblind"
 }

@@ -1,5 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Sat, 23 Dec 2023 10:37:50 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>ml 扫盲二</title><link>http://0x1042.github.io/post/ml%20-sao-mang-er.html</link><description># ML扫盲二&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Sat, 06 Jan 2024 07:38:46 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>macro基本使用</title><link>http://0x1042.github.io/post/macro-ji-ben-shi-yong.html</link><description># macro&#13;
+&#13;
+- [macro](#macro)&#13;
+  - [字符串化](#字符串化)&#13;
+  - [连接](#连接)&#13;
+  - [变参宏](#变参宏)&#13;
+  - [条件编译](#条件编译)&#13;
+- [macro vs function](#macro-vs-function)&#13;
+  - [宏优点](#宏优点)&#13;
+  - [宏缺点](#宏缺点)&#13;
+&#13;
+&#13;
+&gt; 一般我们在CR中不建议宏，因为无法做到类型安全以及可读性上比较差&#13;
+&gt; 但是在一些业务无关的代码上，比如配置解析，可以有效减少重复代码 &#13;
+&gt; 下面收集一些宏的常见使用 &#13;
+&#13;
+## 字符串化&#13;
+&#13;
+&gt; 简单说就是在符号的前后加上双引号。</description><guid isPermaLink="true">http://0x1042.github.io/post/macro-ji-ben-shi-yong.html</guid><pubDate>Sat, 06 Jan 2024 07:38:15 +0000</pubDate></item><item><title>ml 扫盲二</title><link>http://0x1042.github.io/post/ml%20-sao-mang-er.html</link><description># ML扫盲二&#13;
 &#13;
 - [ML扫盲二](#ml扫盲二)&#13;
 - [环境搭建](#环境搭建)&#13;

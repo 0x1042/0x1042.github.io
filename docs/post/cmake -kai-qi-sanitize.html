@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark_colorblind" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.org/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.ico">
+    <script>
+        if(localStorage.getItem("meek_theme")==null){}
+        else if(localStorage.getItem("meek_theme")=="dark"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";}
+        else if(localStorage.getItem("meek_theme")=="light"){document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";}
+    </script>
+    
+<meta name="description" content="cmake 开启sanitize">
+<title>cmake 开启sanitize</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">cmake 开启sanitize</h1>
+<div class="title-right">
+    
+    <a href="http://0x1042.github.io"><button id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd" d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path>
+        </svg>
+    </button></a>
+
+    
+
+    <button class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </button>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><ul>
+<li><a href="#%E9%85%8D%E7%BD%AE">配置</a></li>
+<li><a href="#%E6%B5%8B%E8%AF%95">测试</a></li>
+<li><a href="#%E7%BC%96%E8%AF%91%E8%BF%90%E8%A1%8C">编译运行</a>
+<ul>
+<li><a href="#-fsanitizethread"><code class="notranslate">-fsanitize=thread</code></a></li>
+<li><a href="#-fsanitizeaddress"><code class="notranslate">-fsanitize=address</code></a></li>
+</ul>
+</li>
+<li><a href="#sanitier"><code class="notranslate">sanitier</code></a></li>
+</ul>
+<h1>配置</h1>
+<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-c1">option</span>(ENABLE_SANITIZE <span class="pl-s">"Enable feature"</span> <span class="pl-k">ON</span>)
+
+<span class="pl-k">if</span>(ENABLE_SANITIZE) 
+  <span class="pl-c1">add_compile_options</span>(<span class="pl-s">"-fno-omit-frame-pointer"</span>) 
+  <span class="pl-c1">add_compile_options</span>(<span class="pl-s">"-fno-optimize-sibling-calls"</span>)
+  <span class="pl-c"><span class="pl-c">#</span> add_compile_options("-fsanitize=address")</span>
+  <span class="pl-c1">add_compile_options</span>(<span class="pl-s">"-fsanitize=thread"</span>)
+  <span class="pl-c1">add_compile_options</span>(<span class="pl-s">"-fsanitize-address-use-after-scope"</span>)
+  <span class="pl-c"><span class="pl-c">#</span> set(CMAKE_EXE_LINKER_FLAGS "-fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=address" ) </span>
+  <span class="pl-c1">set</span>(CMAKE_EXE_LINKER_FLAGS <span class="pl-s">"-fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=thread"</span> ) 
+<span class="pl-k">endif</span>()</pre></div>
+<h1>测试</h1>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>functional<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>thread<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>vector<span class="pl-pds">&gt;</span></span>
+
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>fmt/ranges.h<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>gtest/gtest.h<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-k">void</span> <span class="pl-en">add_to_vec</span>(std::vector&lt;std::string&gt; &amp;target, <span class="pl-k">const</span> std::string &amp;name) {
+	<span class="pl-k">for</span> (<span class="pl-k">int</span> i = <span class="pl-c1">0</span>; i &lt; <span class="pl-c1">10</span>; i++) {
+		target.<span class="pl-c1">push_back</span>(<span class="pl-c1">fmt::format</span>(<span class="pl-s"><span class="pl-pds">"</span>{}:{}<span class="pl-pds">"</span></span>, name, i));
+	}
+}
+
+<span class="pl-en">TEST</span>(race, addtovec) {
+	std::vector&lt;std::string&gt; dst;
+	std::string hello = <span class="pl-s"><span class="pl-pds">"</span>hello<span class="pl-pds">"</span></span>;
+	std::string world = <span class="pl-s"><span class="pl-pds">"</span>world<span class="pl-pds">"</span></span>;
+	std::thread <span class="pl-smi">t1</span>(add_to_vec, <span class="pl-c1">std::ref</span>(dst), <span class="pl-c1">std::cref</span>(hello));
+	std::thread <span class="pl-smi">t2</span>(add_to_vec, <span class="pl-c1">std::ref</span>(dst), <span class="pl-c1">std::cref</span>(world));
+	t1.<span class="pl-c1">join</span>();
+	t2.<span class="pl-c1">join</span>();
+	std::cerr &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span> res: <span class="pl-pds">"</span></span> &lt;&lt; <span class="pl-c1">fmt::format</span>(<span class="pl-s"><span class="pl-pds">"</span>{}<span class="pl-pds">"</span></span>, dst) &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
+}</pre></div>
+<h1>编译运行</h1>
+<h2><code class="notranslate">-fsanitize=thread</code></h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate">WARNING: ThreadSanitizer: data race (pid=77881)
+  Read of size 8 at 0x7ff7ba7ae880 by thread T4:
+    <span class="pl-c"><span class="pl-c">#</span>0 add_to_vec(std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;&gt;&gt;&amp;, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt; const&amp;) race.cc:14 (singleton:x86_64+0x100021ba9)</span>
+    <span class="pl-c"><span class="pl-c">#</span>1 void* std::__1::__thread_proxy[abi:ue170006]&lt;std::__1::tuple&lt;std::__1::unique_ptr&lt;std::__1::__thread_struct, std::__1::default_delete&lt;std::__1::__thread_struct&gt;&gt;, void (*)(std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;&gt;&gt;&amp;, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt; const&amp;), std::__1::reference_wrapper&lt;std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;&gt;&gt;&gt;, std::__1::reference_wrapper&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt; const&gt;&gt;&gt;(void*) thread.h:232 (singleton:x86_64+0x100022437)</span>
+
+  Previous write of size 8 at 0x7ff7ba7ae880 by thread T3:
+    <span class="pl-c"><span class="pl-c">#</span>0 add_to_vec(std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;&gt;&gt;&amp;, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt; const&amp;) race.cc:14 (singleton:x86_64+0x100021b0b)</span>
+    <span class="pl-c"><span class="pl-c">#</span>1 void* std::__1::__thread_proxy[abi:ue170006]&lt;std::__1::tuple&lt;std::__1::unique_ptr&lt;std::__1::__thread_struct, std::__1::default_delete&lt;std::__1::__thread_struct&gt;&gt;, void (*)(std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;&gt;&gt;&amp;, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt; const&amp;), std::__1::reference_wrapper&lt;std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;&gt;&gt;&gt;, std::__1::reference_wrapper&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt; const&gt;&gt;&gt;(void*) thread.h:232 (singleton:x86_64+0x100022437)</span></pre></div>
+<h2><code class="notranslate">-fsanitize=address</code></h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate">==84486==ERROR: AddressSanitizer: attempting free on address which was not <span class="pl-en">malloc</span>()-ed: 0x603000003058 <span class="pl-k">in</span> thread T4
+    <span class="pl-c"><span class="pl-c">#</span>0 0x10f6dd4ad in _ZdlPv (/usr/local/Cellar/llvm/17.0.6_1/lib/clang/17/lib/darwin/libclang_rt.asan_osx_dynamic.dylib:x86_64h+0xf14ad)</span>
+    <span class="pl-c"><span class="pl-c">#</span>1 0x10eb5162e in add_to_vec(std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;&gt;&gt;&amp;, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt; const&amp;) (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x10004162e)</span>
+    <span class="pl-c"><span class="pl-c">#</span>2 0x10eb52fab in void* std::__1::__thread_proxy[abi:ue170006]&lt;std::__1::tuple&lt;std::__1::unique_ptr&lt;std::__1::__thread_struct, std::__1::default_delete&lt;std::__1::__thread_struct&gt;&gt;, void (*)(std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;&gt;&gt;&amp;, std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt; const&amp;), std::__1::reference_wrapper&lt;std::__1::vector&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;, std::__1::allocator&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt;&gt;&gt;&gt;, std::__1::reference_wrapper&lt;std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt;&gt; const&gt;&gt;&gt;(void*) (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x100042fab)</span>
+    <span class="pl-c"><span class="pl-c">#</span>3 0x10f6c59dd in asan_thread_start(void*) (/usr/local/Cellar/llvm/17.0.6_1/lib/clang/17/lib/darwin/libclang_rt.asan_osx_dynamic.dylib:x86_64h+0xd99dd)</span>
+    <span class="pl-c"><span class="pl-c">#</span>4 0x7ff819cf818a in _pthread_start (/usr/lib/system/libsystem_pthread.dylib:x86_64+0x618a)</span>
+    <span class="pl-c"><span class="pl-c">#</span>5 0x7ff819cf3ae2 in thread_start (/usr/lib/system/libsystem_pthread.dylib:x86_64+0x1ae2)</span>
+
+0x603000003058 is located 40 bytes after 32-byte region [0x603000003010,0x603000003030)
+freed by thread T0 here:
+    <span class="pl-c"><span class="pl-c">#</span>0 0x10f6dd4ad in _ZdlPv (/usr/local/Cellar/llvm/17.0.6_1/lib/clang/17/lib/darwin/libclang_rt.asan_osx_dynamic.dylib:x86_64h+0xf14ad)</span>
+    <span class="pl-c"><span class="pl-c">#</span>1 0x10eb4e399 in tf::Executor::~Executor() (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x10003e399)</span>
+    <span class="pl-c"><span class="pl-c">#</span>2 0x10eb142b9 in test_task_flow() (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x1000042b9)</span>
+    <span class="pl-c"><span class="pl-c">#</span>3 0x10eb17228 in taskflow_dag_Test::TestBody() (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x100007228)</span>
+    <span class="pl-c"><span class="pl-c">#</span>4 0x10eba18ea in void testing::internal::HandleExceptionsInMethodIfSupported&lt;testing::Test, void&gt;(testing::Test*, void (testing::Test::*)(), char const*) (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x1000918ea)</span>
+    <span class="pl-c"><span class="pl-c">#</span>5 0x10eba183f in testing::Test::Run() (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x10009183f)</span>
+    <span class="pl-c"><span class="pl-c">#</span>6 0x10eba2b9f in testing::TestInfo::Run() (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x100092b9f)</span>
+    <span class="pl-c"><span class="pl-c">#</span>7 0x10eba3bc6 in testing::TestSuite::Run() (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x100093bc6)</span>
+    <span class="pl-c"><span class="pl-c">#</span>8 0x10ebb40ed in testing::internal::UnitTestImpl::RunAllTests() (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x1000a40ed)</span>
+    <span class="pl-c"><span class="pl-c">#</span>9 0x10ebb391a in bool testing::internal::HandleExceptionsInMethodIfSupported&lt;testing::internal::UnitTestImpl, bool&gt;(testing::internal::UnitTestImpl*, bool (testing::internal::UnitTestImpl::*)(), char const*) (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x1000a391a)</span>
+    <span class="pl-c"><span class="pl-c">#</span>10 0x10ebb389c in testing::UnitTest::Run() (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x1000a389c)</span>
+    <span class="pl-c"><span class="pl-c">#</span>11 0x10eb57c2f in main (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x100047c2f)</span>
+    <span class="pl-c"><span class="pl-c">#</span>12 0x7ff81996c365  (/usr/lib/dyld:x86_64+0xfffffffffff5c365)</span>
+
+previously allocated by thread T1 here:
+    <span class="pl-c"><span class="pl-c">#</span>0 0x10f6dd08d in _Znwm (/usr/local/Cellar/llvm/17.0.6_1/lib/clang/17/lib/darwin/libclang_rt.asan_osx_dynamic.dylib:x86_64h+0xf108d)</span>
+    #1 0x10eb1efc9 in std::__1::pair&lt;std::__1::__hash_iterator&lt;std::__1::__hash_node&lt;std::__1::__hash_value_type&lt;std::__1::__thread_id, unsigned long&gt;, void*&gt;*&gt;, bool&gt; std::__1::__hash_table&lt;std::__1::__hash_value_type&lt;std::__1::__thread_id, unsigned long&gt;, std::__1::__unordered_map_hasher&lt;std::__1::__thread_id, std::__1::__hash_value_type&lt;std::__1::__thread_id, unsigned long&gt;, std::__1::hash&lt;std::__1::__thread_id&gt;, std::__1::equal_to&lt;std::__1::__thread_id&gt;, true&gt;, std::__1::__unordered_map_equal&lt;std::__1::__thread_id, std::__1::__hash_value_type&lt;std::__1::__thread_id, unsigned long&gt;, std::__1::equal_to&lt;std::__1::__thread_id&gt;, std::__1::hash&lt;std::__1::__thread_id&gt;, true&gt;, std::__1::allocator&lt;std::__1::__hash_value_type&lt;std::__1::__thread_id, unsigned long&gt;&gt;&gt;::__emplace_unique_key_args&lt;std::__1::__thread_id, std::__1::piecewise_construct_t const&amp;, std::__1::tuple&lt;std::__1::__thread_id&amp;&amp;&gt;, std::__1::tuple&lt;&gt;&gt;(std::__1::__thread_id const&amp;, std::__1::piecewise_construct_t const&amp;, std::__1::tuple&lt;std::__1::__thread_id&amp;&amp;&gt;&amp;&amp;, std::__1::tuple&lt;&gt;&amp;&amp;) (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x10000efc9)
+    <span class="pl-c"><span class="pl-c">#</span>2 0x10eb1dfa2 in tf::Executor::_spawn(unsigned long)::'lambda'(tf::Worker&amp;, std::__1::mutex&amp;, std::__1::condition_variable&amp;, unsigned long&amp;)::operator()(tf::Worker&amp;, std::__1::mutex&amp;, std::__1::condition_variable&amp;, unsigned long&amp;) const (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x10000dfa2)</span>
+    <span class="pl-c"><span class="pl-c">#</span>3 0x10eb1db2c in void* std::__1::__thread_proxy[abi:ue170006]&lt;std::__1::tuple&lt;std::__1::unique_ptr&lt;std::__1::__thread_struct, std::__1::default_delete&lt;std::__1::__thread_struct&gt;&gt;, tf::Executor::_spawn(unsigned long)::'lambda'(tf::Worker&amp;, std::__1::mutex&amp;, std::__1::condition_variable&amp;, unsigned long&amp;), std::__1::reference_wrapper&lt;tf::Worker&gt;, std::__1::reference_wrapper&lt;std::__1::mutex&gt;, std::__1::reference_wrapper&lt;std::__1::condition_variable&gt;, std::__1::reference_wrapper&lt;unsigned long&gt;&gt;&gt;(void*) (/Users/weixuan/code/ccode/singleton/_build/singleton:x86_64+0x10000db2c)</span>
+    <span class="pl-c"><span class="pl-c">#</span>4 0x10f6c59dd in asan_thread_start(void*) (/usr/local/Cellar/llvm/17.0.6_1/lib/clang/17/lib/darwin/libclang_rt.asan_osx_dynamic.dylib:x86_64h+0xd99dd)</span>
+    <span class="pl-c"><span class="pl-c">#</span>5 0x7ff819cf818a in _pthread_start (/usr/lib/system/libsystem_pthread.dylib:x86_64+0x618a)</span>
+    <span class="pl-c"><span class="pl-c">#</span>6 0x7ff819cf3ae2 in thread_start (/usr/lib/system/libsystem_pthread.dylib:x86_64+0x1ae2)</span></pre></div>
+<h1><code class="notranslate">sanitier</code></h1>
+<table role="table">
+<thead>
+<tr>
+<th>sanitizer</th>
+<th>官方地址</th>
+<th>开启方式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">thread</code></td>
+<td><a href="https://clang.llvm.org/docs/ThreadSanitizer.html" rel="nofollow">https://clang.llvm.org/docs/ThreadSanitizer.html</a>.</td>
+<td><code class="notranslate">-fsanitize=thread</code></td>
+<td>检测datarace</td>
+</tr>
+<tr>
+<td><code class="notranslate">address</code></td>
+<td><a href="https://clang.llvm.org/docs/AddressSanitizer.html" rel="nofollow">https://clang.llvm.org/docs/AddressSanitizer.html</a></td>
+<td><code class="notranslate">-fsanitize=address</code></td>
+<td>内存错误</td>
+</tr>
+<tr>
+<td><code class="notranslate">memory</code></td>
+<td><a href="https://clang.llvm.org/docs/MemorySanitizer.html" rel="nofollow">https://clang.llvm.org/docs/MemorySanitizer.html</a></td>
+<td><code class="notranslate">-fsanitize=memory</code></td>
+<td>检测未初始化读取</td>
+</tr>
+<tr>
+<td><code class="notranslate">undefined</code></td>
+<td><a href="https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html" rel="nofollow">https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html</a></td>
+<td><code class="notranslate"> -fsanitize=undefined</code></td>
+<td>检测为定义行为</td>
+</tr>
+</tbody>
+</table></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if(""!=""){
+    var now=new Date();
+    var startSite=new Date("");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'post': 'M0 3.75C0 2.784.784 2 1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25Zm1.75-.25a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25v-8.5a.25.25 0 0 0-.25-.25ZM3.5 6.25a.75.75 0 0 1 .75-.75h7a.75.75 0 0 1 0 1.5h-7a.75.75 0 0 1-.75-.75Zm.75 2.25h4a.75.75 0 0 1 0 1.5h-4a.75.75 0 0 1 0-1.5Z', 'link': 'm7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z', 'about': 'M10.561 8.073a6.005 6.005 0 0 1 3.432 5.142.75.75 0 1 1-1.498.07 4.5 4.5 0 0 0-8.99 0 .75.75 0 0 1-1.498-.07 6.004 6.004 0 0 1 3.431-5.142 3.999 3.999 0 1 1 5.123 0ZM10.5 5a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z', 'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'search': 'M15.7 13.3l-3.81-3.83A5.93 5.93 0 0 0 13 6c0-3.31-2.69-6-6-6S1 2.69 1 6s2.69 6 6 6c1.3 0 2.48-.41 3.47-1.11l3.83 3.81c.19.2.45.3.7.3.25 0 .52-.09.7-.3a.996.996 0 0 0 0-1.41v.01zM7 10.7c-2.59 0-4.7-2.11-4.7-4.7 0-2.59 2.11-4.7 4.7-4.7 2.59 0 4.7 2.11 4.7 4.7 0 2.59-2.11 4.7-4.7 4.7z', 'rss': 'M2.002 2.725a.75.75 0 0 1 .797-.699C8.79 2.42 13.58 7.21 13.974 13.201a.75.75 0 0 1-1.497.098 10.502 10.502 0 0 0-9.776-9.776.747.747 0 0 1-.7-.798ZM2.84 7.05h-.002a7.002 7.002 0 0 1 6.113 6.111.75.75 0 0 1-1.49.178 5.503 5.503 0 0 0-4.8-4.8.75.75 0 0 1 .179-1.489ZM2 13a1 1 0 1 1 2 0 1 1 0 0 1-2 0Z', 'upload': 'M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z M11.78 4.72a.749.749 0 1 1-1.06 1.06L8.75 3.811V9.5a.75.75 0 0 1-1.5 0V3.811L5.28 5.78a.749.749 0 1 1-1.06-1.06l3.25-3.25a.749.749 0 0 1 1.06 0l3.25 3.25Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z'};
+var utterancesLoad=0;
+if(localStorage.getItem("meek_theme")==null){localStorage.setItem("meek_theme","light");changeLight();}
+else if(localStorage.getItem("meek_theme")=="dark"){changeDark();}
+else if(localStorage.getItem("meek_theme")=="light"){changeLight();}
+
+function changeDark(){
+    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="dark";
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList["moon"]);
+    document.getElementById("themeSwitch").parentNode.style.color="#00f0ff";
+    if(utterancesLoad==1){utterancesTheme("dark-blue");}
+}
+function changeLight(){
+    document.getElementsByTagName("html")[0].attributes.getNamedItem("data-color-mode").value="light";
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList["sun"]);
+    document.getElementById("themeSwitch").parentNode.style.color="#ff5000";
+    if(utterancesLoad==1){utterancesTheme("github-light");}
+}
+function modeSwitch(){
+    if(document.getElementsByTagName("html")[0].attributes[0].value=="light"){changeDark();localStorage.setItem("meek_theme","dark");}
+    else{changeLight();localStorage.setItem("meek_theme","light");}
+}
+function utterancesTheme(theme){
+    const message = {type: 'set-theme',theme: theme};
+    const iframe = document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message, 'https://utteranc.es');
+}
+
+console.log("\n %c Gmeek main %c https://github.com/Meekdai/Gmeek \n\n", "color: #fff; background-image: linear-gradient(90deg, rgb(47, 172, 178) 0%, rgb(45, 190, 96) 100%); padding:5px 1px;", "background-image: linear-gradient(90deg, rgb(45, 190, 96) 0%, rgb(255, 255, 255) 100%); padding:5px 0;");
+</script>
+
+<script>
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","0x1042/0x1042.github.io");
+    script.setAttribute("issue-term","title");
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else{script.setAttribute("theme","github-light");}
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+</script>
+
+
+
+
+</html>

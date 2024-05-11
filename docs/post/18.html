@@ -9,8 +9,8 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="GDB 使用 ">
-<title>GDB 使用 </title>
+<meta name="description" content="macro基本使用">
+<title>macro基本使用</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
@@ -41,7 +41,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">GDB 使用 </h1>
+<h1 class="postTitle">macro基本使用</h1>
 <div class="title-right">
     <a href="http://0x1042.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -49,7 +49,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/0x1042/0x1042.github.io/issues/7" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/0x1042/0x1042.github.io/issues/18" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -65,47 +65,72 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><ul>
-<li><a href="#gdb-%E4%BD%BF%E7%94%A8">GDB 使用</a>
+<div class="markdown-body" id="postBody"><h1>macro</h1>
 <ul>
-<li><a href="#%E8%83%8C%E6%99%AF">背景</a></li>
-<li><a href="#gdb-dump%E7%BA%BF%E7%A8%8B%E6%A0%88">GDB dump线程栈</a></li>
-<li><a href="#%E6%89%BE%E5%88%B0%E8%B4%9F%E8%BD%BD%E9%AB%98%E7%9A%84%E7%BA%BF%E7%A8%8B">找到负载高的线程</a></li>
-<li><a href="#%E5%AF%BB%E6%89%BE%E5%AF%B9%E5%BA%94%E7%9A%84%E8%A1%8C%E5%8F%B7">寻找对应的行号</a></li>
+<li><a href="#macro">macro</a>
+<ul>
+<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%96">字符串化</a></li>
+<li><a href="#%E8%BF%9E%E6%8E%A5">连接</a></li>
+<li><a href="#%E5%8F%98%E5%8F%82%E5%AE%8F">变参宏</a></li>
+<li><a href="#%E6%9D%A1%E4%BB%B6%E7%BC%96%E8%AF%91">条件编译</a></li>
+</ul>
+</li>
+<li><a href="#macro-vs-function">macro vs function</a>
+<ul>
+<li><a href="#%E5%AE%8F%E4%BC%98%E7%82%B9">宏优点</a></li>
+<li><a href="#%E5%AE%8F%E7%BC%BA%E7%82%B9">宏缺点</a></li>
 </ul>
 </li>
 </ul>
-<h2>背景</h2>
 <blockquote>
-<p>线上流量没变，但是出现瞬时负载呈直线上涨，1～2分钟整个服务不可用。从火焰图看，top sample 集中在一个函数之内，但是无法精确到函数的行号。</p>
+<p>一般我们在CR中不建议宏，因为无法做到类型安全以及可读性上比较差<br>
+但是在一些业务无关的代码上，比如配置解析，可以有效减少重复代码<br>
+下面收集一些宏的常见使用</p>
 </blockquote>
-<h2>GDB dump线程栈</h2>
-<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> gdb.cmd </span>
-<span class="pl-c1">set</span> logging file thread.txt
-<span class="pl-c1">set</span> logging on
-thread apply all bt
-quit</pre></div>
-<p>然后执行,会把所有的线程栈打印到文件中</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">gdb --command=gdb.cmd --pid 939</pre></div>
-<h2>找到负载高的线程</h2>
-<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 按照cpu排序，找到对应的线程id  比如959</span>
-top -H -p 939 </pre></div>
-<p>在thread stack文件中找到对应的线程id的栈</p>
-<div class="highlight highlight-source-shell"><pre class="notranslate">572 Thread 2 (Thread 0x7ff946b91640 (LWP 959) <span class="pl-s"><span class="pl-pds">"</span>ib_io_ibuf<span class="pl-pds">"</span></span>):
-573 <span class="pl-c"><span class="pl-c">#</span>0  syscall () at ../sysdeps/unix/sysv/linux/x86_64/syscall.S:38</span>
-574 <span class="pl-c"><span class="pl-c">#</span>1  0x00007ff957218279 in io_getevents () from /lib/x86_64-linux-gnu/libaio.so.1</span>
-575 <span class="pl-c"><span class="pl-c">#</span>2  0x00005606d5644ccb in LinuxAIOHandler::collect() ()</span>
-576 <span class="pl-c"><span class="pl-c">#</span>3  0x00005606d5645526 in LinuxAIOHandler::poll(fil_node_t**, void**, IORequest*) ()</span>
-577 <span class="pl-c"><span class="pl-c">#</span>4  0x00005606d5648f68 in os_aio_handler(unsigned long, fil_node_t**, void**, IORequest*) ()</span>
-578 <span class="pl-c"><span class="pl-c">#</span>5  0x00005606d57fd32d in fil_aio_wait(unsigned long) ()</span>
-579 <span class="pl-c"><span class="pl-c">#</span>6  0x00005606d564238a in ?? ()</span>
-580 <span class="pl-c"><span class="pl-c">#</span>7  0x00005606d5642479 in ?? ()</span>
-581 <span class="pl-c"><span class="pl-c">#</span>8  0x00007ff9570b8253 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6</span>
-582 <span class="pl-c"><span class="pl-c">#</span>9  0x00007ff956d41ac3 in start_thread (arg=&lt;optimized out&gt;) at ./nptl/pthread_create.c:442</span>
-583 <span class="pl-c"><span class="pl-c">#</span>10 0x00007ff956dd3a40 in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:81</span></pre></div>
-<h2>寻找对应的行号</h2>
-<div class="highlight highlight-source-shell"><pre class="notranslate">addr2line 0x00005606d4b388a0 -e exec_binary</pre></div>
-<p><strong>对于静态链接程序有效</strong></p></div>
+<h2>字符串化</h2>
+<blockquote>
+<p>简单说就是在符号的前后加上双引号。 #hello -&gt; "hello"</p>
+</blockquote>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">define</span> <span class="pl-en">STR_MACRO</span>(<span class="pl-v">x</span>) #x
+
+std::clog &lt;&lt; STR_MACRO(hello) &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
+std::clog &lt;&lt; STR_MACRO(world) &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
+std::clog &lt;&lt; STR_MACRO(<span class="pl-c1">1024</span>) &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
+std::clog &lt;&lt; STR_MACRO(<span class="pl-c1">3.14</span>) &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;</pre></div>
+<h2>连接</h2>
+<blockquote>
+<p>concat two symbol . eigen 库中大量使用</p>
+</blockquote>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Type, <span class="pl-k">typename</span> Row, <span class="pl-k">typename</span> Col&gt;
+<span class="pl-k">class</span> <span class="pl-en">Matrix</span> {};
+
+#<span class="pl-k">define</span> <span class="pl-en">MAKE_TYPEDEFS_MACRO</span>(<span class="pl-v">Size, SizeSuffix</span>) \
+    <span class="pl-c"><span class="pl-c">/*</span> MatrixX<span class="pl-c">*/</span></span> \
+    <span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Type&gt; \
+    <span class="pl-k">using</span> Matrix##SizeSuffix = Matrix&lt;Type, <span class="pl-c1">Size</span>, <span class="pl-c1">Size</span>&gt;; \
+    <span class="pl-c"><span class="pl-c">/*</span>VectorX<span class="pl-c">*/</span></span> \
+    <span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Type&gt; \
+    <span class="pl-k">using</span> Vector##SizeSuffix = Matrix&lt;Type, <span class="pl-c1">Size</span>, <span class="pl-c1">1</span>&gt;; \
+    <span class="pl-c"><span class="pl-c">/*</span>RowVectorX<span class="pl-c">*/</span></span> \
+    <span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Type&gt; \
+    <span class="pl-k">using</span> RowVector##SizeSuffix = Matrix&lt;Type, <span class="pl-c1">1</span>, <span class="pl-c1">Size</span>&gt;;</pre></div>
+<h2>变参宏</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">define</span> <span class="pl-en">PRINT_VALUES</span>(...) printValues(__VA_ARGS__)</pre></div>
+<h2>条件编译</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">ifdef</span> DEBUG
+<span class="pl-c"><span class="pl-c">//</span> 在调试模式下执行的代码</span>
+#<span class="pl-k">endif</span></pre></div>
+<h1>macro vs function</h1>
+<h2>宏优点</h2>
+<ul>
+<li>在宏处理阶段做文本替换，无运行时函数调用开销</li>
+<li>支持字符串化以及连接，灵活性更好</li>
+</ul>
+<h2>宏缺点</h2>
+<ul>
+<li>可读性和维护性： 由于宏仅是简单的文本替换，可能导致代码可读性较差，特别是在宏定义比较复杂的情况下。这也增加了代码维护的难度。</li>
+<li>类型安全： 宏不具备类型检查，可能导致一些潜在的类型错误，而函数则在编译时会进行类型检查</li>
+</ul></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
@@ -116,9 +141,9 @@ top -H -p 939 </pre></div>
 </p>
 
 <script>
-if(""!=""){
+if("10/25/2023"!=""){
     var now=new Date();
-    var startSite=new Date("");
+    var startSite=new Date("10/25/2023");
     var diff=now.getTime()-startSite.getTime();
     var diffDay=Math.floor(diff/(1000*60*60*24));
     document.getElementById("year").innerHTML=now.getFullYear();

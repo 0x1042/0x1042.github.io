@@ -9,8 +9,8 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="macro基本使用">
-<title>macro基本使用</title>
+<meta name="description" content="C++打印环境变量">
+<title>C++打印环境变量</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
@@ -41,7 +41,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">macro基本使用</h1>
+<h1 class="postTitle">C++打印环境变量</h1>
 <div class="title-right">
     <a href="http://0x1042.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -49,7 +49,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/0x1042/0x1042.github.io/issues/18" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/0x1042/0x1042.github.io/issues/16" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -65,72 +65,49 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>macro</h1>
+<div class="markdown-body" id="postBody"><h1>获取所有的环境变量</h1>
 <ul>
-<li><a href="#macro">macro</a>
+<li><a href="#%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F">获取所有的环境变量</a>
 <ul>
-<li><a href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%8C%96">字符串化</a></li>
-<li><a href="#%E8%BF%9E%E6%8E%A5">连接</a></li>
-<li><a href="#%E5%8F%98%E5%8F%82%E5%AE%8F">变参宏</a></li>
-<li><a href="#%E6%9D%A1%E4%BB%B6%E7%BC%96%E8%AF%91">条件编译</a></li>
-</ul>
-</li>
-<li><a href="#macro-vs-function">macro vs function</a>
-<ul>
-<li><a href="#%E5%AE%8F%E4%BC%98%E7%82%B9">宏优点</a></li>
-<li><a href="#%E5%AE%8F%E7%BC%BA%E7%82%B9">宏缺点</a></li>
+<li><a href="#main-%E5%87%BD%E6%95%B0%E6%96%B9%E5%BC%8F%E8%8E%B7%E5%8F%96"><code class="notranslate">main</code> 函数方式获取</a></li>
+<li><a href="#environ%E8%AF%BB%E5%8F%96"><code class="notranslate">environ</code>读取</a></li>
 </ul>
 </li>
 </ul>
-<blockquote>
-<p>一般我们在CR中不建议宏，因为无法做到类型安全以及可读性上比较差<br>
-但是在一些业务无关的代码上，比如配置解析，可以有效减少重复代码<br>
-下面收集一些宏的常见使用</p>
-</blockquote>
-<h2>字符串化</h2>
-<blockquote>
-<p>简单说就是在符号的前后加上双引号。 #hello -&gt; "hello"</p>
-</blockquote>
-<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">define</span> <span class="pl-en">STR_MACRO</span>(<span class="pl-v">x</span>) #x
+<h2><code class="notranslate">main</code> 函数方式获取</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">auto</span> <span class="pl-en">main</span>(<span class="pl-k">int</span> argc, <span class="pl-k">char</span> ** argv, <span class="pl-k">char</span> ** envp) -&gt; int {
+    <span class="pl-c1">logEnv</span>(envp);
+}
 
-std::clog &lt;&lt; STR_MACRO(hello) &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
-std::clog &lt;&lt; STR_MACRO(world) &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
-std::clog &lt;&lt; STR_MACRO(<span class="pl-c1">1024</span>) &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
-std::clog &lt;&lt; STR_MACRO(<span class="pl-c1">3.14</span>) &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;</pre></div>
-<h2>连接</h2>
+<span class="pl-k">void</span> <span class="pl-en">logEnv</span>(<span class="pl-k">char</span> ** envp) {
+    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>current pid is <span class="pl-pds">"</span></span> &lt;&lt; <span class="pl-c1">getpid</span>();
+    <span class="pl-k">for</span> (<span class="pl-k">char</span> ** this_env = envp; *this_env != <span class="pl-c1">nullptr</span>; ++this_env) {
+        <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>env:<span class="pl-pds">"</span></span> &lt;&lt; <span class="pl-c1">std::string</span>(*this_env);
+    }
+}</pre></div>
+<h2><code class="notranslate">environ</code>读取</h2>
 <blockquote>
-<p>concat two symbol . eigen 库中大量使用</p>
+<p>等同 <code class="notranslate">cat /proc/${PID}/environ | tr '\0' '\n'</code></p>
 </blockquote>
-<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Type, <span class="pl-k">typename</span> Row, <span class="pl-k">typename</span> Col&gt;
-<span class="pl-k">class</span> <span class="pl-en">Matrix</span> {};
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">auto</span> <span class="pl-en">main</span>() -&gt; int {
+    <span class="pl-c1">logEnv2</span>();
+}
 
-#<span class="pl-k">define</span> <span class="pl-en">MAKE_TYPEDEFS_MACRO</span>(<span class="pl-v">Size, SizeSuffix</span>) \
-    <span class="pl-c"><span class="pl-c">/*</span> MatrixX<span class="pl-c">*/</span></span> \
-    <span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Type&gt; \
-    <span class="pl-k">using</span> Matrix##SizeSuffix = Matrix&lt;Type, <span class="pl-c1">Size</span>, <span class="pl-c1">Size</span>&gt;; \
-    <span class="pl-c"><span class="pl-c">/*</span>VectorX<span class="pl-c">*/</span></span> \
-    <span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Type&gt; \
-    <span class="pl-k">using</span> Vector##SizeSuffix = Matrix&lt;Type, <span class="pl-c1">Size</span>, <span class="pl-c1">1</span>&gt;; \
-    <span class="pl-c"><span class="pl-c">/*</span>RowVectorX<span class="pl-c">*/</span></span> \
-    <span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Type&gt; \
-    <span class="pl-k">using</span> RowVector##SizeSuffix = Matrix&lt;Type, <span class="pl-c1">1</span>, <span class="pl-c1">Size</span>&gt;;</pre></div>
-<h2>变参宏</h2>
-<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">define</span> <span class="pl-en">PRINT_VALUES</span>(...) printValues(__VA_ARGS__)</pre></div>
-<h2>条件编译</h2>
-<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">ifdef</span> DEBUG
-<span class="pl-c"><span class="pl-c">//</span> 在调试模式下执行的代码</span>
-#<span class="pl-k">endif</span></pre></div>
-<h1>macro vs function</h1>
-<h2>宏优点</h2>
-<ul>
-<li>在宏处理阶段做文本替换，无运行时函数调用开销</li>
-<li>支持字符串化以及连接，灵活性更好</li>
-</ul>
-<h2>宏缺点</h2>
-<ul>
-<li>可读性和维护性： 由于宏仅是简单的文本替换，可能导致代码可读性较差，特别是在宏定义比较复杂的情况下。这也增加了代码维护的难度。</li>
-<li>类型安全： 宏不具备类型检查，可能导致一些潜在的类型错误，而函数则在编译时会进行类型检查</li>
-</ul></div>
+<span class="pl-k">void</span> <span class="pl-en">logEnv2</span>() {
+    <span class="pl-c1">pid_t</span> pid = <span class="pl-c1">getpid</span>();
+    std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>current pid is <span class="pl-pds">"</span></span> &lt;&lt; pid &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
+    std::string envfile = <span class="pl-s"><span class="pl-pds">"</span>/proc/<span class="pl-pds">"</span></span> + <span class="pl-c1">std::to_string</span>(pid) + <span class="pl-s"><span class="pl-pds">"</span>/environ<span class="pl-pds">"</span></span>;
+
+    std::ifstream <span class="pl-smi">input</span>(envfile);
+
+    std::string envkv;
+    <span class="pl-k">while</span> (!input.<span class="pl-c1">eof</span>()) {
+        <span class="pl-c1">std::getline</span>(input, envkv, <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\0</span><span class="pl-pds">'</span></span>);
+        std::clog &lt;&lt; envkv &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
+    }
+
+    input.<span class="pl-c1">close</span>();
+}</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
@@ -141,9 +118,9 @@ std::clog &lt;&lt; STR_MACRO(<span class="pl-c1">3.14</span>) &lt;&lt; <span cla
 </p>
 
 <script>
-if(""!=""){
+if("10/25/2023"!=""){
     var now=new Date();
-    var startSite=new Date("");
+    var startSite=new Date("10/25/2023");
     var diff=now.getTime()-startSite.getTime();
     var diffDay=Math.floor(diff/(1000*60*60*24));
     document.getElementById("year").innerHTML=now.getFullYear();

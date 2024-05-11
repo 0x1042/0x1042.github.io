@@ -9,8 +9,8 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="absl time基本使用">
-<title>absl time基本使用</title>
+<meta name="description" content="struct 使用生命周期标注">
+<title>struct 使用生命周期标注</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
@@ -41,7 +41,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">absl time基本使用</h1>
+<h1 class="postTitle">struct 使用生命周期标注</h1>
 <div class="title-right">
     <a href="http://0x1042.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -49,7 +49,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/0x1042/0x1042.github.io/issues/22" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/0x1042/0x1042.github.io/issues/3" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -65,47 +65,43 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>时间基本使用</h1>
-<h2>获取指定时区的时间</h2>
-<div class="highlight highlight-source-c++"><pre class="notranslate">        absl::TimeZone local;
-        <span class="pl-en">absl::LoadTimeZone</span>(<span class="pl-s"><span class="pl-pds">"</span>Asia/Shanghai<span class="pl-pds">"</span></span>, &amp;local);
-        <span class="pl-k">auto</span> now_in_second = absl::ToCivilSecond(absl::Now(), local);
-        std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>now_in_second:<span class="pl-pds">"</span></span> &lt;&lt; now_in_second &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;</pre></div>
-<h2>获取指定时区当前小时</h2>
-<div class="highlight highlight-source-c++"><pre class="notranslate">        absl::TimeZone local;
-        <span class="pl-en">absl::LoadTimeZone</span>(<span class="pl-s"><span class="pl-pds">"</span>Asia/Shanghai<span class="pl-pds">"</span></span>, &amp;local);
-        <span class="pl-k">auto</span> now_in_hour = absl::ToCivilHour(absl::Now(), local);
-        std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>now_in_hour:<span class="pl-pds">"</span></span> &lt;&lt; now_in_hour.hour() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;</pre></div>
-<h2>获取日期</h2>
-<div class="highlight highlight-source-c++"><pre class="notranslate">    absl::<span class="pl-c1">Duration</span> one_day = absl::Hours(<span class="pl-c1">24</span>) * offset;
-    absl::Time tt = absl::Now() + one_day;
-    absl::TimeZone local;
-    <span class="pl-en">absl::LoadTimeZone</span>(<span class="pl-s"><span class="pl-pds">"</span>Asia/Shanghai<span class="pl-pds">"</span></span>, &amp;local);
-    <span class="pl-k">auto</span> today = absl::ToCivilDay(tt, local);
-    <span class="pl-k">return</span> absl::FormatCivilTime(today);</pre></div>
-<h2>解析字符串到时间</h2>
-<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">auto</span> <span class="pl-en">str2time</span>(<span class="pl-k">const</span> std::string &amp; str, absl::Time &amp; dst, absl::TimeZone tz) -&gt; bool {
-    std::string err;
-    <span class="pl-k">bool</span> status = <span class="pl-c1">absl::ParseTime</span>(<span class="pl-s"><span class="pl-pds">"</span>%Y-%m-%d<span class="pl-pds">"</span></span>, str, tz, &amp;dst, &amp;err);
-    <span class="pl-k">return</span> status;
-}
+<div class="markdown-body" id="postBody"><div class="highlight highlight-source-rust"><pre class="notranslate"><span class="pl-c1">#<span class="pl-kos">[</span>derive<span class="pl-kos">(</span><span class="pl-v">Debug</span><span class="pl-kos">)</span><span class="pl-kos">]</span></span>
+<span class="pl-k">struct</span> <span class="pl-smi">Sheep</span><span class="pl-kos">&lt;</span><span class="pl-c1">'</span>c<span class="pl-kos">,</span> <span class="pl-c1">'</span>d<span class="pl-kos">&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-c1">age</span><span class="pl-kos">:</span> <span class="pl-c1">&amp;</span><span class="pl-c1">'</span>c <span class="pl-smi">u32</span><span class="pl-kos">,</span>
+    <span class="pl-c1">name</span><span class="pl-kos">:</span> <span class="pl-c1">&amp;</span><span class="pl-c1">'</span>d <span class="pl-smi">str</span><span class="pl-kos">,</span>
+<span class="pl-kos">}</span>
 
-<span class="pl-k">auto</span> <span class="pl-en">parse_time</span>(<span class="pl-k">const</span> std::string &amp; str) -&gt; absl::CivilDay {
-    absl::CivilDay day;
+<span class="pl-k">impl</span><span class="pl-kos">&lt;</span><span class="pl-c1">'</span>c<span class="pl-kos">,</span> <span class="pl-c1">'</span>d<span class="pl-kos">&gt;</span> <span class="pl-smi">Sheep</span><span class="pl-kos">&lt;</span><span class="pl-c1">'</span>c<span class="pl-kos">,</span> <span class="pl-c1">'</span>d<span class="pl-kos">&gt;</span> <span class="pl-kos">{</span>
+    <span class="pl-c">/// Returns the get age of this [`Sheep`].</span>
+    <span class="pl-k">pub</span> <span class="pl-k">fn</span> <span class="pl-en">get_age</span><span class="pl-kos">(</span><span class="pl-c1">&amp;</span><span class="pl-smi">self</span><span class="pl-kos">)</span> -&gt; <span class="pl-smi">u32</span> <span class="pl-kos">{</span>
+        <span class="pl-c1">*</span><span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">age</span>
+    <span class="pl-kos">}</span>
 
-    <span class="pl-k">bool</span> status = <span class="pl-c1">absl::ParseCivilTime</span>(str, &amp;day);
-    std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>status:<span class="pl-pds">"</span></span> &lt;&lt; status &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
-    <span class="pl-k">return</span> day;
-}</pre></div>
-<h2>时间计算</h2>
-<div class="highlight highlight-source-c++"><pre class="notranslate">        <span class="pl-k">const</span> std::string &amp; start_str = <span class="pl-s"><span class="pl-pds">"</span>2024-05-10<span class="pl-pds">"</span></span>;
-        <span class="pl-k">auto</span> start = parse_time(start_str);
+    <span class="pl-c">/// Returns the get name of this [`Sheep`].</span>
+    <span class="pl-k">pub</span> <span class="pl-k">fn</span> <span class="pl-en">get_name</span><span class="pl-kos">(</span><span class="pl-c1">&amp;</span><span class="pl-smi">self</span><span class="pl-kos">)</span> -&gt; <span class="pl-smi">String</span> <span class="pl-kos">{</span>
+        <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">name</span><span class="pl-kos">.</span><span class="pl-en">to_owned</span><span class="pl-kos">(</span><span class="pl-kos">)</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span>
 
-        <span class="pl-k">const</span> std::string &amp; end_str = <span class="pl-s"><span class="pl-pds">"</span>2024-05-18<span class="pl-pds">"</span></span>;
-        <span class="pl-k">auto</span> end = parse_time(end_str);
+<span class="pl-c1">#<span class="pl-kos">[</span>cfg<span class="pl-kos">(</span>test<span class="pl-kos">)</span><span class="pl-kos">]</span></span>
+<span class="pl-k">mod</span> tests <span class="pl-kos">{</span>
+    <span class="pl-k">use</span> <span class="pl-k">super</span><span class="pl-kos">::</span><span class="pl-v">Sheep</span><span class="pl-kos">;</span>
+    <span class="pl-c1">#<span class="pl-kos">[</span>test<span class="pl-kos">]</span></span>
+    <span class="pl-k">fn</span> <span class="pl-en">test_lt</span><span class="pl-kos">(</span><span class="pl-kos">)</span> <span class="pl-kos">{</span>
+        <span class="pl-k">let</span> age = <span class="pl-c1">5</span><span class="pl-kos">;</span>
+        <span class="pl-k">let</span> name = <span class="pl-s">"dollor"</span><span class="pl-kos">;</span>
 
-        std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>(end - start) = <span class="pl-pds">"</span></span> &lt;&lt; end - start &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
-        <span class="pl-en">ASSERT_EQ</span>(end - start, <span class="pl-c1">8</span>);</pre></div></div>
+        <span class="pl-k">let</span> sheep = <span class="pl-smi">Sheep</span> <span class="pl-kos">{</span>
+            <span class="pl-c1">age</span><span class="pl-kos">:</span> <span class="pl-c1">&amp;</span>age<span class="pl-kos">,</span>
+            <span class="pl-c1">name</span><span class="pl-kos">:</span> name<span class="pl-kos">,</span>
+        <span class="pl-kos">}</span><span class="pl-kos">;</span>
+
+        <span class="pl-en">println</span><span class="pl-en">!</span><span class="pl-kos">(</span><span class="pl-s">"name is {:?}"</span>, sheep.get_name<span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-en">println</span><span class="pl-en">!</span><span class="pl-kos">(</span><span class="pl-s">"age is {:?}"</span>, sheep.get_age<span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+
+        <span class="pl-en">println</span><span class="pl-en">!</span><span class="pl-kos">(</span><span class="pl-s">"sheep :{:?}"</span>, sheep<span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-kos">}</span>
+<span class="pl-kos">}</span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
@@ -116,9 +112,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </p>
 
 <script>
-if(""!=""){
+if("10/25/2023"!=""){
     var now=new Date();
-    var startSite=new Date("");
+    var startSite=new Date("10/25/2023");
     var diff=now.getTime()-startSite.getTime();
     var diffDay=Math.floor(diff/(1000*60*60*24));
     document.getElementById("year").innerHTML=now.getFullYear();

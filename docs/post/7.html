@@ -9,8 +9,8 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="golang中protobuf 反序列化性能优化">
-<title>golang中protobuf 反序列化性能优化</title>
+<meta name="description" content="GDB 使用 ">
+<title>GDB 使用 </title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
@@ -41,7 +41,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">golang中protobuf 反序列化性能优化</h1>
+<h1 class="postTitle">GDB 使用 </h1>
 <div class="title-right">
     <a href="http://0x1042.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -49,7 +49,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/0x1042/0x1042.github.io/issues/2" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/0x1042/0x1042.github.io/issues/7" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -65,77 +65,47 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>背景</h1>
-<p>线上有一些公共使用的超大<code class="notranslate">protobuf</code>，部分单<strong>message的field大于10000</strong>。由于业务侧只使用部分字段，所以针对这个场景做裁剪，只保留使用到的字段。但是从火焰图上看，反序列化的开销仍然很大。</p>
-<p>从<code class="notranslate">protobuf</code><a href="https://protobuf.dev/programming-guides/proto3/#unknowns" rel="nofollow">官方文档</a>看，反序列化时，不能识别的字段会放在<code class="notranslate">unknown fields </code>，<strong>proto3</strong> 版本一开始时丢弃<code class="notranslate">unknown fileds</code>，<strong>但是从3.5 开始对齐proto2的功能，默认保留</strong></p>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/9d3d3f4d-ff58-4b6b-a65c-ddd6eabbba58"><img width="1367" alt="image" src="https://github.com/0x1042/0x1042.github.io/assets/7525242/9d3d3f4d-ff58-4b6b-a65c-ddd6eabbba58" style="max-width: 100%;"></a></p>
-<h1><code class="notranslate">DiscardUnknown</code></h1>
-<p>从官方的api看，新版本的api支持在unmarshal时，指定<code class="notranslate">UnmarshalOptions</code>，其中一个开关就是 <code class="notranslate">DiscardUnknown</code>, 使用方式如下</p>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">import</span> (
-	<span class="pl-s">"google.golang.org/protobuf/proto"</span>
-)
-
-<span class="pl-c">// BaseParser  线上基线版本</span>
-<span class="pl-k">func</span> <span class="pl-en">BaseParser</span>[<span class="pl-s1">T</span> proto.<span class="pl-smi">Message</span>](<span class="pl-s1">buf</span> []<span class="pl-smi">byte</span>, <span class="pl-s1">t</span> <span class="pl-smi">T</span>) <span class="pl-smi">error</span> {
-	<span class="pl-k">return</span> <span class="pl-s1">proto</span>.<span class="pl-en">Unmarshal</span>(<span class="pl-s1">buf</span>, <span class="pl-s1">t</span>)
-}
-
-<span class="pl-c">// AbtestParser  新版本</span>
-<span class="pl-k">func</span> <span class="pl-en">AbtestParser</span>[<span class="pl-s1">T</span> proto.<span class="pl-smi">Message</span>](<span class="pl-s1">buf</span> []<span class="pl-smi">byte</span>, <span class="pl-s1">t</span> <span class="pl-smi">T</span>) <span class="pl-smi">error</span> {
-	<span class="pl-s1">opt</span> <span class="pl-c1">:=</span> proto.<span class="pl-smi">UnmarshalOptions</span>{
-		<span class="pl-s1">DiscardUnknown</span>: <span class="pl-c1">true</span>,
-	}
-	<span class="pl-k">return</span> <span class="pl-s1">opt</span>.<span class="pl-en">Unmarshal</span>(<span class="pl-s1">buf</span>, <span class="pl-s1">t</span>)
-}</pre></div>
-<h1>性能差异</h1>
-<p>抓取一个场景的数据，单个message 序列化之后在30kb左右，从benchmark看，可以提升34%的性能，内存分配下降97%。实际效果取决于裁剪字段站比，需要实际场景测试验证，不具有参考价值。</p>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-en">BenchmarkBaseParser</span>(<span class="pl-s1">b</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">B</span>) {
-	<span class="pl-s1">b</span>.<span class="pl-en">ResetTimer</span>()
-	<span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">:=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">b</span>.<span class="pl-c1">N</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span> {
-		<span class="pl-s1">target</span> <span class="pl-c1">:=</span> simple.<span class="pl-smi">BidRequest</span>{}
-
-		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">BaseParser</span>(<span class="pl-s1">buf</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">target</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-			<span class="pl-en">panic</span>(<span class="pl-s1">err</span>)
-		}
-	}
-}
-
-<span class="pl-k">func</span> <span class="pl-en">BenchmarkAbtestParser</span>(<span class="pl-s1">b</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">B</span>) {
-	<span class="pl-s1">b</span>.<span class="pl-en">ResetTimer</span>()
-
-	<span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">:=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">b</span>.<span class="pl-c1">N</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span> {
-		<span class="pl-s1">target</span> <span class="pl-c1">:=</span> simple.<span class="pl-smi">BidRequest</span>{}
-
-		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">AbtestParser</span>(<span class="pl-s1">buf</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">target</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-			<span class="pl-en">panic</span>(<span class="pl-s1">err</span>)
-		}
-	}
-}</pre></div>
+<div class="markdown-body" id="postBody"><ul>
+<li><a href="#gdb-%E4%BD%BF%E7%94%A8">GDB 使用</a>
+<ul>
+<li><a href="#%E8%83%8C%E6%99%AF">背景</a></li>
+<li><a href="#gdb-dump%E7%BA%BF%E7%A8%8B%E6%A0%88">GDB dump线程栈</a></li>
+<li><a href="#%E6%89%BE%E5%88%B0%E8%B4%9F%E8%BD%BD%E9%AB%98%E7%9A%84%E7%BA%BF%E7%A8%8B">找到负载高的线程</a></li>
+<li><a href="#%E5%AF%BB%E6%89%BE%E5%AF%B9%E5%BA%94%E7%9A%84%E8%A1%8C%E5%8F%B7">寻找对应的行号</a></li>
+</ul>
+</li>
+</ul>
+<h2>背景</h2>
 <blockquote>
-<p>benchmark</p>
+<p>线上流量没变，但是出现瞬时负载呈直线上涨，1～2分钟整个服务不可用。从火焰图看，top sample 集中在一个函数之内，但是无法精确到函数的行号。</p>
 </blockquote>
-<div class="highlight highlight-source-shell"><pre class="notranslate">go <span class="pl-c1">test</span> -bench=. -count=2  -benchtime=5s -benchmem -cpuprofile=cpu.out -memprofile=mem.out</pre></div>
-<blockquote>
-<p>对比</p>
-</blockquote>
-<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 先使用base </span>
-go <span class="pl-c1">test</span> -bench=. -count=10  -benchtime=5s -benchmem <span class="pl-k">&gt;</span> old.txt
-<span class="pl-c"><span class="pl-c">#</span> 使用abtest </span>
-go <span class="pl-c1">test</span> -bench=. -count=10  -benchtime=5s -benchmem <span class="pl-k">&gt;</span> new.txt
-
-benchstat old.txt new.txt
-</pre></div>
-<h1>cpp</h1>
-<blockquote>
-<p>cpp <a href="https://protobuf.dev/reference/cpp/api-docs/google.protobuf.message/#Message.DiscardUnknownFields.details" rel="nofollow">也有类似的api</a>，但是实在 parse之后执行，对于反序列化性能没有帮助，但是对于缓存场景，可以降低内存的使用率</p>
-</blockquote>
-<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">void</span> <span class="pl-en">string_to_message</span>(<span class="pl-k">const</span> std::string &amp; src, tutorial::Person &amp; dst) {
-    <span class="pl-k">if</span> (<span class="pl-k">bool</span> status = dst.<span class="pl-c1">ParseFromString</span>(src); !status) {
-        <span class="pl-c1">LOG</span>(ERROR) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>unmarshal fail<span class="pl-pds">"</span></span>;
-    }
-    dst.<span class="pl-c1">DiscardUnknownFields</span>();
-}</pre></div>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/dd86b27b-bc50-412d-981c-e3fcebd0d605"><img width="1336" alt="image" src="https://github.com/0x1042/0x1042.github.io/assets/7525242/dd86b27b-bc50-412d-981c-e3fcebd0d605" style="max-width: 100%;"></a></p></div>
+<h2>GDB dump线程栈</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> gdb.cmd </span>
+<span class="pl-c1">set</span> logging file thread.txt
+<span class="pl-c1">set</span> logging on
+thread apply all bt
+quit</pre></div>
+<p>然后执行,会把所有的线程栈打印到文件中</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">gdb --command=gdb.cmd --pid 939</pre></div>
+<h2>找到负载高的线程</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 按照cpu排序，找到对应的线程id  比如959</span>
+top -H -p 939 </pre></div>
+<p>在thread stack文件中找到对应的线程id的栈</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">572 Thread 2 (Thread 0x7ff946b91640 (LWP 959) <span class="pl-s"><span class="pl-pds">"</span>ib_io_ibuf<span class="pl-pds">"</span></span>):
+573 <span class="pl-c"><span class="pl-c">#</span>0  syscall () at ../sysdeps/unix/sysv/linux/x86_64/syscall.S:38</span>
+574 <span class="pl-c"><span class="pl-c">#</span>1  0x00007ff957218279 in io_getevents () from /lib/x86_64-linux-gnu/libaio.so.1</span>
+575 <span class="pl-c"><span class="pl-c">#</span>2  0x00005606d5644ccb in LinuxAIOHandler::collect() ()</span>
+576 <span class="pl-c"><span class="pl-c">#</span>3  0x00005606d5645526 in LinuxAIOHandler::poll(fil_node_t**, void**, IORequest*) ()</span>
+577 <span class="pl-c"><span class="pl-c">#</span>4  0x00005606d5648f68 in os_aio_handler(unsigned long, fil_node_t**, void**, IORequest*) ()</span>
+578 <span class="pl-c"><span class="pl-c">#</span>5  0x00005606d57fd32d in fil_aio_wait(unsigned long) ()</span>
+579 <span class="pl-c"><span class="pl-c">#</span>6  0x00005606d564238a in ?? ()</span>
+580 <span class="pl-c"><span class="pl-c">#</span>7  0x00005606d5642479 in ?? ()</span>
+581 <span class="pl-c"><span class="pl-c">#</span>8  0x00007ff9570b8253 in ?? () from /lib/x86_64-linux-gnu/libstdc++.so.6</span>
+582 <span class="pl-c"><span class="pl-c">#</span>9  0x00007ff956d41ac3 in start_thread (arg=&lt;optimized out&gt;) at ./nptl/pthread_create.c:442</span>
+583 <span class="pl-c"><span class="pl-c">#</span>10 0x00007ff956dd3a40 in clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:81</span></pre></div>
+<h2>寻找对应的行号</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate">addr2line 0x00005606d4b388a0 -e exec_binary</pre></div>
+<p><strong>对于静态链接程序有效</strong></p></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
@@ -146,9 +116,9 @@ benchstat old.txt new.txt
 </p>
 
 <script>
-if(""!=""){
+if("10/25/2023"!=""){
     var now=new Date();
-    var startSite=new Date("");
+    var startSite=new Date("10/25/2023");
     var diff=now.getTime()-startSite.getTime();
     var diffDay=Math.floor(diff/(1000*60*60*24));
     document.getElementById("year").innerHTML=now.getFullYear();

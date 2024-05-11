@@ -9,8 +9,8 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="c++中获取类定义的完整名字">
-<title>c++中获取类定义的完整名字</title>
+<meta name="description" content="虚拟机使用宿主机代理">
+<title>虚拟机使用宿主机代理</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
@@ -41,7 +41,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">c++中获取类定义的完整名字</h1>
+<h1 class="postTitle">虚拟机使用宿主机代理</h1>
 <div class="title-right">
     <a href="http://0x1042.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -49,7 +49,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/0x1042/0x1042.github.io/issues/13" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/0x1042/0x1042.github.io/issues/8" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -65,49 +65,30 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>说明</h1>
-<blockquote>
-<p>仅限于读取类定义</p>
-</blockquote>
-<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>memory<span class="pl-pds">&gt;</span></span>
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string<span class="pl-pds">&gt;</span></span>
+<div class="markdown-body" id="postBody"><h1>mac 虚拟机使用代理</h1>
+<ul>
+<li><a href="#mac-%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%BD%BF%E7%94%A8%E4%BB%A3%E7%90%86">mac 虚拟机使用代理</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85gost">安装<code class="notranslate">gost</code></a></li>
+<li><a href="#%E6%89%A7%E8%A1%8Cgost">执行gost</a></li>
+<li><a href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%85%8D%E7%BD%AE">虚拟机配置</a></li>
+</ul>
+</li>
+</ul>
+<h2>安装<code class="notranslate">gost</code></h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 安装gost </span>
 
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>cxxabi.h<span class="pl-pds">&gt;</span></span>
-
-<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
-<span class="pl-k">struct</span> <span class="pl-en">Name</span> {
-    <span class="pl-en">Name</span>() {
-        std::unique_ptr&lt;<span class="pl-k">char</span>, <span class="pl-c1">decltype</span>(free) *&gt; <span class="pl-c1">real_name</span>(<span class="pl-c1">abi::__cxa_demangle</span>(<span class="pl-c1">typeid</span>(T).<span class="pl-c1">name</span>(), <span class="pl-c1">nullptr</span>, <span class="pl-c1">nullptr</span>, <span class="pl-c1">nullptr</span>), free);
-        <span class="pl-c1">this</span>-&gt;<span class="pl-smi">name</span> = <span class="pl-c1">std::string</span>(real_name.<span class="pl-c1">get</span>());
-    }
-
-    std::string name{};
-};
-</pre></div>
-<p>测试</p>
-<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">namespace</span> <span class="pl-en">tests</span> {
-
-<span class="pl-k">namespace</span> <span class="pl-en">a</span>::b::c {
-    <span class="pl-k">class</span> <span class="pl-en">A</span> {};
-} <span class="pl-c"><span class="pl-c">//</span> namespace a::b::c</span>
-
-<span class="pl-k">namespace</span> <span class="pl-en">na</span> {
-    <span class="pl-k">class</span> <span class="pl-en">B</span> {};
-} <span class="pl-c"><span class="pl-c">//</span> namespace na</span>
-
-<span class="pl-k">namespace</span> <span class="pl-en">a</span>::b::d {
-    <span class="pl-k">struct</span> <span class="pl-en">C</span> {};
-} <span class="pl-c"><span class="pl-c">//</span> namespace a::b::d</span>
-
-<span class="pl-en">TEST_CASE</span>(<span class="pl-s"><span class="pl-pds">"</span>test name<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>[name]<span class="pl-pds">"</span></span>) {
-    <span class="pl-c"><span class="pl-c">//</span> tests::a::b::c::A</span>
-    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>infra::Name&lt;a::b::c::A&gt;().name:<span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;a::b::c::A&gt;().<span class="pl-smi">name</span>;
-    <span class="pl-c"><span class="pl-c">//</span> tests::na::B</span>
-    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>infra::Name&lt;na::B&gt;().name:<span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;na::B&gt;().<span class="pl-smi">name</span>;
-    <span class="pl-c"><span class="pl-c">//</span> tests::a::b::d::C</span>
-    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>infra::Name&lt;a::b::d::C&gt;().name:<span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;a::b::d::C&gt;().<span class="pl-smi">name</span>;
-}
-} <span class="pl-c"><span class="pl-c">//</span> namespace tests</span></pre></div></div>
+git clone https://github.com/go-gost/gost.git
+<span class="pl-c1">cd</span> gost/cmd/gost
+go build</pre></div>
+<h2>执行gost</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 宿主机侧在8080端口的HTTP代理服务，使用本地的1087端口做为上级代理进行转发</span>
+./gost -L http://:8080 -F http://127.0.0.1:1087</pre></div>
+<h2>虚拟机配置</h2>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> shell</span>
+<span class="pl-k">export</span> https_proxy=http://10.0.0.67:8080 http_proxy=http://10.0.0.67:8080
+<span class="pl-c"><span class="pl-c">#</span> git </span>
+git config --global http.proxy <span class="pl-s"><span class="pl-pds">'</span>http://10.0.0.67:8080<span class="pl-pds">'</span></span></pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>
@@ -118,9 +99,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </p>
 
 <script>
-if(""!=""){
+if("10/25/2023"!=""){
     var now=new Date();
-    var startSite=new Date("");
+    var startSite=new Date("10/25/2023");
     var diff=now.getTime()-startSite.getTime();
     var diffDay=Math.floor(diff/(1000*60*60*24));
     document.getElementById("year").innerHTML=now.getFullYear();

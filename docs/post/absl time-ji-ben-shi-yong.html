@@ -9,8 +9,8 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="c++中获取类定义的完整名字">
-<title>c++中获取类定义的完整名字</title>
+<meta name="description" content="absl time基本使用">
+<title>absl time基本使用</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
@@ -41,7 +41,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">c++中获取类定义的完整名字</h1>
+<h1 class="postTitle">absl time基本使用</h1>
 <div class="title-right">
     <a href="http://0x1042.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -49,7 +49,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/0x1042/0x1042.github.io/issues/13" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/0x1042/0x1042.github.io/issues/22" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -65,49 +65,47 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>说明</h1>
-<blockquote>
-<p>仅限于读取类定义</p>
-</blockquote>
-<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>memory<span class="pl-pds">&gt;</span></span>
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string<span class="pl-pds">&gt;</span></span>
-
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>cxxabi.h<span class="pl-pds">&gt;</span></span>
-
-<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
-<span class="pl-k">struct</span> <span class="pl-en">Name</span> {
-    <span class="pl-en">Name</span>() {
-        std::unique_ptr&lt;<span class="pl-k">char</span>, <span class="pl-c1">decltype</span>(free) *&gt; <span class="pl-c1">real_name</span>(<span class="pl-c1">abi::__cxa_demangle</span>(<span class="pl-c1">typeid</span>(T).<span class="pl-c1">name</span>(), <span class="pl-c1">nullptr</span>, <span class="pl-c1">nullptr</span>, <span class="pl-c1">nullptr</span>), free);
-        <span class="pl-c1">this</span>-&gt;<span class="pl-smi">name</span> = <span class="pl-c1">std::string</span>(real_name.<span class="pl-c1">get</span>());
-    }
-
-    std::string name{};
-};
-</pre></div>
-<p>测试</p>
-<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">namespace</span> <span class="pl-en">tests</span> {
-
-<span class="pl-k">namespace</span> <span class="pl-en">a</span>::b::c {
-    <span class="pl-k">class</span> <span class="pl-en">A</span> {};
-} <span class="pl-c"><span class="pl-c">//</span> namespace a::b::c</span>
-
-<span class="pl-k">namespace</span> <span class="pl-en">na</span> {
-    <span class="pl-k">class</span> <span class="pl-en">B</span> {};
-} <span class="pl-c"><span class="pl-c">//</span> namespace na</span>
-
-<span class="pl-k">namespace</span> <span class="pl-en">a</span>::b::d {
-    <span class="pl-k">struct</span> <span class="pl-en">C</span> {};
-} <span class="pl-c"><span class="pl-c">//</span> namespace a::b::d</span>
-
-<span class="pl-en">TEST_CASE</span>(<span class="pl-s"><span class="pl-pds">"</span>test name<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>[name]<span class="pl-pds">"</span></span>) {
-    <span class="pl-c"><span class="pl-c">//</span> tests::a::b::c::A</span>
-    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>infra::Name&lt;a::b::c::A&gt;().name:<span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;a::b::c::A&gt;().<span class="pl-smi">name</span>;
-    <span class="pl-c"><span class="pl-c">//</span> tests::na::B</span>
-    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>infra::Name&lt;na::B&gt;().name:<span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;na::B&gt;().<span class="pl-smi">name</span>;
-    <span class="pl-c"><span class="pl-c">//</span> tests::a::b::d::C</span>
-    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>infra::Name&lt;a::b::d::C&gt;().name:<span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;a::b::d::C&gt;().<span class="pl-smi">name</span>;
+<div class="markdown-body" id="postBody"><h1>时间基本使用</h1>
+<h2>获取指定时区的时间</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">        absl::TimeZone local;
+        <span class="pl-en">absl::LoadTimeZone</span>(<span class="pl-s"><span class="pl-pds">"</span>Asia/Shanghai<span class="pl-pds">"</span></span>, &amp;local);
+        <span class="pl-k">auto</span> now_in_second = absl::ToCivilSecond(absl::Now(), local);
+        std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>now_in_second:<span class="pl-pds">"</span></span> &lt;&lt; now_in_second &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;</pre></div>
+<h2>获取指定时区当前小时</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">        absl::TimeZone local;
+        <span class="pl-en">absl::LoadTimeZone</span>(<span class="pl-s"><span class="pl-pds">"</span>Asia/Shanghai<span class="pl-pds">"</span></span>, &amp;local);
+        <span class="pl-k">auto</span> now_in_hour = absl::ToCivilHour(absl::Now(), local);
+        std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>now_in_hour:<span class="pl-pds">"</span></span> &lt;&lt; now_in_hour.hour() &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;</pre></div>
+<h2>获取日期</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">    absl::<span class="pl-c1">Duration</span> one_day = absl::Hours(<span class="pl-c1">24</span>) * offset;
+    absl::Time tt = absl::Now() + one_day;
+    absl::TimeZone local;
+    <span class="pl-en">absl::LoadTimeZone</span>(<span class="pl-s"><span class="pl-pds">"</span>Asia/Shanghai<span class="pl-pds">"</span></span>, &amp;local);
+    <span class="pl-k">auto</span> today = absl::ToCivilDay(tt, local);
+    <span class="pl-k">return</span> absl::FormatCivilTime(today);</pre></div>
+<h2>解析字符串到时间</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">auto</span> <span class="pl-en">str2time</span>(<span class="pl-k">const</span> std::string &amp; str, absl::Time &amp; dst, absl::TimeZone tz) -&gt; bool {
+    std::string err;
+    <span class="pl-k">bool</span> status = <span class="pl-c1">absl::ParseTime</span>(<span class="pl-s"><span class="pl-pds">"</span>%Y-%m-%d<span class="pl-pds">"</span></span>, str, tz, &amp;dst, &amp;err);
+    <span class="pl-k">return</span> status;
 }
-} <span class="pl-c"><span class="pl-c">//</span> namespace tests</span></pre></div></div>
+
+<span class="pl-k">auto</span> <span class="pl-en">parse_time</span>(<span class="pl-k">const</span> std::string &amp; str) -&gt; absl::CivilDay {
+    absl::CivilDay day;
+
+    <span class="pl-k">bool</span> status = <span class="pl-c1">absl::ParseCivilTime</span>(str, &amp;day);
+    std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>status:<span class="pl-pds">"</span></span> &lt;&lt; status &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
+    <span class="pl-k">return</span> day;
+}</pre></div>
+<h2>时间计算</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate">        <span class="pl-k">const</span> std::string &amp; start_str = <span class="pl-s"><span class="pl-pds">"</span>2024-05-10<span class="pl-pds">"</span></span>;
+        <span class="pl-k">auto</span> start = parse_time(start_str);
+
+        <span class="pl-k">const</span> std::string &amp; end_str = <span class="pl-s"><span class="pl-pds">"</span>2024-05-18<span class="pl-pds">"</span></span>;
+        <span class="pl-k">auto</span> end = parse_time(end_str);
+
+        std::clog &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>(end - start) = <span class="pl-pds">"</span></span> &lt;&lt; end - start &lt;&lt; <span class="pl-s"><span class="pl-pds">'</span><span class="pl-cce">\n</span><span class="pl-pds">'</span></span>;
+        <span class="pl-en">ASSERT_EQ</span>(end - start, <span class="pl-c1">8</span>);</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>

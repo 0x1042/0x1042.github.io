@@ -1,9 +1,23 @@
 {
-    "title":"Daily",
-    "displayTitle":"Daily",
-    "subTitle":"我自倾怀，君且随意。",
-    "homeUrl":"http://0x1042.github.io",
-    "avatarUrl":"https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png",
-    "faviconUrl":"https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.ico",
-    "GMEEK_VERSION":"v2.16"
+    "title": "Daily",
+    "displayTitle": "Daily",
+    "subTitle": "我自倾怀，君且随意。",
+    "homeUrl": "http://0x1042.github.io",
+    "avatarUrl": "https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png",
+    "faviconUrl": "https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.ico",
+    "GMEEK_VERSION": "v2.16",
+    "urlMode": "issue",
+    "singlePage": [
+        "link",
+        "about"
+    ],
+    "startSite":"10/25/2023",
+    "onePageListNum": 15,
+    "commentLabelColor": "#006b75",
+    "yearColorList": [
+        "#bc4c00",
+        "#0969da",
+        "#1f883d",
+        "#A333D0"
+    ]
 }

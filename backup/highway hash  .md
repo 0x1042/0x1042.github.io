@@ -95,3 +95,21 @@ std::string high_hash128(const std::string &input) {
   return rsp;
 }
 ```
+
+## 优化版本
+
+```c++
+auto high_hash128_v2(const std::string & input) -> std::string {
+    uint64_t hash[2];
+    HighwayHash128(reinterpret_cast<const uint8_t *>(input.data()), input.size(), EMPTY_KEY, hash);
+
+    std::array<uint8_t, 16> buffer{};
+    std::memcpy(buffer.data(), &hash, sizeof(hash));
+
+    std::string rsp;
+    for (unsigned char & b : buffer) {
+        rsp += fmt::format("{0:02x}", b);
+    }
+    return rsp;
+}
+```

@@ -140,6 +140,20 @@ std::string <span class="pl-en">high_hash</span>(<span class="pl-k">const</span>
     rsp += <span class="pl-c1">fmt::format</span>(<span class="pl-s"><span class="pl-pds">"</span>{0:02x}<span class="pl-pds">"</span></span>, bytes2[i]);
   }
   <span class="pl-k">return</span> rsp;
+}</pre></div>
+<h2>优化版本</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">auto</span> <span class="pl-en">high_hash128_v2</span>(<span class="pl-k">const</span> std::string &amp; input) -&gt; std::string {
+    <span class="pl-c1">uint64_t</span> hash[<span class="pl-c1">2</span>];
+    <span class="pl-c1">HighwayHash128</span>(<span class="pl-k">reinterpret_cast</span>&lt;<span class="pl-k">const</span> <span class="pl-c1">uint8_t</span> *&gt;(input.<span class="pl-c1">data</span>()), input.<span class="pl-c1">size</span>(), EMPTY_KEY, hash);
+
+    std::array&lt;<span class="pl-c1">uint8_t</span>, <span class="pl-c1">16</span>&gt; buffer{};
+    <span class="pl-c1">std::memcpy</span>(buffer.<span class="pl-c1">data</span>(), &amp;hash, <span class="pl-k">sizeof</span>(hash));
+
+    std::string rsp;
+    <span class="pl-k">for</span> (<span class="pl-k">unsigned</span> <span class="pl-k">char</span> &amp; b : buffer) {
+        rsp += <span class="pl-c1">fmt::format</span>(<span class="pl-s"><span class="pl-pds">"</span>{0:02x}<span class="pl-pds">"</span></span>, b);
+    }
+    <span class="pl-k">return</span> rsp;
 }</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="//cdn.staticfile.net/Primer/21.0.7/primer.css" rel="stylesheet" />
+    <link rel="icon" href="https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.ico"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="sock5 && http proxy in go">
+<title>sock5 && http proxy in go</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+</style>
+
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">sock5 && http proxy in go</h1>
+<div class="title-right">
+    <a href="http://0x1042.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/0x1042/0x1042.github.io/issues/28" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>listen</h1>
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">type</span> <span class="pl-smi">Stream</span> <span class="pl-k">struct</span> {
+	<span class="pl-c1">r</span> <span class="pl-c1">*</span>bufio.<span class="pl-smi">Reader</span>
+	net.<span class="pl-smi">Conn</span>
+}
+
+<span class="pl-k">func</span> <span class="pl-en">newStream</span>(<span class="pl-s1">c</span> net.<span class="pl-smi">Conn</span>) <span class="pl-c1">*</span><span class="pl-smi">Stream</span> {
+	<span class="pl-k">return</span> <span class="pl-c1">&amp;</span><span class="pl-smi">Stream</span>{<span class="pl-s1">bufio</span>.<span class="pl-en">NewReader</span>(<span class="pl-s1">c</span>), <span class="pl-s1">c</span>}
+}
+
+<span class="pl-k">func</span> (<span class="pl-s1">b</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) <span class="pl-en">Peek</span>(<span class="pl-s1">n</span> <span class="pl-smi">int</span>) ([]<span class="pl-smi">byte</span>, <span class="pl-smi">error</span>) {
+	<span class="pl-k">return</span> <span class="pl-s1">b</span>.<span class="pl-c1">r</span>.<span class="pl-en">Peek</span>(<span class="pl-s1">n</span>)
+}
+
+<span class="pl-k">func</span> (<span class="pl-s1">b</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) <span class="pl-en">Read</span>(<span class="pl-s1">p</span> []<span class="pl-smi">byte</span>) (<span class="pl-smi">int</span>, <span class="pl-smi">error</span>) {
+	<span class="pl-k">return</span> <span class="pl-s1">b</span>.<span class="pl-c1">r</span>.<span class="pl-en">Read</span>(<span class="pl-s1">p</span>)
+}
+
+<span class="pl-k">func</span> (<span class="pl-s1">b</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) <span class="pl-en">Line</span>() (<span class="pl-smi">string</span>, <span class="pl-smi">error</span>) {
+	<span class="pl-s1">line</span>, <span class="pl-s1">_</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">b</span>.<span class="pl-c1">r</span>.<span class="pl-en">ReadLine</span>()
+	<span class="pl-k">return</span> <span class="pl-en">string</span>(<span class="pl-s1">line</span>), <span class="pl-s1">err</span>
+}
+
+<span class="pl-k">func</span> <span class="pl-en">readBe</span>[<span class="pl-s1">T</span> <span class="pl-smi">any</span>](<span class="pl-s1">r</span> io.<span class="pl-smi">Reader</span>, <span class="pl-s1">data</span> <span class="pl-smi">T</span>) (<span class="pl-s1">err</span> <span class="pl-smi">error</span>) {
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">binary</span>.<span class="pl-en">Read</span>(<span class="pl-s1">r</span>, <span class="pl-s1">binary</span>.<span class="pl-c1">BigEndian</span>, <span class="pl-s1">data</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">err</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"readBe error"</span>)
+	}
+	<span class="pl-k">return</span>
+}
+
+<span class="pl-k">func</span> <span class="pl-en">writeBe</span>[<span class="pl-s1">T</span> <span class="pl-smi">any</span>](<span class="pl-s1">r</span> io.<span class="pl-smi">Writer</span>, <span class="pl-s1">data</span> <span class="pl-smi">T</span>) (<span class="pl-s1">err</span> <span class="pl-smi">error</span>) {
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">binary</span>.<span class="pl-en">Write</span>(<span class="pl-s1">r</span>, <span class="pl-s1">binary</span>.<span class="pl-c1">BigEndian</span>, <span class="pl-s1">data</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">err</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"writeBe error"</span>)
+	}
+	<span class="pl-k">return</span>
+}
+
+<span class="pl-k">func</span> <span class="pl-en">listen</span>(<span class="pl-s1">option</span> <span class="pl-smi">Option</span>) <span class="pl-smi">error</span> {
+	<span class="pl-k">var</span> <span class="pl-s1">lc</span> net.<span class="pl-smi">ListenConfig</span>
+	<span class="pl-s1">lc</span>.<span class="pl-en">SetMultipathTCP</span>(<span class="pl-c1">true</span>)
+	<span class="pl-s1">lc</span>.<span class="pl-c1">Control</span> <span class="pl-c1">=</span> <span class="pl-k">func</span>(<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-smi">string</span>, <span class="pl-s1">c</span> syscall.<span class="pl-smi">RawConn</span>) <span class="pl-smi">error</span> {
+		<span class="pl-k">var</span> <span class="pl-s1">err</span> <span class="pl-smi">error</span>
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">c</span>.<span class="pl-en">Control</span>(<span class="pl-k">func</span>(<span class="pl-s1">fd</span> <span class="pl-smi">uintptr</span>) {
+			<span class="pl-k">if</span> <span class="pl-s1">option</span>.<span class="pl-c1">nodelay</span> {
+				<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">unix</span>.<span class="pl-en">SetsockoptInt</span>(<span class="pl-en">int</span>(<span class="pl-s1">fd</span>), <span class="pl-s1">unix</span>.<span class="pl-c1">IPPROTO_TCP</span>, <span class="pl-s1">unix</span>.<span class="pl-c1">TCP_NODELAY</span>, <span class="pl-c1">1</span>)
+			}
+			<span class="pl-k">if</span> <span class="pl-s1">option</span>.<span class="pl-c1">fastOpen</span> {
+				<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">unix</span>.<span class="pl-en">SetsockoptInt</span>(<span class="pl-en">int</span>(<span class="pl-s1">fd</span>), <span class="pl-s1">unix</span>.<span class="pl-c1">IPPROTO_TCP</span>, <span class="pl-s1">unix</span>.<span class="pl-c1">TCP_FASTOPEN</span>, <span class="pl-c1">1</span>)
+			}
+			<span class="pl-k">if</span> <span class="pl-s1">option</span>.<span class="pl-c1">reuseAddr</span> {
+				<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">unix</span>.<span class="pl-en">SetsockoptInt</span>(<span class="pl-en">int</span>(<span class="pl-s1">fd</span>), <span class="pl-s1">unix</span>.<span class="pl-c1">SOL_SOCKET</span>, <span class="pl-s1">unix</span>.<span class="pl-c1">SO_REUSEADDR</span>, <span class="pl-c1">1</span>)
+				<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">unix</span>.<span class="pl-en">SetsockoptInt</span>(<span class="pl-en">int</span>(<span class="pl-s1">fd</span>), <span class="pl-s1">unix</span>.<span class="pl-c1">SOL_SOCKET</span>, <span class="pl-s1">unix</span>.<span class="pl-c1">SO_REUSEPORT</span>, <span class="pl-c1">1</span>)
+			}
+		})
+		<span class="pl-k">return</span> <span class="pl-s1">err</span>
+	}
+	<span class="pl-s1">ln</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">lc</span>.<span class="pl-en">Listen</span>(<span class="pl-s1">context</span>.<span class="pl-en">Background</span>(), <span class="pl-s">"tcp"</span>, <span class="pl-s1">option</span>.<span class="pl-c1">addr</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-k">return</span> <span class="pl-s1">err</span>
+	}
+
+	<span class="pl-s1">log</span>.<span class="pl-en">Info</span>().<span class="pl-en">Str</span>(<span class="pl-s">"addr"</span>, <span class="pl-s1">option</span>.<span class="pl-c1">addr</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"server start"</span>)
+
+	<span class="pl-k">for</span> {
+		<span class="pl-s1">conn</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">ln</span>.<span class="pl-en">Accept</span>()
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+			<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">err</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"accept error"</span>)
+			<span class="pl-k">break</span>
+		}
+		<span class="pl-s1">stream</span> <span class="pl-c1">:=</span> <span class="pl-en">newStream</span>(<span class="pl-s1">conn</span>)
+
+		<span class="pl-s1">peek</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">stream</span>.<span class="pl-en">Peek</span>(<span class="pl-c1">1</span>)
+		<span class="pl-s1">log</span>.<span class="pl-en">Trace</span>().<span class="pl-en">Uint8</span>(<span class="pl-s">"type"</span>, <span class="pl-s1">peek</span>[<span class="pl-c1">0</span>]).<span class="pl-en">Str</span>(<span class="pl-s">"from"</span>, <span class="pl-s1">conn</span>.<span class="pl-en">LocalAddr</span>().<span class="pl-en">String</span>()).<span class="pl-en">Msg</span>(<span class="pl-s">"incomeing request"</span>)
+		<span class="pl-k">if</span> <span class="pl-s1">peek</span>[<span class="pl-c1">0</span>] <span class="pl-c1">==</span> <span class="pl-c1">0x05</span> {
+			<span class="pl-k">go</span> <span class="pl-en">serveSocks</span>(<span class="pl-s1">stream</span>)
+		} <span class="pl-k">else</span> {
+			<span class="pl-k">go</span> <span class="pl-en">serveHTTP</span>(<span class="pl-s1">stream</span>)
+		}
+	}
+	<span class="pl-k">return</span> <span class="pl-c1">nil</span>
+}</pre></div>
+<h1>http</h1>
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">var</span> <span class="pl-s1">SUCCESS</span> <span class="pl-c1">=</span> []<span class="pl-smi">byte</span>(<span class="pl-s">"HTTP/1.1 200 Connection Established<span class="pl-cce">\r</span><span class="pl-cce">\n</span><span class="pl-cce">\r</span><span class="pl-cce">\n</span>"</span>)
+
+<span class="pl-k">const</span> (
+	<span class="pl-s1">CONNECT</span>  <span class="pl-c1">=</span> <span class="pl-s">"CONNECT"</span>
+	<span class="pl-s1">LF</span>       <span class="pl-c1">=</span> <span class="pl-s">"<span class="pl-cce">\r</span><span class="pl-cce">\n</span>"</span>
+	<span class="pl-s1">PORT</span>     <span class="pl-c1">=</span> <span class="pl-s">"80"</span>
+	<span class="pl-s1">HEADLEN</span>  <span class="pl-c1">=</span> <span class="pl-c1">5</span>
+	<span class="pl-s1">HEADSIZE</span> <span class="pl-c1">=</span> <span class="pl-c1">512</span>
+)
+
+<span class="pl-k">type</span> <span class="pl-smi">Req</span> <span class="pl-k">struct</span> {
+	<span class="pl-c1">Method</span> <span class="pl-smi">string</span>
+	<span class="pl-c1">Host</span>   <span class="pl-smi">string</span>
+	<span class="pl-c1">Port</span>   <span class="pl-smi">string</span>
+}
+
+<span class="pl-k">func</span> <span class="pl-en">newReq</span>(<span class="pl-s1">line</span> []<span class="pl-smi">string</span>) <span class="pl-c1">*</span><span class="pl-smi">Req</span> {
+	<span class="pl-s1">req</span> <span class="pl-c1">:=</span> <span class="pl-en">new</span>(<span class="pl-smi">Req</span>)
+	<span class="pl-s1">req</span>.<span class="pl-c1">Port</span> <span class="pl-c1">=</span> <span class="pl-s1">PORT</span>
+	<span class="pl-c">// first</span>
+	{
+		<span class="pl-c">// CONNECT www.google.com:443 HTTP/1.1\r\n</span>
+		<span class="pl-c">// GET http://www.google.com/ HTTP/1.1\r\n</span>
+		<span class="pl-s1">tmps</span> <span class="pl-c1">:=</span> <span class="pl-s1">strings</span>.<span class="pl-en">Split</span>(<span class="pl-s1">line</span>[<span class="pl-c1">0</span>], <span class="pl-s">" "</span>)
+		<span class="pl-s1">req</span>.<span class="pl-c1">Method</span> <span class="pl-c1">=</span> <span class="pl-s1">tmps</span>[<span class="pl-c1">0</span>]
+	}
+
+	<span class="pl-c">// second</span>
+	{
+
+		<span class="pl-c">// Host: www.google.com:443</span>
+		<span class="pl-c">// Host: www.google.com</span>
+		<span class="pl-s1">tmps</span> <span class="pl-c1">:=</span> <span class="pl-s1">strings</span>.<span class="pl-en">Split</span>(<span class="pl-s1">line</span>[<span class="pl-c1">1</span>], <span class="pl-s">":"</span>)
+		<span class="pl-s1">req</span>.<span class="pl-c1">Host</span> <span class="pl-c1">=</span> <span class="pl-s1">strings</span>.<span class="pl-en">TrimSpace</span>(<span class="pl-s1">tmps</span>[<span class="pl-c1">1</span>])
+		<span class="pl-k">if</span> <span class="pl-en">len</span>(<span class="pl-s1">tmps</span>) <span class="pl-c1">==</span> <span class="pl-c1">3</span> {
+			<span class="pl-s1">req</span>.<span class="pl-c1">Port</span> <span class="pl-c1">=</span> <span class="pl-s1">strings</span>.<span class="pl-en">TrimSpace</span>(<span class="pl-s1">tmps</span>[<span class="pl-c1">2</span>])
+		}
+	}
+	<span class="pl-k">return</span> <span class="pl-s1">req</span>
+}
+
+<span class="pl-k">func</span> <span class="pl-en">serveHTTP</span>(<span class="pl-s1">stream</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) {
+	<span class="pl-s1">headers</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">string</span>, <span class="pl-c1">0</span>, <span class="pl-s1">HEADLEN</span>)
+	<span class="pl-k">for</span> {
+		<span class="pl-s1">line</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">stream</span>.<span class="pl-en">Line</span>()
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+			<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">err</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"read line error"</span>)
+			<span class="pl-k">return</span>
+		}
+
+		<span class="pl-k">if</span> <span class="pl-s1">line</span> <span class="pl-c1">==</span> <span class="pl-s1">LF</span> <span class="pl-c1">||</span> <span class="pl-en">len</span>(<span class="pl-s1">line</span>) <span class="pl-c1">==</span> <span class="pl-c1">0</span> {
+			<span class="pl-k">break</span>
+		}
+		<span class="pl-s1">headers</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">headers</span>, <span class="pl-s1">line</span>)
+	}
+
+	<span class="pl-s1">req</span> <span class="pl-c1">:=</span> <span class="pl-en">newReq</span>(<span class="pl-s1">headers</span>)
+	<span class="pl-s1">remoteAddr</span> <span class="pl-c1">:=</span> <span class="pl-s1">net</span>.<span class="pl-en">JoinHostPort</span>(<span class="pl-s1">req</span>.<span class="pl-c1">Host</span>, <span class="pl-s1">req</span>.<span class="pl-c1">Port</span>)
+
+	<span class="pl-s1">remote</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">net</span>.<span class="pl-en">Dial</span>(<span class="pl-s">"tcp"</span>, <span class="pl-s1">remoteAddr</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">err</span>).<span class="pl-en">Str</span>(<span class="pl-s">"to"</span>, <span class="pl-s1">remoteAddr</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"connect error"</span>)
+		<span class="pl-k">return</span>
+	}
+
+	<span class="pl-k">if</span> <span class="pl-s1">req</span>.<span class="pl-c1">Method</span> <span class="pl-c1">==</span> <span class="pl-s1">CONNECT</span> {
+		<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">stream</span>.<span class="pl-en">Write</span>(<span class="pl-s1">SUCCESS</span>)
+	} <span class="pl-k">else</span> {
+		<span class="pl-s1">buf</span> <span class="pl-c1">:=</span> bytes.<span class="pl-smi">Buffer</span>{}
+		<span class="pl-s1">buf</span>.<span class="pl-en">Grow</span>(<span class="pl-s1">HEADSIZE</span>)
+		<span class="pl-k">for</span> <span class="pl-s1">_</span>, <span class="pl-s1">line</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">headers</span> {
+			<span class="pl-k">if</span> <span class="pl-s1">strings</span>.<span class="pl-en">HasPrefix</span>(<span class="pl-s1">line</span>, <span class="pl-s">"Proxy"</span>) {
+				<span class="pl-k">continue</span>
+			}
+			<span class="pl-s1">buf</span>.<span class="pl-en">WriteString</span>(<span class="pl-s1">line</span>)
+			<span class="pl-s1">buf</span>.<span class="pl-en">WriteString</span>(<span class="pl-s1">LF</span>)
+		}
+		<span class="pl-s1">buf</span>.<span class="pl-en">WriteString</span>(<span class="pl-s1">LF</span>)
+		<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">remote</span>.<span class="pl-en">Write</span>(<span class="pl-s1">buf</span>.<span class="pl-en">Bytes</span>())
+	}
+	<span class="pl-en">relay</span>(<span class="pl-s1">stream</span>, <span class="pl-s1">remote</span>)
+}</pre></div>
+<h1>socks5</h1>
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">var</span> (
+	<span class="pl-s1">SUC</span>    <span class="pl-c1">=</span> []<span class="pl-smi">byte</span>{<span class="pl-c1">0x05</span>, <span class="pl-c1">0x00</span>}
+	<span class="pl-s1">SusRep</span> <span class="pl-c1">=</span> []<span class="pl-smi">byte</span>{<span class="pl-c1">0x05</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x01</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>}
+	<span class="pl-s1">errRep</span> <span class="pl-c1">=</span> []<span class="pl-smi">byte</span>{<span class="pl-c1">0x05</span>, <span class="pl-c1">0x04</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x01</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>}
+)
+
+<span class="pl-k">func</span> <span class="pl-en">serveSocks</span>(<span class="pl-s1">stream</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) {
+	<span class="pl-s1">header</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-c1">2</span>)
+	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">header</span>)
+
+	<span class="pl-s1">nmeth</span> <span class="pl-c1">:=</span> <span class="pl-s1">header</span>[<span class="pl-c1">1</span>]
+
+	<span class="pl-s1">methods</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-en">int</span>(<span class="pl-s1">nmeth</span>))
+	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">methods</span>)
+
+	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">writeBe</span>(<span class="pl-s1">stream</span>, <span class="pl-s1">SUC</span>)
+
+	<span class="pl-c">// read request</span>
+
+	<span class="pl-s1">request</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-c1">4</span>)
+	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">request</span>)
+
+	<span class="pl-s1">adtp</span> <span class="pl-c1">:=</span> <span class="pl-s1">request</span>[<span class="pl-c1">3</span>]
+
+	<span class="pl-k">var</span> <span class="pl-s1">host</span> <span class="pl-smi">string</span>
+
+	<span class="pl-k">switch</span> <span class="pl-s1">adtp</span> {
+	<span class="pl-k">case</span> <span class="pl-c1">1</span>:
+		<span class="pl-s1">hostBuf</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-s1">net</span>.<span class="pl-c1">IPv4len</span>)
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">hostBuf</span>)
+		<span class="pl-s1">host</span> <span class="pl-c1">=</span> <span class="pl-s1">net</span>.<span class="pl-en">IP</span>(<span class="pl-s1">hostBuf</span>).<span class="pl-en">String</span>()
+	<span class="pl-k">case</span> <span class="pl-c1">3</span>:
+		<span class="pl-s1">hostBuf</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-s1">net</span>.<span class="pl-c1">IPv6len</span>)
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">hostBuf</span>)
+		<span class="pl-s1">host</span> <span class="pl-c1">=</span> <span class="pl-s1">net</span>.<span class="pl-en">IP</span>(<span class="pl-s1">hostBuf</span>).<span class="pl-en">String</span>()
+	<span class="pl-k">default</span>:
+		<span class="pl-k">var</span> <span class="pl-s1">length</span> <span class="pl-smi">uint8</span>
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">length</span>)
+		<span class="pl-s1">buf</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-s1">length</span>)
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">buf</span>)
+		<span class="pl-s1">host</span> <span class="pl-c1">=</span> <span class="pl-en">string</span>(<span class="pl-s1">buf</span>)
+	}
+
+	<span class="pl-s1">portBuf</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-c1">2</span>)
+	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">portBuf</span>)
+	<span class="pl-s1">port</span> <span class="pl-c1">:=</span> <span class="pl-s1">binary</span>.<span class="pl-c1">BigEndian</span>.<span class="pl-en">Uint16</span>(<span class="pl-s1">portBuf</span>)
+
+	<span class="pl-s1">targetAddr</span> <span class="pl-c1">:=</span> <span class="pl-s1">net</span>.<span class="pl-en">JoinHostPort</span>(<span class="pl-s1">host</span>, <span class="pl-s1">strconv</span>.<span class="pl-en">FormatInt</span>(<span class="pl-en">int64</span>(<span class="pl-s1">port</span>), <span class="pl-c1">10</span>))
+
+	<span class="pl-s1">remote</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">net</span>.<span class="pl-en">Dial</span>(<span class="pl-s">"tcp"</span>, <span class="pl-s1">targetAddr</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">err</span>).<span class="pl-en">Str</span>(<span class="pl-s">"remote"</span>, <span class="pl-s1">targetAddr</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"connect error"</span>)
+		<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">stream</span>.<span class="pl-en">Write</span>(<span class="pl-s1">errRep</span>)
+		<span class="pl-k">return</span>
+	}
+	<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">stream</span>.<span class="pl-en">Write</span>(<span class="pl-s1">SusRep</span>)
+	<span class="pl-en">relay</span>(<span class="pl-s1">stream</span>, <span class="pl-s1">remote</span>)
+}</pre></div>
+<h1>relay</h1>
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">type</span> <span class="pl-smi">Resp</span> <span class="pl-k">struct</span> {
+	<span class="pl-c1">len</span>  <span class="pl-smi">int64</span>
+	<span class="pl-c1">err</span>  <span class="pl-smi">error</span>
+	<span class="pl-c1">from</span> net.<span class="pl-smi">Addr</span>
+	<span class="pl-c1">to</span>   net.<span class="pl-smi">Addr</span>
+}
+
+<span class="pl-k">func</span> <span class="pl-en">relay</span>(<span class="pl-s1">from</span>, <span class="pl-s1">to</span> net.<span class="pl-smi">Conn</span>) {
+	<span class="pl-k">defer</span> <span class="pl-k">func</span>(<span class="pl-s1">from</span>, <span class="pl-s1">to</span> net.<span class="pl-smi">Conn</span>) {
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">from</span>.<span class="pl-en">Close</span>()
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">to</span>.<span class="pl-en">Close</span>()
+	}(<span class="pl-s1">from</span>, <span class="pl-s1">to</span>)
+
+	<span class="pl-s1">channel</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>(<span class="pl-k">chan</span> <span class="pl-smi">Resp</span>, <span class="pl-c1">2</span>)
+
+	<span class="pl-k">go</span> <span class="pl-k">func</span>(<span class="pl-s1">dst</span>, <span class="pl-s1">src</span> net.<span class="pl-smi">Conn</span>) {
+		<span class="pl-s1">size</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">io</span>.<span class="pl-en">Copy</span>(<span class="pl-s1">dst</span>, <span class="pl-s1">src</span>)
+		<span class="pl-s1">channel</span> <span class="pl-c1">&lt;-</span> <span class="pl-smi">Resp</span>{<span class="pl-s1">len</span>: <span class="pl-s1">size</span>, <span class="pl-s1">err</span>: <span class="pl-s1">err</span>, <span class="pl-s1">from</span>: <span class="pl-s1">src</span>.<span class="pl-en">RemoteAddr</span>(), <span class="pl-s1">to</span>: <span class="pl-s1">dst</span>.<span class="pl-en">RemoteAddr</span>()}
+	}(<span class="pl-s1">from</span>, <span class="pl-s1">to</span>)
+
+	<span class="pl-k">go</span> <span class="pl-k">func</span>(<span class="pl-s1">dst</span>, <span class="pl-s1">src</span> net.<span class="pl-smi">Conn</span>) {
+		<span class="pl-s1">size</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">io</span>.<span class="pl-en">Copy</span>(<span class="pl-s1">dst</span>, <span class="pl-s1">src</span>)
+		<span class="pl-s1">channel</span> <span class="pl-c1">&lt;-</span> <span class="pl-smi">Resp</span>{<span class="pl-s1">len</span>: <span class="pl-s1">size</span>, <span class="pl-s1">err</span>: <span class="pl-s1">err</span>, <span class="pl-s1">from</span>: <span class="pl-s1">src</span>.<span class="pl-en">RemoteAddr</span>(), <span class="pl-s1">to</span>: <span class="pl-s1">dst</span>.<span class="pl-en">RemoteAddr</span>()}
+	}(<span class="pl-s1">to</span>, <span class="pl-s1">from</span>)
+
+	<span class="pl-k">for</span> <span class="pl-s1">resp</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">channel</span> {
+		<span class="pl-k">if</span> <span class="pl-s1">resp</span>.<span class="pl-c1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">resp</span>.<span class="pl-c1">err</span> <span class="pl-c1">!=</span> <span class="pl-s1">io</span>.<span class="pl-c1">EOF</span> {
+			<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">resp</span>.<span class="pl-c1">err</span>).<span class="pl-en">Str</span>(<span class="pl-s">"from"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">from</span>.<span class="pl-en">String</span>()).<span class="pl-en">Str</span>(<span class="pl-s">"to"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">to</span>.<span class="pl-en">String</span>()).<span class="pl-en">Msg</span>(<span class="pl-s">"relay error"</span>)
+		} <span class="pl-k">else</span> {
+			<span class="pl-s1">log</span>.<span class="pl-en">Info</span>().<span class="pl-en">Str</span>(<span class="pl-s">"from"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">from</span>.<span class="pl-en">String</span>()).<span class="pl-en">Str</span>(<span class="pl-s">"to"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">to</span>.<span class="pl-en">String</span>()).<span class="pl-en">Int64</span>(<span class="pl-s">"transfer"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">len</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"relay success"</span>)
+		}
+	}
+}</pre></div></div>
+<div style="font-size:small;margin-top:8px;float:right;"></div>
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+</div>
+    <div id="footer">Copyright © <span id="year"></span><a href="http://0x1042.github.io"> Daily </a>
+<p>
+<span id="runday"></span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a>
+</p>
+
+<script>
+if("10/25/2023"!=""){
+    var now=new Date();
+    var startSite=new Date("10/25/2023");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("year").innerHTML=now.getFullYear();
+    if(""!=""){document.getElementById("runday").innerHTML=" • "+"网站运行"+diffDay+"天"+" • ";}
+    else{document.getElementById("runday").innerHTML="网站运行"+diffDay+"天"+" • ";}
+}
+</script>
+</div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek v2.16 https://github.com/Meekdai/Gmeek \n\n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","0x1042/0x1042.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+</script>
+
+
+
+</html>

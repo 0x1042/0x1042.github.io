@@ -11,7 +11,7 @@
     </script>
 <meta name="description" content="debian/ubuntu基本使用">
 <title>debian/ubuntu基本使用</title>
-
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 </head>
 <style>
@@ -65,13 +65,14 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>warning</h1>
+<div class="markdown-body" id="postBody"><h1>apt update</h1>
+<h2>warning</h2>
 <pre class="notranslate"><code class="notranslate"> sudo apt update
 W: https://mirrors.tuna.tsinghua.edu.cn/llvm-apt/jammy/dists/llvm-toolchain-jammy-18/InRelease: 
 Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg),
 see the DEPRECATION section in apt-key(8) for details.
 </code></pre>
-<h1>处理</h1>
+<h2>处理</h2>
 <ul>
 <li>找到对应的key</li>
 </ul>
@@ -88,7 +89,11 @@ see the DEPRECATION section in apt-key(8) for details.
 </code></pre>
 <ul>
 <li>重新update</li>
-</ul></div>
+</ul>
+<h1>清理无效软连接</h1>
+<div class="highlight highlight-source-shell"><pre class="notranslate">find <span class="pl-c1">.</span> -xtype l
+
+find /path -xtype l</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
 <div class="comments" id="comments"></div>

@@ -1,4 +1,6 @@
-# warning
+# apt update
+
+## warning
 
 ```
  sudo apt update
@@ -8,7 +10,7 @@ see the DEPRECATION section in apt-key(8) for details.
 ```
 
 
-# 处理
+## 处理
 
 - 找到对应的key 
 ```
@@ -26,4 +28,14 @@ sudo apt-key export AF4F7421 | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/llv
 ```
 
 - 重新update 
+
+# 清理无效软连接
+
+```shell
+
+find . -xtype l
+
+find /path -xtype l
+```
+
 

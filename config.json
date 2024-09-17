@@ -11,6 +11,7 @@
         "link",
         "about"
     ],
+    "script":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>",
     "startSite":"10/25/2023",
     "onePageListNum": 15,
     "commentLabelColor": "#006b75",

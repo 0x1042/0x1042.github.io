@@ -96,7 +96,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li>暂停，即意味着需要保存函数执行过程中产生的上下文</li>
 <li>恢复，调用方可以获取到这个协程在堆上的控制入口</li>
 </ul>
-<table role="table">
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th>关键字</th>
@@ -117,7 +117,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <td>结束协程</td>
 </tr>
 </tbody>
-</table>
+</table></markdown-accessiblity-table>
 <h2>基本原理</h2>
 <p>参考 <a href="https://owent.net/2019/1904.html" title="C++20 Coroutine" rel="nofollow">C++20 Coroutine</a>,<a href="https://z3475.work/post/c20-xie-cheng-mai-xiang-yi-bu-part1-zui-jian-dan-de-xie-cheng/" title="[C++20协程]迈向异步 Part1-最简单的协程" rel="nofollow">C++20协程</a>.  核心是有编译器针对协程函数做patch，生成新的代码，区别于有栈协程，需要有对应的runtime来调度.</p>
 <p>可以在 <a href="https://cppinsights.io" rel="nofollow">cppinsights.io</a> 上打开 <code class="notranslate">Show coroutine transformation</code> 选项，查看详细的细节，生成的结果中有注释，是一个近似的结果</p>
@@ -429,5 +429,5 @@ function iFrameLoading(){
 </script>
 
 
-
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
 </html>

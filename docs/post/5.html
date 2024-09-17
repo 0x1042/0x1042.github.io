@@ -94,7 +94,7 @@ Cat * cat1 = &amp;cat;
 Cat &amp; lr_cat = cat;
 <span class="pl-k">const</span> Cat &amp; ltc_cat = cat;
 Cat&amp;&amp; rr_cat = Cat{};</pre></div>
-<table role="table">
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th>表达式</th>
@@ -155,7 +155,7 @@ Cat&amp;&amp; rr_cat = Cat{};</pre></div>
 <td><code class="notranslate">Cat&amp;&amp;</code></td>
 </tr>
 </tbody>
-</table>
+</table></markdown-accessiblity-table>
 <h1><code class="notranslate">decltype</code></h1>
 <blockquote>
 <p>作用：获取 标识符被定义时的类型或者 整体作为 表达式 时的值类别</p>
@@ -178,7 +178,7 @@ Cat&amp;&amp; rr_cat = Cat{};</pre></div>
     Student &amp;&amp; st_tmp = {};
 }</pre></div>
 <h2>不带括号(获取的是标识符 定义时的类型)</h2>
-<table role="table">
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th>表达式</th>
@@ -215,9 +215,9 @@ Cat&amp;&amp; rr_cat = Cat{};</pre></div>
 <td><code class="notranslate">std::string</code></td>
 </tr>
 </tbody>
-</table>
+</table></markdown-accessiblity-table>
 <h2>带括号 获取表达式的值类别</h2>
-<table role="table">
+<markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
 <th>表达式</th>
@@ -266,7 +266,7 @@ Cat&amp;&amp; rr_cat = Cat{};</pre></div>
 <td><code class="notranslate">uint32_t</code></td>
 </tr>
 </tbody>
-</table>
+</table></markdown-accessiblity-table>
 <ul>
 <li>如果表达式是左值，那么 <code class="notranslate">decltype((exp))</code> 就是左值引用（T1-&gt;T6）</li>
 <li><code class="notranslate">st_tmp</code>的类型是 右值引用，但是作为表达式，可以被取地址，所以是左值引用</li>
@@ -456,5 +456,5 @@ function iFrameLoading(){
 </script>
 
 
-
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script src='https://blog.meekdai.com/Gmeek/plugins/lightbox.js'></script>
 </html>

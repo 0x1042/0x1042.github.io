@@ -70,13 +70,13 @@ ssh -N -f -L localhost:8888:localhost:8889 ubuntu
 
 > 为了解释线性回归，我们举一个实际的例子： 我们希望根据房屋的面积（平方英尺）和房龄（年）来估算房屋价格（美元）。 为了开发一个能预测房价的模型，我们需要收集一个真实的数据集。 这个数据集包括了房屋的销售价格、面积和房龄。 在机器学习的术语中，该数据集称为训练数据集（training data set） 或训练集（training set）。 每行数据（比如一次房屋交易相对应的数据）称为样本（sample）， 也可以称为数据点（data point）或数据样本（data instance）。 我们把试图预测的目标（比如预测房屋价格）称为标签（label）或目标（target）。 预测所依据的自变量（面积和房龄）称为特征（feature）或协变量（covariate）  https://zh.d2l.ai/chapter_linear-networks/linear-regression.html
 
-简单理解为$y=wx+b$
+简单理解为 $y=wx+b$
 
 线性回归(Linear Regression)算法就是寻找一条最优的直线来拟合数据(可以扩展到多维)。线性回归通常采用给定的函数值与模型预测值之差的平方和最小为损失函数, 并使用最小二乘法和梯度下降法来计算最终的拟合参数。 
 
 给定一个数据集，我们的目标是寻找模型的权重，使得根据模型做出的预测大体符合数据里的真实价格。 输出的预测值由输入特征通过线性模型的仿射变换决定，仿射变换由所选权重和偏置确定
 
-房价的例子中$price = w_{area}*area + w_{age}*age + b$ , 即变量(面积和房龄) 与因变量(房屋价格)之间存在线性关系。
+房价的例子中 $price = w_{area}*area + w_{age}*age + b$ , 即变量(面积和房龄) 与因变量(房屋价格)之间存在线性关系。
 
 ## 损失函数 loss function 
 
@@ -236,7 +236,7 @@ print('b的估计误差：', true_b - b)
 
 # 非线性回归 Non-linear Regression
 
-简单理解为$y=wx^2+b$
+简单理解为 $y=wx^2+b$
 
 # 逻辑回归 logistic regression 
 

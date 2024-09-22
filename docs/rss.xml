@@ -1,5 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Sat, 21 Sep 2024 17:00:50 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>ml 扫盲四</title><link>http://0x1042.github.io/post/34.html</link><description># origin post&#13;
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>http://0x1042.github.io</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>http://0x1042.github.io</link></image><lastBuildDate>Sun, 22 Sep 2024 07:23:38 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>vscode misc</title><link>http://0x1042.github.io/post/35.html</link><description># terminal 打开报错 &#13;
+&#13;
+```&#13;
+SecCodeCheckValidity: Error Domain=NSOSStatusErrorDomain Code=-67062 '(null)' (-67062)&#13;
+```&#13;
+&#13;
+## 修复 &#13;
+&#13;
+```&#13;
+xattr -cr  /Applications/Visual\ Studio\ Code.app&#13;
+sudo codesign --force --deep --sign - /Applications/Visual\ Studio\ Code.app&#13;
+``` &#13;
+。</description><guid isPermaLink="true">http://0x1042.github.io/post/35.html</guid><pubDate>Sun, 22 Sep 2024 07:23:14 +0000</pubDate></item><item><title>ml 扫盲四</title><link>http://0x1042.github.io/post/34.html</link><description># origin post&#13;
 &#13;
 &gt; https://x.com/konradgajdus/status/1837196363735482396&#13;
 &#13;

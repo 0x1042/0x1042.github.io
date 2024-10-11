@@ -39,6 +39,8 @@ message UaInfo {
 
 > 生成 `protoc --proto_path=proto --cpp_out=pbgen proto/*.proto`
 
+- 反序列化
+
 ```cpp
 TEST(pb, valus) {
     const std::string json = R"({"show_list":{"hello1":["world1","world1"],"hello2":["world2","world2"]}})";
@@ -64,6 +66,41 @@ TEST(pb, valus) {
 
     // 输出 {"hello1": ["world1", "world1"], "hello2": ["world2", "world2"]}
     std::clog << fmt::to_string(db) << '\n';
+}
+```
+
+- 生成
+
+```cpp
+TEST(pb, valus2) {
+    google::protobuf::json::PrintOptions opt;
+    opt.add_whitespace = true;
+    demo::UaInfo info;
+    auto * map = info.mutable_show_list();
+
+    {
+        google::protobuf::ListValue list_value;
+        list_value.add_values()->set_string_value("orld1010");
+        list_value.add_values()->set_string_value("orld1020");
+        (*map)["hello101"] = std::move(list_value);
+    }
+
+    {
+        google::protobuf::ListValue list_value;
+        list_value.add_values()->set_string_value("orld2010");
+        list_value.add_values()->set_string_value("orld2020");
+        (*map)["hello202"] = std::move(list_value);
+    }
+
+    std::clog << info.DebugString() << '\n';
+
+    std::string message;
+
+    const auto & status = google::protobuf::json::MessageToJsonString(info, &message, opt);
+
+    std::clog << "status " << status << '\n';
+
+    std::clog << "message " << message << '\n';
 }
 ```
 

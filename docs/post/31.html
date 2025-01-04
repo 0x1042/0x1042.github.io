@@ -285,10 +285,10 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 #<span class="pl-k">endif</span></pre></div>
 <h1>cmake</h1>
-<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-c1">set</span>(CMAKE_POSITION_INDEPENDENT_CODE <span class="pl-k">ON</span>)
-<span class="pl-c1">set</span>(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-k">set</span>(<span class="pl-v">CMAKE_POSITION_INDEPENDENT_CODE</span> <span class="pl-k">ON</span>)
+<span class="pl-k">set</span>(CMAKE_INTERPROCEDURAL_OPTIMIZATION <span class="pl-k">TRUE</span>)
 
-<span class="pl-c1">add_library</span>(parse <span class="pl-k">STATIC</span> <span class="pl-smi">${LIBSRC}</span>)</pre></div>
+<span class="pl-k">add_library</span>(parse <span class="pl-e">STATIC</span> <span class="pl-k">${LIBSRC}</span>)</pre></div>
 <h1>rust 32 bit target</h1>
 <pre class="notranslate"><code class="notranslate">
 # add target
@@ -328,9 +328,9 @@ std::allocator&lt;char&gt; &gt;::rfind(char, unsigned int) const
 <blockquote>
 <p>或者全静态编译lib</p>
 </blockquote>
-<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-c1">target_link_libraries</span>(parse
-    -static-libstdc++
-    -static-libgcc
+<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-k">target_link_libraries</span>(parse
+    -<span class="pl-e">static</span>-libstdc++
+    -<span class="pl-e">static</span>-libgcc
 )</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
@@ -396,6 +396,7 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 function openComments(){
     cm=document.getElementById("comments");
     cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
     cmButton.innerHTML="loading";
     span=document.createElement("span");
     span.setAttribute("class","AnimatedEllipsis");

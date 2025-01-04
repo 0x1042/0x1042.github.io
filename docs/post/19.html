@@ -595,7 +595,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 <div class="highlight highlight-source-rust"><pre class="notranslate"><span class="pl-c1">#<span class="pl-kos">[</span>proc_macro_derive<span class="pl-kos">(</span><span class="pl-v">Builder</span><span class="pl-kos">)</span><span class="pl-kos">]</span></span>
 <span class="pl-k">pub</span> <span class="pl-k">fn</span> <span class="pl-en">derive</span><span class="pl-kos">(</span><span class="pl-s1">input</span><span class="pl-kos">:</span> proc_macro<span class="pl-kos">::</span><span class="pl-smi">TokenStream</span><span class="pl-kos">)</span> -&gt; proc_macro<span class="pl-kos">::</span><span class="pl-smi">TokenStream</span> <span class="pl-kos">{</span>
-    <span class="pl-k">let</span> ast = syn<span class="pl-kos">::</span>parse_macro_input!<span class="pl-kos">(</span>input <span class="pl-k">as</span> syn::<span class="pl-v">DeriveInput</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
+    <span class="pl-k">let</span> ast = syn<span class="pl-kos">::</span>parse_macro_input!<span class="pl-kos">(</span>input <span class="pl-k">as</span> syn<span class="pl-kos">::</span><span class="pl-v">DeriveInput</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
     <span class="pl-k">let</span> ident = ast<span class="pl-kos">.</span><span class="pl-c1">ident</span><span class="pl-kos">;</span>
 
@@ -615,7 +615,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <span class="pl-k">let</span> ty = field<span class="pl-kos">.</span><span class="pl-c1">ty</span><span class="pl-kos">;</span>
 
         quote<span class="pl-kos">::</span>quote! <span class="pl-kos">{</span>
-            #id: std::option::<span class="pl-v">Option</span>&lt;#ty&gt;
+            #id<span class="pl-kos">:</span> std<span class="pl-kos">::</span>option<span class="pl-kos">::</span><span class="pl-v">Option</span>&lt;#ty&gt;
         <span class="pl-kos">}</span>
     <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
@@ -625,7 +625,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <span class="pl-k">let</span> field = field<span class="pl-kos">.</span><span class="pl-en">clone</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
         <span class="pl-k">let</span> id = field<span class="pl-kos">.</span><span class="pl-c1">ident</span><span class="pl-kos">.</span><span class="pl-en">unwrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
-        quote<span class="pl-kos">::</span>quote! <span class="pl-kos">{</span> #id: std::option::<span class="pl-v">Option</span>::<span class="pl-v">None</span> <span class="pl-kos">}</span>
+        quote<span class="pl-kos">::</span>quote! <span class="pl-kos">{</span> #id<span class="pl-kos">:</span> std<span class="pl-kos">::</span>option<span class="pl-kos">::</span><span class="pl-v">Option</span><span class="pl-kos">::</span><span class="pl-v">None</span> <span class="pl-kos">}</span>
     <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
     <span class="pl-c">// 定义setter 函数</span>
@@ -639,8 +639,8 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <span class="pl-k">let</span> id = field<span class="pl-kos">.</span><span class="pl-c1">ident</span><span class="pl-kos">.</span><span class="pl-en">unwrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
         quote<span class="pl-kos">::</span>quote! <span class="pl-kos">{</span>
-            <span class="pl-k">pub</span> <span class="pl-k">fn</span> #id<span class="pl-kos">(</span>&amp;<span class="pl-k">mut</span> <span class="pl-smi">self</span>,value:#ty<span class="pl-kos">)</span> -&gt; &amp;<span class="pl-k">mut</span> <span class="pl-v">Self</span> <span class="pl-kos">{</span>
-                <span class="pl-smi">self</span>.#id = std::option::<span class="pl-v">Option</span>::<span class="pl-v">Some</span><span class="pl-kos">(</span>value<span class="pl-kos">)</span>;
+            <span class="pl-k">pub</span> <span class="pl-k">fn</span> #id<span class="pl-kos">(</span><span class="pl-c1">&amp;</span><span class="pl-k">mut</span> <span class="pl-smi">self</span><span class="pl-kos">,</span>value<span class="pl-kos">:</span>#ty<span class="pl-kos">)</span> -&gt; <span class="pl-c1">&amp;</span><span class="pl-k">mut</span> <span class="pl-v">Self</span> <span class="pl-kos">{</span>
+                <span class="pl-smi">self</span><span class="pl-kos">.</span>#id = std<span class="pl-kos">::</span>option<span class="pl-kos">::</span><span class="pl-v">Option</span><span class="pl-kos">::</span><span class="pl-v">Some</span><span class="pl-kos">(</span>value<span class="pl-kos">)</span><span class="pl-kos">;</span>
                 <span class="pl-smi">self</span>
             <span class="pl-kos">}</span>
         <span class="pl-kos">}</span>
@@ -653,24 +653,24 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <span class="pl-k">let</span> id = field<span class="pl-kos">.</span><span class="pl-c1">ident</span><span class="pl-kos">.</span><span class="pl-en">unwrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
         quote<span class="pl-kos">::</span>quote! <span class="pl-kos">{</span>
-            #id: <span class="pl-smi">self</span>.#id.clone<span class="pl-kos">(</span><span class="pl-kos">)</span>.unwrap<span class="pl-kos">(</span><span class="pl-kos">)</span>
+            #id<span class="pl-kos">:</span> <span class="pl-smi">self</span><span class="pl-kos">.</span>#id<span class="pl-kos">.</span>clone<span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">.</span>unwrap<span class="pl-kos">(</span><span class="pl-kos">)</span>
         <span class="pl-kos">}</span>
     <span class="pl-kos">}</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 
     <span class="pl-k">let</span> output = quote<span class="pl-kos">::</span>quote! <span class="pl-kos">{</span>
         <span class="pl-c">// 定义builder struct </span>
         <span class="pl-k">pub</span> <span class="pl-k">struct</span> #builder_ident <span class="pl-kos">{</span>
-            #<span class="pl-kos">(</span>#builder_fields<span class="pl-kos">)</span>,*
+            #<span class="pl-kos">(</span>#builder_fields<span class="pl-kos">)</span><span class="pl-kos">,</span><span class="pl-c1">*</span>
         <span class="pl-kos">}</span>
 
         <span class="pl-k">impl</span> #builder_ident <span class="pl-kos">{</span>
-            #<span class="pl-kos">(</span>#setters<span class="pl-kos">)</span>*
+            #<span class="pl-kos">(</span>#setters<span class="pl-kos">)</span><span class="pl-c1">*</span>
         <span class="pl-kos">}</span>
 
         <span class="pl-k">impl</span> #builder_ident <span class="pl-kos">{</span>
-            <span class="pl-k">pub</span> <span class="pl-k">fn</span> build<span class="pl-kos">(</span>&amp;<span class="pl-k">mut</span> <span class="pl-smi">self</span><span class="pl-kos">)</span> -&gt; std::result::<span class="pl-v">Result</span>&lt;#ident, std::boxed::<span class="pl-v">Box</span>&lt;dyn std::error::<span class="pl-v">Error</span>&gt;&gt; <span class="pl-kos">{</span>
-                std::result::<span class="pl-v">Result</span>::<span class="pl-v">Ok</span><span class="pl-kos">(</span>#ident <span class="pl-kos">{</span>
-                    #<span class="pl-kos">(</span>#build_fields<span class="pl-kos">)</span>,*
+            <span class="pl-k">pub</span> <span class="pl-k">fn</span> build<span class="pl-kos">(</span><span class="pl-c1">&amp;</span><span class="pl-k">mut</span> <span class="pl-smi">self</span><span class="pl-kos">)</span> -&gt; std<span class="pl-kos">::</span>result<span class="pl-kos">::</span><span class="pl-v">Result</span>&lt;#ident<span class="pl-kos">,</span> std<span class="pl-kos">::</span>boxed<span class="pl-kos">::</span><span class="pl-v">Box</span>&lt;dyn std<span class="pl-kos">::</span>error<span class="pl-kos">::</span><span class="pl-v">Error</span>&gt;&gt; <span class="pl-kos">{</span>
+                std<span class="pl-kos">::</span>result<span class="pl-kos">::</span><span class="pl-v">Result</span><span class="pl-kos">::</span><span class="pl-v">Ok</span><span class="pl-kos">(</span>#ident <span class="pl-kos">{</span>
+                    #<span class="pl-kos">(</span>#build_fields<span class="pl-kos">)</span><span class="pl-kos">,</span><span class="pl-c1">*</span>
                 <span class="pl-kos">}</span><span class="pl-kos">)</span>
             <span class="pl-kos">}</span>
 
@@ -679,7 +679,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         <span class="pl-k">impl</span> #ident <span class="pl-kos">{</span>
             <span class="pl-k">pub</span> <span class="pl-k">fn</span> builder<span class="pl-kos">(</span><span class="pl-kos">)</span> -&gt; #builder_ident <span class="pl-kos">{</span>
                 #builder_ident <span class="pl-kos">{</span>
-                    #<span class="pl-kos">(</span>#builder_defaults<span class="pl-kos">)</span>,*
+                    #<span class="pl-kos">(</span>#builder_defaults<span class="pl-kos">)</span><span class="pl-kos">,</span><span class="pl-c1">*</span>
                 <span class="pl-kos">}</span>
             <span class="pl-kos">}</span>
         <span class="pl-kos">}</span>
@@ -702,7 +702,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-k">let</span> ad = builder
         <span class="pl-kos">.</span><span class="pl-en">bid</span><span class="pl-kos">(</span><span class="pl-c1">1.23</span><span class="pl-kos">)</span>
         <span class="pl-kos">.</span><span class="pl-en">id</span><span class="pl-kos">(</span><span class="pl-c1">193987829387</span><span class="pl-kos">)</span>
-        <span class="pl-kos">.</span><span class="pl-en">cids</span><span class="pl-kos">(</span><span class="pl-en">vec</span><span class="pl-en">!</span><span class="pl-kos">[</span><span class="pl-c1">1</span>, <span class="pl-c1">2</span>, <span class="pl-c1">3</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
+        <span class="pl-kos">.</span><span class="pl-en">cids</span><span class="pl-kos">(</span><span class="pl-en">vec</span><span class="pl-en">!</span><span class="pl-kos">[</span><span class="pl-c1">1</span><span class="pl-kos">,</span> <span class="pl-c1">2</span><span class="pl-kos">,</span> <span class="pl-c1">3</span><span class="pl-kos">]</span><span class="pl-kos">)</span>
         <span class="pl-kos">.</span><span class="pl-en">title</span><span class="pl-kos">(</span><span class="pl-s">"推广"</span><span class="pl-kos">.</span><span class="pl-en">to_string</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">)</span>
         <span class="pl-kos">.</span><span class="pl-en">build</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">;</span>
 <span class="pl-kos">}</span></pre></div>
@@ -728,19 +728,19 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-kos">}</span>
 <span class="pl-k">impl</span> <span class="pl-smi">AdBuilder</span> <span class="pl-kos">{</span>
     <span class="pl-k">pub</span> <span class="pl-k">fn</span> <span class="pl-en">id</span><span class="pl-kos">(</span><span class="pl-c1">&amp;</span><span class="pl-k">mut</span> <span class="pl-smi">self</span><span class="pl-kos">,</span> <span class="pl-s1">value</span><span class="pl-kos">:</span> <span class="pl-smi">u64</span><span class="pl-kos">)</span> -&gt; <span class="pl-c1">&amp;</span><span class="pl-k">mut</span> <span class="pl-smi">Self</span> <span class="pl-kos">{</span>
-        <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">id</span> = std<span class="pl-kos">::</span>option<span class="pl-kos">::</span><span class="pl-smi">Option</span><span class="pl-kos">::</span><span class="pl-v">Some</span><span class="pl-kos">(</span>value<span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">id</span> = std<span class="pl-kos">::</span>option<span class="pl-kos">::</span><span class="pl-smi">Option</span><span class="pl-kos">::</span><span class="pl-en">Some</span><span class="pl-kos">(</span>value<span class="pl-kos">)</span><span class="pl-kos">;</span>
         <span class="pl-smi">self</span>
     <span class="pl-kos">}</span>
     <span class="pl-k">pub</span> <span class="pl-k">fn</span> <span class="pl-en">cids</span><span class="pl-kos">(</span><span class="pl-c1">&amp;</span><span class="pl-k">mut</span> <span class="pl-smi">self</span><span class="pl-kos">,</span> <span class="pl-s1">value</span><span class="pl-kos">:</span> <span class="pl-smi">Vec</span><span class="pl-kos">&lt;</span><span class="pl-smi">u64</span><span class="pl-kos">&gt;</span><span class="pl-kos">)</span> -&gt; <span class="pl-c1">&amp;</span><span class="pl-k">mut</span> <span class="pl-smi">Self</span> <span class="pl-kos">{</span>
-        <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">cids</span> = std<span class="pl-kos">::</span>option<span class="pl-kos">::</span><span class="pl-smi">Option</span><span class="pl-kos">::</span><span class="pl-v">Some</span><span class="pl-kos">(</span>value<span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">cids</span> = std<span class="pl-kos">::</span>option<span class="pl-kos">::</span><span class="pl-smi">Option</span><span class="pl-kos">::</span><span class="pl-en">Some</span><span class="pl-kos">(</span>value<span class="pl-kos">)</span><span class="pl-kos">;</span>
         <span class="pl-smi">self</span>
     <span class="pl-kos">}</span>
     <span class="pl-k">pub</span> <span class="pl-k">fn</span> <span class="pl-en">title</span><span class="pl-kos">(</span><span class="pl-c1">&amp;</span><span class="pl-k">mut</span> <span class="pl-smi">self</span><span class="pl-kos">,</span> <span class="pl-s1">value</span><span class="pl-kos">:</span> <span class="pl-smi">String</span><span class="pl-kos">)</span> -&gt; <span class="pl-c1">&amp;</span><span class="pl-k">mut</span> <span class="pl-smi">Self</span> <span class="pl-kos">{</span>
-        <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">title</span> = std<span class="pl-kos">::</span>option<span class="pl-kos">::</span><span class="pl-smi">Option</span><span class="pl-kos">::</span><span class="pl-v">Some</span><span class="pl-kos">(</span>value<span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">title</span> = std<span class="pl-kos">::</span>option<span class="pl-kos">::</span><span class="pl-smi">Option</span><span class="pl-kos">::</span><span class="pl-en">Some</span><span class="pl-kos">(</span>value<span class="pl-kos">)</span><span class="pl-kos">;</span>
         <span class="pl-smi">self</span>
     <span class="pl-kos">}</span>
     <span class="pl-k">pub</span> <span class="pl-k">fn</span> <span class="pl-en">bid</span><span class="pl-kos">(</span><span class="pl-c1">&amp;</span><span class="pl-k">mut</span> <span class="pl-smi">self</span><span class="pl-kos">,</span> <span class="pl-s1">value</span><span class="pl-kos">:</span> <span class="pl-smi">f32</span><span class="pl-kos">)</span> -&gt; <span class="pl-c1">&amp;</span><span class="pl-k">mut</span> <span class="pl-smi">Self</span> <span class="pl-kos">{</span>
-        <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">bid</span> = std<span class="pl-kos">::</span>option<span class="pl-kos">::</span><span class="pl-smi">Option</span><span class="pl-kos">::</span><span class="pl-v">Some</span><span class="pl-kos">(</span>value<span class="pl-kos">)</span><span class="pl-kos">;</span>
+        <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">bid</span> = std<span class="pl-kos">::</span>option<span class="pl-kos">::</span><span class="pl-smi">Option</span><span class="pl-kos">::</span><span class="pl-en">Some</span><span class="pl-kos">(</span>value<span class="pl-kos">)</span><span class="pl-kos">;</span>
         <span class="pl-smi">self</span>
     <span class="pl-kos">}</span>
 <span class="pl-kos">}</span>
@@ -748,7 +748,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     <span class="pl-k">pub</span> <span class="pl-k">fn</span> <span class="pl-en">build</span><span class="pl-kos">(</span>
         <span class="pl-c1">&amp;</span><span class="pl-k">mut</span> <span class="pl-smi">self</span><span class="pl-kos">,</span>
     <span class="pl-kos">)</span> -&gt; std<span class="pl-kos">::</span>result<span class="pl-kos">::</span><span class="pl-smi">Result</span><span class="pl-kos">&lt;</span><span class="pl-smi">Ad</span><span class="pl-kos">,</span> std<span class="pl-kos">::</span>boxed<span class="pl-kos">::</span><span class="pl-smi">Box</span><span class="pl-kos">&lt;</span><span class="pl-k">dyn</span> std<span class="pl-kos">::</span>error<span class="pl-kos">::</span><span class="pl-smi">Error</span><span class="pl-kos">&gt;</span><span class="pl-kos">&gt;</span> <span class="pl-kos">{</span>
-        std<span class="pl-kos">::</span>result<span class="pl-kos">::</span><span class="pl-smi">Result</span><span class="pl-kos">::</span><span class="pl-v">Ok</span><span class="pl-kos">(</span><span class="pl-smi">Ad</span> <span class="pl-kos">{</span>
+        std<span class="pl-kos">::</span>result<span class="pl-kos">::</span><span class="pl-smi">Result</span><span class="pl-kos">::</span><span class="pl-en">Ok</span><span class="pl-kos">(</span><span class="pl-smi">Ad</span> <span class="pl-kos">{</span>
             <span class="pl-c1">id</span><span class="pl-kos">:</span> <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">id</span><span class="pl-kos">.</span><span class="pl-en">clone</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">unwrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
             <span class="pl-c1">cids</span><span class="pl-kos">:</span> <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">cids</span><span class="pl-kos">.</span><span class="pl-en">clone</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">unwrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
             <span class="pl-c1">title</span><span class="pl-kos">:</span> <span class="pl-smi">self</span><span class="pl-kos">.</span><span class="pl-c1">title</span><span class="pl-kos">.</span><span class="pl-en">clone</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">.</span><span class="pl-en">unwrap</span><span class="pl-kos">(</span><span class="pl-kos">)</span><span class="pl-kos">,</span>
@@ -839,6 +839,7 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 function openComments(){
     cm=document.getElementById("comments");
     cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
     cmButton.innerHTML="loading";
     span=document.createElement("span");
     span.setAttribute("class","AnimatedEllipsis");

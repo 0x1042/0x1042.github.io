@@ -160,17 +160,17 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
 <blockquote>
 <p><code class="notranslate">cmake</code> 默认<code class="notranslate">RelWithDebInfo</code> 模式是<code class="notranslate">O2</code></p>
 </blockquote>
-<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-c1">set</span>(CMAKE_C_FLAGS_RELWITHDEBINFO
+<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-k">set</span>(CMAKE_C_FLAGS_RELWITHDEBINFO
     <span class="pl-s">"-O3 -g"</span>
-    <span class="pl-k">CACHE</span> STRING
+    <span class="pl-k">CACHE</span> <span class="pl-k">STRING</span>
           <span class="pl-s">"Flags used by the C compiler during release builds with debug info."</span>
-          <span class="pl-k">FORCE</span>)
-<span class="pl-c1">set</span>(CMAKE_CXX_FLAGS_RELWITHDEBINFO
+          FORCE)
+<span class="pl-k">set</span>(<span class="pl-v">CMAKE_CXX_FLAGS_RELWITHDEBINFO</span>
     <span class="pl-s">"-O3 -g"</span>
     <span class="pl-k">CACHE</span>
-      STRING
+<span class="pl-k">      STRING</span>
       <span class="pl-s">"Flags used by the C++ compiler during release builds with debug info."</span>
-      <span class="pl-k">FORCE</span>)</pre></div></div>
+      FORCE)</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
@@ -235,6 +235,7 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 function openComments(){
     cm=document.getElementById("comments");
     cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
     cmButton.innerHTML="loading";
     span=document.createElement("span");
     span.setAttribute("class","AnimatedEllipsis");

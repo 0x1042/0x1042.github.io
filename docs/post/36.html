@@ -490,41 +490,41 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <ul>
 <li>反序列化</li>
 </ul>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-en">Test_test</span>(<span class="pl-s1">t</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">T</span>) {
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-s1">Test_test</span>(<span class="pl-s1">t</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">T</span>) {
 	<span class="pl-s1">str</span> <span class="pl-c1">:=</span> <span class="pl-s">"{<span class="pl-cce">\"</span>show_list<span class="pl-cce">\"</span>:{<span class="pl-cce">\"</span>hello1<span class="pl-cce">\"</span>:[<span class="pl-cce">\"</span>world1<span class="pl-cce">\"</span>,<span class="pl-cce">\"</span>world1<span class="pl-cce">\"</span>],<span class="pl-cce">\"</span>hello2<span class="pl-cce">\"</span>:[<span class="pl-cce">\"</span>world2<span class="pl-cce">\"</span>,<span class="pl-cce">\"</span>world2<span class="pl-cce">\"</span>]}}"</span>
-	<span class="pl-s1">uainfo</span> <span class="pl-c1">:=</span> <span class="pl-en">new</span>(<span class="pl-smi">UaInfo</span>)
+	<span class="pl-s1">uainfo</span> <span class="pl-c1">:=</span> <span class="pl-s1">new</span>(<span class="pl-smi">UaInfo</span>)
 
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">json</span>.<span class="pl-en">Unmarshal</span>([]<span class="pl-smi">byte</span>(<span class="pl-s1">str</span>), <span class="pl-s1">uainfo</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Fatal</span>(<span class="pl-s1">err</span>)
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">json</span>.<span class="pl-c1">Unmarshal</span>([]<span class="pl-smi">byte</span>(<span class="pl-s1">str</span>), <span class="pl-s1">uainfo</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Fatal</span>(<span class="pl-s1">err</span>)
 	}
 
-	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"%+v"</span>, <span class="pl-s1">uainfo</span>)
+	<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"%+v"</span>, <span class="pl-s1">uainfo</span>)
 
-	<span class="pl-s1">bs</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">json</span>.<span class="pl-en">Marshal</span>(<span class="pl-s1">uainfo</span>)
+	<span class="pl-s1">bs</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">json</span>.<span class="pl-c1">Marshal</span>(<span class="pl-s1">uainfo</span>)
 
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-en">panic</span>(<span class="pl-s1">err</span>)
+		<span class="pl-s1">panic</span>(<span class="pl-s1">err</span>)
 	}
-	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"<span class="pl-cce">\n</span>%s"</span>, <span class="pl-s1">bs</span>)
+	<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"<span class="pl-cce">\n</span>%s"</span>, <span class="pl-s1">bs</span>)
 }</pre></div>
 <ul>
 <li>生成</li>
 </ul>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-en">Test_test2</span>(<span class="pl-s1">t</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">T</span>) {
-	<span class="pl-s1">uainfo</span> <span class="pl-c1">:=</span> <span class="pl-en">new</span>(<span class="pl-smi">UaInfo</span>)
-	<span class="pl-s1">uainfo</span>.<span class="pl-c1">ShowList</span> <span class="pl-c1">=</span> <span class="pl-en">make</span>(<span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-c1">*</span>structpb.<span class="pl-smi">ListValue</span>)
-	<span class="pl-s1">l1</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">structpb</span>.<span class="pl-en">NewList</span>([]<span class="pl-smi">any</span>{<span class="pl-s">"world101"</span>, <span class="pl-s">"world102"</span>})
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-s1">Test_test2</span>(<span class="pl-s1">t</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">T</span>) {
+	<span class="pl-s1">uainfo</span> <span class="pl-c1">:=</span> <span class="pl-s1">new</span>(<span class="pl-smi">UaInfo</span>)
+	<span class="pl-s1">uainfo</span>.<span class="pl-c1">ShowList</span> <span class="pl-c1">=</span> <span class="pl-s1">make</span>(<span class="pl-k">map</span>[<span class="pl-smi">string</span>]<span class="pl-c1">*</span>structpb.<span class="pl-smi">ListValue</span>)
+	<span class="pl-s1">l1</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">structpb</span>.<span class="pl-c1">NewList</span>([]<span class="pl-smi">any</span>{<span class="pl-s">"world101"</span>, <span class="pl-s">"world102"</span>})
 	<span class="pl-s1">uainfo</span>.<span class="pl-c1">ShowList</span>[<span class="pl-s">"hello1"</span>] <span class="pl-c1">=</span> <span class="pl-s1">l1</span>
 
-	<span class="pl-s1">l2</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">structpb</span>.<span class="pl-en">NewList</span>([]<span class="pl-smi">any</span>{<span class="pl-s">"world202"</span>, <span class="pl-s">"world201"</span>})
+	<span class="pl-s1">l2</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">structpb</span>.<span class="pl-c1">NewList</span>([]<span class="pl-smi">any</span>{<span class="pl-s">"world202"</span>, <span class="pl-s">"world201"</span>})
 	<span class="pl-s1">uainfo</span>.<span class="pl-c1">ShowList</span>[<span class="pl-s">"hello2"</span>] <span class="pl-c1">=</span> <span class="pl-s1">l2</span>
 
-	<span class="pl-s1">bs</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">json</span>.<span class="pl-en">Marshal</span>(<span class="pl-s1">uainfo</span>)
+	<span class="pl-s1">bs</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">json</span>.<span class="pl-c1">Marshal</span>(<span class="pl-s1">uainfo</span>)
 
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-en">panic</span>(<span class="pl-s1">err</span>)
+		<span class="pl-s1">panic</span>(<span class="pl-s1">err</span>)
 	}
-	<span class="pl-s1">log</span>.<span class="pl-en">Printf</span>(<span class="pl-s">"uainfo<span class="pl-cce">\n</span>%s"</span>, <span class="pl-s1">bs</span>)
+	<span class="pl-s1">log</span>.<span class="pl-c1">Printf</span>(<span class="pl-s">"uainfo<span class="pl-cce">\n</span>%s"</span>, <span class="pl-s1">bs</span>)
 }</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
@@ -590,6 +590,7 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 function openComments(){
     cm=document.getElementById("comments");
     cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
     cmButton.innerHTML="loading";
     span=document.createElement("span");
     span.setAttribute("class","AnimatedEllipsis");

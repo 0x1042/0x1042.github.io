@@ -259,14 +259,14 @@ ssh -N -f -L localhost:8888:localhost:8889 ubuntu</pre></div>
 
 <span class="pl-k">def</span> <span class="pl-en">synthetic_data</span>(<span class="pl-s1">w</span>, <span class="pl-s1">b</span>, <span class="pl-s1">num_examples</span>):  <span class="pl-c">#@save</span>
     <span class="pl-s">"""生成y=Xw+b+噪声"""</span>
-    <span class="pl-v">X</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-en">zeros</span>((<span class="pl-s1">num_examples</span>, <span class="pl-s1">w</span>.<span class="pl-s1">shape</span>[<span class="pl-c1">0</span>]))
-    <span class="pl-v">X</span> <span class="pl-c1">+=</span> <span class="pl-s1">tf</span>.<span class="pl-s1">random</span>.<span class="pl-en">normal</span>(<span class="pl-s1">shape</span><span class="pl-c1">=</span><span class="pl-v">X</span>.<span class="pl-s1">shape</span>)
-    <span class="pl-s1">y</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-en">matmul</span>(<span class="pl-v">X</span>, <span class="pl-s1">tf</span>.<span class="pl-en">reshape</span>(<span class="pl-s1">w</span>, (<span class="pl-c1">-</span><span class="pl-c1">1</span>, <span class="pl-c1">1</span>))) <span class="pl-c1">+</span> <span class="pl-s1">b</span>
-    <span class="pl-s1">y</span> <span class="pl-c1">+=</span> <span class="pl-s1">tf</span>.<span class="pl-s1">random</span>.<span class="pl-en">normal</span>(<span class="pl-s1">shape</span><span class="pl-c1">=</span><span class="pl-s1">y</span>.<span class="pl-s1">shape</span>, <span class="pl-s1">stddev</span><span class="pl-c1">=</span><span class="pl-c1">0.01</span>)
-    <span class="pl-s1">y</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-en">reshape</span>(<span class="pl-s1">y</span>, (<span class="pl-c1">-</span><span class="pl-c1">1</span>, <span class="pl-c1">1</span>))
-    <span class="pl-k">return</span> <span class="pl-v">X</span>, <span class="pl-s1">y</span>
+    <span class="pl-c1">X</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">zeros</span>((<span class="pl-s1">num_examples</span>, <span class="pl-s1">w</span>.<span class="pl-c1">shape</span>[<span class="pl-c1">0</span>]))
+    <span class="pl-c1">X</span> <span class="pl-c1">+=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">random</span>.<span class="pl-c1">normal</span>(<span class="pl-s1">shape</span><span class="pl-c1">=</span><span class="pl-c1">X</span>.<span class="pl-c1">shape</span>)
+    <span class="pl-s1">y</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">matmul</span>(<span class="pl-c1">X</span>, <span class="pl-s1">tf</span>.<span class="pl-c1">reshape</span>(<span class="pl-s1">w</span>, (<span class="pl-c1">-</span><span class="pl-c1">1</span>, <span class="pl-c1">1</span>))) <span class="pl-c1">+</span> <span class="pl-s1">b</span>
+    <span class="pl-s1">y</span> <span class="pl-c1">+=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">random</span>.<span class="pl-c1">normal</span>(<span class="pl-s1">shape</span><span class="pl-c1">=</span><span class="pl-s1">y</span>.<span class="pl-c1">shape</span>, <span class="pl-s1">stddev</span><span class="pl-c1">=</span><span class="pl-c1">0.01</span>)
+    <span class="pl-s1">y</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">reshape</span>(<span class="pl-s1">y</span>, (<span class="pl-c1">-</span><span class="pl-c1">1</span>, <span class="pl-c1">1</span>))
+    <span class="pl-k">return</span> <span class="pl-c1">X</span>, <span class="pl-s1">y</span>
 
-<span class="pl-s1">true_w</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-en">constant</span>([<span class="pl-c1">2</span>, <span class="pl-c1">-</span><span class="pl-c1">3.4</span>])
+<span class="pl-s1">true_w</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">constant</span>([<span class="pl-c1">2</span>, <span class="pl-c1">-</span><span class="pl-c1">3.4</span>])
 <span class="pl-s1">true_b</span> <span class="pl-c1">=</span> <span class="pl-c1">4.2</span>
 <span class="pl-s1">features</span>, <span class="pl-s1">labels</span> <span class="pl-c1">=</span> <span class="pl-en">synthetic_data</span>(<span class="pl-s1">true_w</span>, <span class="pl-s1">true_b</span>, <span class="pl-c1">1000</span>)</pre></div>
 <ul>
@@ -276,37 +276,37 @@ ssh -N -f -L localhost:8888:localhost:8889 ubuntu</pre></div>
     <span class="pl-s1">num_examples</span> <span class="pl-c1">=</span> <span class="pl-en">len</span>(<span class="pl-s1">features</span>)
     <span class="pl-s1">indices</span> <span class="pl-c1">=</span> <span class="pl-en">list</span>(<span class="pl-en">range</span>(<span class="pl-s1">num_examples</span>))
     <span class="pl-c"># 这些样本是随机读取的，没有特定的顺序</span>
-    <span class="pl-s1">random</span>.<span class="pl-en">shuffle</span>(<span class="pl-s1">indices</span>)
+    <span class="pl-s1">random</span>.<span class="pl-c1">shuffle</span>(<span class="pl-s1">indices</span>)
     <span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-c1">0</span>, <span class="pl-s1">num_examples</span>, <span class="pl-s1">batch_size</span>):
-        <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-en">constant</span>(<span class="pl-s1">indices</span>[<span class="pl-s1">i</span>: <span class="pl-en">min</span>(<span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-s1">batch_size</span>, <span class="pl-s1">num_examples</span>)])
-        <span class="pl-k">yield</span> <span class="pl-s1">tf</span>.<span class="pl-en">gather</span>(<span class="pl-s1">features</span>, <span class="pl-s1">j</span>), <span class="pl-s1">tf</span>.<span class="pl-en">gather</span>(<span class="pl-s1">labels</span>, <span class="pl-s1">j</span>)</pre></div>
+        <span class="pl-s1">j</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">constant</span>(<span class="pl-s1">indices</span>[<span class="pl-s1">i</span>: <span class="pl-en">min</span>(<span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-s1">batch_size</span>, <span class="pl-s1">num_examples</span>)])
+        <span class="pl-k">yield</span> <span class="pl-s1">tf</span>.<span class="pl-c1">gather</span>(<span class="pl-s1">features</span>, <span class="pl-s1">j</span>), <span class="pl-s1">tf</span>.<span class="pl-c1">gather</span>(<span class="pl-s1">labels</span>, <span class="pl-s1">j</span>)</pre></div>
 <ul>
 <li>step3 初始化模型参数</li>
 </ul>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># 从均值为0、标准差为0.01的正态分布中采样随机数来初始化权重， 并将偏置初始化为0。</span>
-<span class="pl-s1">w</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-v">Variable</span>(<span class="pl-s1">tf</span>.<span class="pl-s1">random</span>.<span class="pl-en">normal</span>(<span class="pl-s1">shape</span><span class="pl-c1">=</span>(<span class="pl-c1">2</span>, <span class="pl-c1">1</span>), <span class="pl-s1">mean</span><span class="pl-c1">=</span><span class="pl-c1">0</span>, <span class="pl-s1">stddev</span><span class="pl-c1">=</span><span class="pl-c1">0.01</span>),
+<span class="pl-s1">w</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">Variable</span>(<span class="pl-s1">tf</span>.<span class="pl-c1">random</span>.<span class="pl-c1">normal</span>(<span class="pl-s1">shape</span><span class="pl-c1">=</span>(<span class="pl-c1">2</span>, <span class="pl-c1">1</span>), <span class="pl-s1">mean</span><span class="pl-c1">=</span><span class="pl-c1">0</span>, <span class="pl-s1">stddev</span><span class="pl-c1">=</span><span class="pl-c1">0.01</span>),
                 <span class="pl-s1">trainable</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
-<span class="pl-s1">b</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-v">Variable</span>(<span class="pl-s1">tf</span>.<span class="pl-en">zeros</span>(<span class="pl-c1">1</span>), <span class="pl-s1">trainable</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)</pre></div>
+<span class="pl-s1">b</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">Variable</span>(<span class="pl-s1">tf</span>.<span class="pl-c1">zeros</span>(<span class="pl-c1">1</span>), <span class="pl-s1">trainable</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)</pre></div>
 <p>模型训练的过程就是不断更新w和b，直到这些参数足够拟合我们的数据， 每次更新都需要计算损失函数关于模型参数的梯度，有了这个梯度，我们就可以向减小损失的方向更新每个参数（使用自动微分来计算梯度）</p>
 <ul>
 <li>step4 定义模型</li>
 </ul>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">def</span> <span class="pl-en">linreg</span>(<span class="pl-v">X</span>, <span class="pl-s1">w</span>, <span class="pl-s1">b</span>):  <span class="pl-c">#@save</span>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">def</span> <span class="pl-en">linreg</span>(<span class="pl-c1">X</span>, <span class="pl-s1">w</span>, <span class="pl-s1">b</span>):  <span class="pl-c">#@save</span>
     <span class="pl-s">"""线性回归模型"""</span>
-    <span class="pl-k">return</span> <span class="pl-s1">tf</span>.<span class="pl-en">matmul</span>(<span class="pl-v">X</span>, <span class="pl-s1">w</span>) <span class="pl-c1">+</span> <span class="pl-s1">b</span></pre></div>
+    <span class="pl-k">return</span> <span class="pl-s1">tf</span>.<span class="pl-c1">matmul</span>(<span class="pl-c1">X</span>, <span class="pl-s1">w</span>) <span class="pl-c1">+</span> <span class="pl-s1">b</span></pre></div>
 <ul>
 <li>step5 定义损失函数</li>
 </ul>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">def</span> <span class="pl-en">squared_loss</span>(<span class="pl-s1">y_hat</span>, <span class="pl-s1">y</span>):  <span class="pl-c">#@save</span>
     <span class="pl-s">"""均方损失"""</span>
-    <span class="pl-k">return</span> (<span class="pl-s1">y_hat</span> <span class="pl-c1">-</span> <span class="pl-s1">tf</span>.<span class="pl-en">reshape</span>(<span class="pl-s1">y</span>, <span class="pl-s1">y_hat</span>.<span class="pl-s1">shape</span>)) <span class="pl-c1">**</span> <span class="pl-c1">2</span> <span class="pl-c1">/</span> <span class="pl-c1">2</span></pre></div>
+    <span class="pl-k">return</span> (<span class="pl-s1">y_hat</span> <span class="pl-c1">-</span> <span class="pl-s1">tf</span>.<span class="pl-c1">reshape</span>(<span class="pl-s1">y</span>, <span class="pl-s1">y_hat</span>.<span class="pl-c1">shape</span>)) <span class="pl-c1">**</span> <span class="pl-c1">2</span> <span class="pl-c1">/</span> <span class="pl-c1">2</span></pre></div>
 <ul>
 <li>step6 定义优化器</li>
 </ul>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">def</span> <span class="pl-en">sgd</span>(<span class="pl-s1">params</span>, <span class="pl-s1">grads</span>, <span class="pl-s1">lr</span>, <span class="pl-s1">batch_size</span>):  <span class="pl-c">#@save</span>
     <span class="pl-s">"""小批量随机梯度下降"""</span>
     <span class="pl-k">for</span> <span class="pl-s1">param</span>, <span class="pl-s1">grad</span> <span class="pl-c1">in</span> <span class="pl-en">zip</span>(<span class="pl-s1">params</span>, <span class="pl-s1">grads</span>):
-        <span class="pl-s1">param</span>.<span class="pl-en">assign_sub</span>(<span class="pl-s1">lr</span><span class="pl-c1">*</span><span class="pl-s1">grad</span><span class="pl-c1">/</span><span class="pl-s1">batch_size</span>)</pre></div>
+        <span class="pl-s1">param</span>.<span class="pl-c1">assign_sub</span>(<span class="pl-s1">lr</span><span class="pl-c1">*</span><span class="pl-s1">grad</span><span class="pl-c1">/</span><span class="pl-s1">batch_size</span>)</pre></div>
 <ul>
 <li>step7 train</li>
 </ul>
@@ -316,58 +316,58 @@ ssh -N -f -L localhost:8888:localhost:8889 ubuntu</pre></div>
 <span class="pl-s1">loss</span> <span class="pl-c1">=</span> <span class="pl-s1">squared_loss</span>
 
 <span class="pl-k">for</span> <span class="pl-s1">epoch</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-s1">num_epochs</span>):
-    <span class="pl-k">for</span> <span class="pl-v">X</span>, <span class="pl-s1">y</span> <span class="pl-c1">in</span> <span class="pl-en">data_iter</span>(<span class="pl-s1">batch_size</span>, <span class="pl-s1">features</span>, <span class="pl-s1">labels</span>):
-        <span class="pl-k">with</span> <span class="pl-s1">tf</span>.<span class="pl-v">GradientTape</span>() <span class="pl-k">as</span> <span class="pl-s1">g</span>:
-            <span class="pl-s1">l</span> <span class="pl-c1">=</span> <span class="pl-en">loss</span>(<span class="pl-en">net</span>(<span class="pl-v">X</span>, <span class="pl-s1">w</span>, <span class="pl-s1">b</span>), <span class="pl-s1">y</span>)  <span class="pl-c"># X和y的小批量损失</span>
+    <span class="pl-k">for</span> <span class="pl-c1">X</span>, <span class="pl-s1">y</span> <span class="pl-c1">in</span> <span class="pl-en">data_iter</span>(<span class="pl-s1">batch_size</span>, <span class="pl-s1">features</span>, <span class="pl-s1">labels</span>):
+        <span class="pl-k">with</span> <span class="pl-s1">tf</span>.<span class="pl-c1">GradientTape</span>() <span class="pl-k">as</span> <span class="pl-s1">g</span>:
+            <span class="pl-s1">l</span> <span class="pl-c1">=</span> <span class="pl-en">loss</span>(<span class="pl-en">net</span>(<span class="pl-c1">X</span>, <span class="pl-s1">w</span>, <span class="pl-s1">b</span>), <span class="pl-s1">y</span>)  <span class="pl-c"># X和y的小批量损失</span>
         <span class="pl-c"># 计算l关于[w,b]的梯度</span>
-        <span class="pl-s1">dw</span>, <span class="pl-s1">db</span> <span class="pl-c1">=</span> <span class="pl-s1">g</span>.<span class="pl-en">gradient</span>(<span class="pl-s1">l</span>, [<span class="pl-s1">w</span>, <span class="pl-s1">b</span>])
+        <span class="pl-s1">dw</span>, <span class="pl-s1">db</span> <span class="pl-c1">=</span> <span class="pl-s1">g</span>.<span class="pl-c1">gradient</span>(<span class="pl-s1">l</span>, [<span class="pl-s1">w</span>, <span class="pl-s1">b</span>])
         <span class="pl-c"># 使用参数的梯度更新参数</span>
         <span class="pl-en">sgd</span>([<span class="pl-s1">w</span>, <span class="pl-s1">b</span>], [<span class="pl-s1">dw</span>, <span class="pl-s1">db</span>], <span class="pl-s1">lr</span>, <span class="pl-s1">batch_size</span>)
     <span class="pl-s1">train_l</span> <span class="pl-c1">=</span> <span class="pl-en">loss</span>(<span class="pl-en">net</span>(<span class="pl-s1">features</span>, <span class="pl-s1">w</span>, <span class="pl-s1">b</span>), <span class="pl-s1">labels</span>)
-    <span class="pl-en">print</span>(<span class="pl-s">f'epoch <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">epoch</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">}</span></span>, loss <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-en">float</span>(<span class="pl-s1">tf</span>.<span class="pl-en">reduce_mean</span>(<span class="pl-s1">train_l</span>)):f<span class="pl-kos">}</span></span>'</span>)</pre></div>
+    <span class="pl-en">print</span>(<span class="pl-s">f'epoch <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">epoch</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">}</span></span>, loss <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-en">float</span>(<span class="pl-s1">tf</span>.<span class="pl-c1">reduce_mean</span>(<span class="pl-s1">train_l</span>)):f<span class="pl-kos">}</span></span>'</span>)</pre></div>
 <h2>use tf</h2>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">numpy</span> <span class="pl-k">as</span> <span class="pl-s1">np</span>
 <span class="pl-k">import</span> <span class="pl-s1">tensorflow</span> <span class="pl-k">as</span> <span class="pl-s1">tf</span>
 <span class="pl-k">from</span> <span class="pl-s1">d2l</span> <span class="pl-k">import</span> <span class="pl-s1">tensorflow</span> <span class="pl-k">as</span> <span class="pl-s1">d2l</span>
 
-<span class="pl-s1">true_w</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-en">constant</span>([<span class="pl-c1">2</span>, <span class="pl-c1">-</span><span class="pl-c1">3.4</span>])
+<span class="pl-s1">true_w</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">constant</span>([<span class="pl-c1">2</span>, <span class="pl-c1">-</span><span class="pl-c1">3.4</span>])
 <span class="pl-s1">true_b</span> <span class="pl-c1">=</span> <span class="pl-c1">4.2</span>
-<span class="pl-s1">features</span>, <span class="pl-s1">labels</span> <span class="pl-c1">=</span> <span class="pl-s1">d2l</span>.<span class="pl-en">synthetic_data</span>(<span class="pl-s1">true_w</span>, <span class="pl-s1">true_b</span>, <span class="pl-c1">1000</span>)
+<span class="pl-s1">features</span>, <span class="pl-s1">labels</span> <span class="pl-c1">=</span> <span class="pl-s1">d2l</span>.<span class="pl-c1">synthetic_data</span>(<span class="pl-s1">true_w</span>, <span class="pl-s1">true_b</span>, <span class="pl-c1">1000</span>)
 
 <span class="pl-k">def</span> <span class="pl-en">load_array</span>(<span class="pl-s1">data_arrays</span>, <span class="pl-s1">batch_size</span>, <span class="pl-s1">is_train</span><span class="pl-c1">=</span><span class="pl-c1">True</span>):  <span class="pl-c">#@save</span>
     <span class="pl-s">"""构造一个TensorFlow数据迭代器"""</span>
-    <span class="pl-s1">dataset</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-s1">data</span>.<span class="pl-v">Dataset</span>.<span class="pl-en">from_tensor_slices</span>(<span class="pl-s1">data_arrays</span>)
+    <span class="pl-s1">dataset</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">data</span>.<span class="pl-c1">Dataset</span>.<span class="pl-c1">from_tensor_slices</span>(<span class="pl-s1">data_arrays</span>)
     <span class="pl-k">if</span> <span class="pl-s1">is_train</span>:
-        <span class="pl-s1">dataset</span> <span class="pl-c1">=</span> <span class="pl-s1">dataset</span>.<span class="pl-en">shuffle</span>(<span class="pl-s1">buffer_size</span><span class="pl-c1">=</span><span class="pl-c1">1000</span>)
-    <span class="pl-s1">dataset</span> <span class="pl-c1">=</span> <span class="pl-s1">dataset</span>.<span class="pl-en">batch</span>(<span class="pl-s1">batch_size</span>)
+        <span class="pl-s1">dataset</span> <span class="pl-c1">=</span> <span class="pl-s1">dataset</span>.<span class="pl-c1">shuffle</span>(<span class="pl-s1">buffer_size</span><span class="pl-c1">=</span><span class="pl-c1">1000</span>)
+    <span class="pl-s1">dataset</span> <span class="pl-c1">=</span> <span class="pl-s1">dataset</span>.<span class="pl-c1">batch</span>(<span class="pl-s1">batch_size</span>)
     <span class="pl-k">return</span> <span class="pl-s1">dataset</span>
 
 <span class="pl-s1">batch_size</span> <span class="pl-c1">=</span> <span class="pl-c1">10</span>
 <span class="pl-s1">data_iter</span> <span class="pl-c1">=</span> <span class="pl-en">load_array</span>((<span class="pl-s1">features</span>, <span class="pl-s1">labels</span>), <span class="pl-s1">batch_size</span>)
 <span class="pl-c"># 定义网络</span>
-<span class="pl-s1">initializer</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-s1">initializers</span>.<span class="pl-v">RandomNormal</span>(<span class="pl-s1">stddev</span><span class="pl-c1">=</span><span class="pl-c1">0.01</span>)
-<span class="pl-s1">net</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-s1">keras</span>.<span class="pl-v">Sequential</span>()
-<span class="pl-s1">net</span>.<span class="pl-en">add</span>(<span class="pl-s1">tf</span>.<span class="pl-s1">keras</span>.<span class="pl-s1">layers</span>.<span class="pl-v">Dense</span>(<span class="pl-c1">1</span>, <span class="pl-s1">kernel_initializer</span><span class="pl-c1">=</span><span class="pl-s1">initializer</span>))
+<span class="pl-s1">initializer</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">initializers</span>.<span class="pl-c1">RandomNormal</span>(<span class="pl-s1">stddev</span><span class="pl-c1">=</span><span class="pl-c1">0.01</span>)
+<span class="pl-s1">net</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">keras</span>.<span class="pl-c1">Sequential</span>()
+<span class="pl-s1">net</span>.<span class="pl-c1">add</span>(<span class="pl-s1">tf</span>.<span class="pl-c1">keras</span>.<span class="pl-c1">layers</span>.<span class="pl-c1">Dense</span>(<span class="pl-c1">1</span>, <span class="pl-s1">kernel_initializer</span><span class="pl-c1">=</span><span class="pl-s1">initializer</span>))
 
 <span class="pl-c"># 损失函数 </span>
-<span class="pl-s1">loss</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-s1">keras</span>.<span class="pl-s1">losses</span>.<span class="pl-v">MeanSquaredError</span>()
+<span class="pl-s1">loss</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">keras</span>.<span class="pl-c1">losses</span>.<span class="pl-c1">MeanSquaredError</span>()
 <span class="pl-c"># 优化器 </span>
-<span class="pl-s1">trainer</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-s1">keras</span>.<span class="pl-s1">optimizers</span>.<span class="pl-v">SGD</span>(<span class="pl-s1">learning_rate</span><span class="pl-c1">=</span><span class="pl-c1">0.03</span>)
+<span class="pl-s1">trainer</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">keras</span>.<span class="pl-c1">optimizers</span>.<span class="pl-c1">SGD</span>(<span class="pl-s1">learning_rate</span><span class="pl-c1">=</span><span class="pl-c1">0.03</span>)
 
 
 <span class="pl-s1">num_epochs</span> <span class="pl-c1">=</span> <span class="pl-c1">3</span>
 <span class="pl-k">for</span> <span class="pl-s1">epoch</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-s1">num_epochs</span>):
-    <span class="pl-k">for</span> <span class="pl-v">X</span>, <span class="pl-s1">y</span> <span class="pl-c1">in</span> <span class="pl-s1">data_iter</span>:
-        <span class="pl-k">with</span> <span class="pl-s1">tf</span>.<span class="pl-v">GradientTape</span>() <span class="pl-k">as</span> <span class="pl-s1">tape</span>:
-            <span class="pl-s1">l</span> <span class="pl-c1">=</span> <span class="pl-en">loss</span>(<span class="pl-en">net</span>(<span class="pl-v">X</span>, <span class="pl-s1">training</span><span class="pl-c1">=</span><span class="pl-c1">True</span>), <span class="pl-s1">y</span>)
-        <span class="pl-s1">grads</span> <span class="pl-c1">=</span> <span class="pl-s1">tape</span>.<span class="pl-en">gradient</span>(<span class="pl-s1">l</span>, <span class="pl-s1">net</span>.<span class="pl-s1">trainable_variables</span>)
-        <span class="pl-s1">trainer</span>.<span class="pl-en">apply_gradients</span>(<span class="pl-en">zip</span>(<span class="pl-s1">grads</span>, <span class="pl-s1">net</span>.<span class="pl-s1">trainable_variables</span>))
+    <span class="pl-k">for</span> <span class="pl-c1">X</span>, <span class="pl-s1">y</span> <span class="pl-c1">in</span> <span class="pl-s1">data_iter</span>:
+        <span class="pl-k">with</span> <span class="pl-s1">tf</span>.<span class="pl-c1">GradientTape</span>() <span class="pl-k">as</span> <span class="pl-s1">tape</span>:
+            <span class="pl-s1">l</span> <span class="pl-c1">=</span> <span class="pl-en">loss</span>(<span class="pl-en">net</span>(<span class="pl-c1">X</span>, <span class="pl-s1">training</span><span class="pl-c1">=</span><span class="pl-c1">True</span>), <span class="pl-s1">y</span>)
+        <span class="pl-s1">grads</span> <span class="pl-c1">=</span> <span class="pl-s1">tape</span>.<span class="pl-c1">gradient</span>(<span class="pl-s1">l</span>, <span class="pl-s1">net</span>.<span class="pl-c1">trainable_variables</span>)
+        <span class="pl-s1">trainer</span>.<span class="pl-c1">apply_gradients</span>(<span class="pl-en">zip</span>(<span class="pl-s1">grads</span>, <span class="pl-s1">net</span>.<span class="pl-c1">trainable_variables</span>))
     <span class="pl-s1">l</span> <span class="pl-c1">=</span> <span class="pl-en">loss</span>(<span class="pl-en">net</span>(<span class="pl-s1">features</span>), <span class="pl-s1">labels</span>)
     <span class="pl-en">print</span>(<span class="pl-s">f'epoch <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">epoch</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">}</span></span>, loss <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">l</span>:f<span class="pl-kos">}</span></span>'</span>)
 
-<span class="pl-s1">w</span> <span class="pl-c1">=</span> <span class="pl-s1">net</span>.<span class="pl-en">get_weights</span>()[<span class="pl-c1">0</span>]
-<span class="pl-en">print</span>(<span class="pl-s">'w的估计误差：'</span>, <span class="pl-s1">true_w</span> <span class="pl-c1">-</span> <span class="pl-s1">tf</span>.<span class="pl-en">reshape</span>(<span class="pl-s1">w</span>, <span class="pl-s1">true_w</span>.<span class="pl-s1">shape</span>))
-<span class="pl-s1">b</span> <span class="pl-c1">=</span> <span class="pl-s1">net</span>.<span class="pl-en">get_weights</span>()[<span class="pl-c1">1</span>]
+<span class="pl-s1">w</span> <span class="pl-c1">=</span> <span class="pl-s1">net</span>.<span class="pl-c1">get_weights</span>()[<span class="pl-c1">0</span>]
+<span class="pl-en">print</span>(<span class="pl-s">'w的估计误差：'</span>, <span class="pl-s1">true_w</span> <span class="pl-c1">-</span> <span class="pl-s1">tf</span>.<span class="pl-c1">reshape</span>(<span class="pl-s1">w</span>, <span class="pl-s1">true_w</span>.<span class="pl-c1">shape</span>))
+<span class="pl-s1">b</span> <span class="pl-c1">=</span> <span class="pl-s1">net</span>.<span class="pl-c1">get_weights</span>()[<span class="pl-c1">1</span>]
 <span class="pl-en">print</span>(<span class="pl-s">'b的估计误差：'</span>, <span class="pl-s1">true_b</span> <span class="pl-c1">-</span> <span class="pl-s1">b</span>)</pre></div>
 <h1>非线性回归 Non-linear Regression</h1>
 <p>简单理解为 $y=wx^2+b$</p>
@@ -446,6 +446,7 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 function openComments(){
     cm=document.getElementById("comments");
     cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
     cmButton.innerHTML="loading";
     span=document.createElement("span");
     span.setAttribute("class","AnimatedEllipsis");

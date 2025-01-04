@@ -10,113 +10,17 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="# 说明
+<meta name="description" content="# x 宏
 
-> 仅限于读取类定义
+> 实现枚举与str互相转换的时候，搜到的一个用法。">
+<meta property="og:title" content="x macro">
+<meta property="og:description" content="# x 宏
 
-```cpp
-
-#include <memory>
-#include <string>
-
-#include <cxxabi.h>
-
-template <typename T>
-struct Name {
-    Name() {
-        std::unique_ptr<char, decltype(free) *> real_name(abi::__cxa_demangle(typeid(T).name(), nullptr, nullptr, nullptr), free);
-        this->name = std::string(real_name.get());
-    }
-
-    std::string name{};
-};
-
-```
-
-测试 
-
-```cpp
-namespace tests {
-
-namespace a::b::c {
-    class A {};
-} // namespace a::b::c
-
-namespace na {
-    class B {};
-} // namespace na
-
-namespace a::b::d {
-    struct C {};
-} // namespace a::b::d
-
-TEST_CASE('test name', '[name]') {
-    // tests::a::b::c::A
-    LOG(INFO) << 'infra::Name<a::b::c::A>().name:' << infra::Name<a::b::c::A>().name;
-    // tests::na::B
-    LOG(INFO) << 'infra::Name<na::B>().name:' << infra::Name<na::B>().name;
-    // tests::a::b::d::C
-    LOG(INFO) << 'infra::Name<a::b::d::C>().name:' << infra::Name<a::b::d::C>().name;
-}
-} // namespace tests
-```
-。">
-<meta property="og:title" content="c++中获取类定义的完整名字">
-<meta property="og:description" content="# 说明
-
-> 仅限于读取类定义
-
-```cpp
-
-#include <memory>
-#include <string>
-
-#include <cxxabi.h>
-
-template <typename T>
-struct Name {
-    Name() {
-        std::unique_ptr<char, decltype(free) *> real_name(abi::__cxa_demangle(typeid(T).name(), nullptr, nullptr, nullptr), free);
-        this->name = std::string(real_name.get());
-    }
-
-    std::string name{};
-};
-
-```
-
-测试 
-
-```cpp
-namespace tests {
-
-namespace a::b::c {
-    class A {};
-} // namespace a::b::c
-
-namespace na {
-    class B {};
-} // namespace na
-
-namespace a::b::d {
-    struct C {};
-} // namespace a::b::d
-
-TEST_CASE('test name', '[name]') {
-    // tests::a::b::c::A
-    LOG(INFO) << 'infra::Name<a::b::c::A>().name:' << infra::Name<a::b::c::A>().name;
-    // tests::na::B
-    LOG(INFO) << 'infra::Name<na::B>().name:' << infra::Name<na::B>().name;
-    // tests::a::b::d::C
-    LOG(INFO) << 'infra::Name<a::b::d::C>().name:' << infra::Name<a::b::d::C>().name;
-}
-} // namespace tests
-```
-。">
+> 实现枚举与str互相转换的时候，搜到的一个用法。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://gorust.us.kg/post/13.html">
+<meta property="og:url" content="http://gorust.us.kg/post/40.html">
 <meta property="og:image" content="https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png">
-<title>c++中获取类定义的完整名字</title>
+<title>x macro</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
@@ -159,7 +63,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">c++中获取类定义的完整名字</h1>
+<h1 class="postTitle">x macro</h1>
 <div class="title-right">
     <a href="http://gorust.us.kg" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -167,7 +71,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/0x1042/0x1042.github.io/issues/13" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/0x1042/0x1042.github.io/issues/40" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -183,49 +87,70 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>说明</h1>
+<div class="markdown-body" id="postBody"><h1>x 宏</h1>
 <blockquote>
-<p>仅限于读取类定义</p>
+<p>实现枚举与str互相转换的时候，搜到的一个用法。<br>
+核心是 使用替换x宏的实现，来使用同一份数据生成不同的定义，好处是减少冗余实现和防止不一致</p>
 </blockquote>
-<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>memory<span class="pl-pds">&gt;</span></span>
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string<span class="pl-pds">&gt;</span></span>
+<h2>step 1 定义数据类型别表</h2>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-k">#define</span> <span class="pl-c1">HTTP_METHODS</span>                                                           \
+  X(HTTP_GET, "GET")                                                           \
+  X(HTTP_POST, "POST")                                                         \
+  X(HTTP_HEAD, "HEAD")                                                         \
+  X(HTTP_PUT, "PUT")                                                           \
+  X(HTTP_CONNECT, "CONNECT")                                                   \
+  X(HTTP_TRACE, "TRACE")                                                       \
+  X(HTTP_DELETE, "DELETE")                                                     \
+  X(HTTP_OPTIONS, "OPTIONS")</pre></div>
+<h2>step2 定义枚举类型</h2>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-k">#define</span> <span class="pl-en">X</span>(<span class="pl-s1">val</span>, <span class="pl-s1">desc</span>) val,
 
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>cxxabi.h<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">typedef</span> <span class="pl-k">enum</span> { <span class="pl-c1">HTTP_METHODS</span> <span class="pl-c1">HTTP_UNKNOWN</span> } <span class="pl-smi">http_method_t</span>;
 
-<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
-<span class="pl-k">struct</span> <span class="pl-en">Name</span> {
-    <span class="pl-en">Name</span>() {
-        std::unique_ptr&lt;<span class="pl-k">char</span>, <span class="pl-c1">decltype</span>(free) *&gt; <span class="pl-c1">real_name</span>(<span class="pl-c1">abi::__cxa_demangle</span>(<span class="pl-c1">typeid</span>(T).<span class="pl-c1">name</span>(), <span class="pl-c1">nullptr</span>, <span class="pl-c1">nullptr</span>, <span class="pl-c1">nullptr</span>), free);
-        <span class="pl-c1">this</span>-&gt;<span class="pl-smi">name</span> = <span class="pl-c1">std::string</span>(real_name.<span class="pl-c1">get</span>());
-    }
+<span class="pl-k">#undef</span> X</pre></div>
+<p>这里的<code class="notranslate">X</code>宏是将 <code class="notranslate">step 1</code>的类型列表中的枚举提取出来，生成<code class="notranslate">enum</code> 的定义</p>
+<p>宏解析结果</p>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-k">typedef</span> <span class="pl-k">enum</span> {
+  <span class="pl-c1">HTTP_GET</span>,
+  <span class="pl-c1">HTTP_POST</span>,
+  <span class="pl-c1">HTTP_HEAD</span>,
+  <span class="pl-c1">HTTP_PUT</span>,
+  <span class="pl-c1">HTTP_CONNECT</span>,
+  <span class="pl-c1">HTTP_TRACE</span>,
+  <span class="pl-c1">HTTP_DELETE</span>,
+  <span class="pl-c1">HTTP_OPTIONS</span>,
+  <span class="pl-c1">HTTP_UNKNOWN</span>
+} <span class="pl-smi">http_method_t</span>;</pre></div>
+<h2>step3 定义使用字符串数组</h2>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-k">#define</span> <span class="pl-en">X</span>(<span class="pl-s1">val</span>, <span class="pl-s1">desc</span>) desc,
 
-    std::string name{};
-};
-</pre></div>
-<p>测试</p>
-<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">namespace</span> <span class="pl-en">tests</span> {
+<span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-smi">char</span> <span class="pl-c1">*</span><span class="pl-s1">http_method_infos</span>[] <span class="pl-c1">=</span> {<span class="pl-c1">HTTP_METHODS</span>};
 
-<span class="pl-k">namespace</span> <span class="pl-en">a</span>::b::c {
-    <span class="pl-k">class</span> <span class="pl-en">A</span> {};
-} <span class="pl-c"><span class="pl-c">//</span> namespace a::b::c</span>
+<span class="pl-k">#undef</span> X</pre></div>
+<p>宏解析结果</p>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-k">static</span> <span class="pl-k">const</span> <span class="pl-smi">char</span> <span class="pl-c1">*</span><span class="pl-s1">http_method_infos</span>[] <span class="pl-c1">=</span> {
+    <span class="pl-s">"GET"</span>, <span class="pl-s">"POST"</span>, <span class="pl-s">"HEAD"</span>, <span class="pl-s">"PUT"</span>, <span class="pl-s">"CONNECT"</span>, <span class="pl-s">"TRACE"</span>, <span class="pl-s">"DELETE"</span>, <span class="pl-s">"OPTIONS"</span>,
+};</pre></div>
+<h2>step4 使用</h2>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-k">const</span> <span class="pl-smi">char</span> <span class="pl-c1">*</span><span class="pl-en">mhd_to_str</span>(<span class="pl-smi">http_method_t</span> <span class="pl-s1">mhd</span>);
+<span class="pl-smi">http_method_t</span> <span class="pl-en">str_to_mhd</span>(<span class="pl-k">const</span> <span class="pl-smi">char</span> <span class="pl-c1">*</span><span class="pl-s1">str</span>);
 
-<span class="pl-k">namespace</span> <span class="pl-en">na</span> {
-    <span class="pl-k">class</span> <span class="pl-en">B</span> {};
-} <span class="pl-c"><span class="pl-c">//</span> namespace na</span>
+<span class="pl-k">const</span> <span class="pl-smi">char</span> <span class="pl-c1">*</span><span class="pl-en">mhd_to_str</span>(<span class="pl-smi">http_method_t</span> <span class="pl-s1">mhd</span>) {
+  <span class="pl-k">if</span> (<span class="pl-s1">mhd</span> &gt;= <span class="pl-c1">0</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">mhd</span> <span class="pl-c1">&lt;</span> <span class="pl-c1">HTTP_UNKNOWN</span>) {
+    <span class="pl-k">return</span> <span class="pl-s1">http_method_infos</span>[<span class="pl-s1">mhd</span>];
+  }
 
-<span class="pl-k">namespace</span> <span class="pl-en">a</span>::b::d {
-    <span class="pl-k">struct</span> <span class="pl-en">C</span> {};
-} <span class="pl-c"><span class="pl-c">//</span> namespace a::b::d</span>
-
-<span class="pl-en">TEST_CASE</span>(<span class="pl-s"><span class="pl-pds">"</span>test name<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>[name]<span class="pl-pds">"</span></span>) {
-    <span class="pl-c"><span class="pl-c">//</span> tests::a::b::c::A</span>
-    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>infra::Name&lt;a::b::c::A&gt;().name:<span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;a::b::c::A&gt;().<span class="pl-smi">name</span>;
-    <span class="pl-c"><span class="pl-c">//</span> tests::na::B</span>
-    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>infra::Name&lt;na::B&gt;().name:<span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;na::B&gt;().<span class="pl-smi">name</span>;
-    <span class="pl-c"><span class="pl-c">//</span> tests::a::b::d::C</span>
-    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>infra::Name&lt;a::b::d::C&gt;().name:<span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;a::b::d::C&gt;().<span class="pl-smi">name</span>;
+  <span class="pl-k">return</span> <span class="pl-s">"UNKNOWN"</span>;
 }
-} <span class="pl-c"><span class="pl-c">//</span> namespace tests</span></pre></div></div>
+
+<span class="pl-smi">http_method_t</span> <span class="pl-en">str_to_mhd</span>(<span class="pl-k">const</span> <span class="pl-smi">char</span> <span class="pl-c1">*</span><span class="pl-s1">str</span>) {
+  <span class="pl-k">for</span> (<span class="pl-smi">int</span> <span class="pl-s1">i</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-c1">HTTP_UNKNOWN</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span>) {
+    <span class="pl-k">if</span> (<span class="pl-en">strcasecmp</span>(<span class="pl-s1">str</span>, <span class="pl-s1">http_method_infos</span>[<span class="pl-s1">i</span>]) <span class="pl-c1">==</span> <span class="pl-c1">0</span>) {
+      <span class="pl-k">return</span> (<span class="pl-smi">http_method_t</span>)<span class="pl-s1">i</span>;
+    }
+  }
+  <span class="pl-k">return</span> <span class="pl-c1">HTTP_UNKNOWN</span>;
+}</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

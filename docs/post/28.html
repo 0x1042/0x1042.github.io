@@ -647,77 +647,77 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	net.<span class="pl-smi">Conn</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">newStream</span>(<span class="pl-s1">c</span> net.<span class="pl-smi">Conn</span>) <span class="pl-c1">*</span><span class="pl-smi">Stream</span> {
-	<span class="pl-k">return</span> <span class="pl-c1">&amp;</span><span class="pl-smi">Stream</span>{<span class="pl-s1">bufio</span>.<span class="pl-en">NewReader</span>(<span class="pl-s1">c</span>), <span class="pl-s1">c</span>}
+<span class="pl-k">func</span> <span class="pl-s1">newStream</span>(<span class="pl-s1">c</span> net.<span class="pl-smi">Conn</span>) <span class="pl-c1">*</span><span class="pl-smi">Stream</span> {
+	<span class="pl-k">return</span> <span class="pl-c1">&amp;</span><span class="pl-smi">Stream</span>{<span class="pl-s1">bufio</span>.<span class="pl-c1">NewReader</span>(<span class="pl-s1">c</span>), <span class="pl-s1">c</span>}
 }
 
-<span class="pl-k">func</span> (<span class="pl-s1">b</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) <span class="pl-en">Peek</span>(<span class="pl-s1">n</span> <span class="pl-smi">int</span>) ([]<span class="pl-smi">byte</span>, <span class="pl-smi">error</span>) {
-	<span class="pl-k">return</span> <span class="pl-s1">b</span>.<span class="pl-c1">r</span>.<span class="pl-en">Peek</span>(<span class="pl-s1">n</span>)
+<span class="pl-k">func</span> (<span class="pl-s1">b</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) <span class="pl-c1">Peek</span>(<span class="pl-s1">n</span> <span class="pl-smi">int</span>) ([]<span class="pl-smi">byte</span>, <span class="pl-smi">error</span>) {
+	<span class="pl-k">return</span> <span class="pl-s1">b</span>.<span class="pl-c1">r</span>.<span class="pl-c1">Peek</span>(<span class="pl-s1">n</span>)
 }
 
-<span class="pl-k">func</span> (<span class="pl-s1">b</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) <span class="pl-en">Read</span>(<span class="pl-s1">p</span> []<span class="pl-smi">byte</span>) (<span class="pl-smi">int</span>, <span class="pl-smi">error</span>) {
-	<span class="pl-k">return</span> <span class="pl-s1">b</span>.<span class="pl-c1">r</span>.<span class="pl-en">Read</span>(<span class="pl-s1">p</span>)
+<span class="pl-k">func</span> (<span class="pl-s1">b</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) <span class="pl-c1">Read</span>(<span class="pl-s1">p</span> []<span class="pl-smi">byte</span>) (<span class="pl-smi">int</span>, <span class="pl-smi">error</span>) {
+	<span class="pl-k">return</span> <span class="pl-s1">b</span>.<span class="pl-c1">r</span>.<span class="pl-c1">Read</span>(<span class="pl-s1">p</span>)
 }
 
-<span class="pl-k">func</span> (<span class="pl-s1">b</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) <span class="pl-en">Line</span>() (<span class="pl-smi">string</span>, <span class="pl-smi">error</span>) {
-	<span class="pl-s1">line</span>, <span class="pl-s1">_</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">b</span>.<span class="pl-c1">r</span>.<span class="pl-en">ReadLine</span>()
-	<span class="pl-k">return</span> <span class="pl-en">string</span>(<span class="pl-s1">line</span>), <span class="pl-s1">err</span>
+<span class="pl-k">func</span> (<span class="pl-s1">b</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) <span class="pl-c1">Line</span>() (<span class="pl-smi">string</span>, <span class="pl-smi">error</span>) {
+	<span class="pl-s1">line</span>, <span class="pl-s1">_</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">b</span>.<span class="pl-c1">r</span>.<span class="pl-c1">ReadLine</span>()
+	<span class="pl-k">return</span> <span class="pl-s1">string</span>(<span class="pl-s1">line</span>), <span class="pl-s1">err</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">readBe</span>[<span class="pl-s1">T</span> <span class="pl-smi">any</span>](<span class="pl-s1">r</span> io.<span class="pl-smi">Reader</span>, <span class="pl-s1">data</span> <span class="pl-smi">T</span>) (<span class="pl-s1">err</span> <span class="pl-smi">error</span>) {
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">binary</span>.<span class="pl-en">Read</span>(<span class="pl-s1">r</span>, <span class="pl-s1">binary</span>.<span class="pl-c1">BigEndian</span>, <span class="pl-s1">data</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">err</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"readBe error"</span>)
+<span class="pl-k">func</span> <span class="pl-s1">readBe</span>[<span class="pl-s1">T</span> <span class="pl-smi">any</span>](<span class="pl-s1">r</span> io.<span class="pl-smi">Reader</span>, <span class="pl-s1">data</span> <span class="pl-smi">T</span>) (<span class="pl-s1">err</span> <span class="pl-smi">error</span>) {
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">binary</span>.<span class="pl-c1">Read</span>(<span class="pl-s1">r</span>, <span class="pl-s1">binary</span>.<span class="pl-c1">BigEndian</span>, <span class="pl-s1">data</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Error</span>().<span class="pl-c1">Err</span>(<span class="pl-s1">err</span>).<span class="pl-c1">Msg</span>(<span class="pl-s">"readBe error"</span>)
 	}
 	<span class="pl-k">return</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">writeBe</span>[<span class="pl-s1">T</span> <span class="pl-smi">any</span>](<span class="pl-s1">r</span> io.<span class="pl-smi">Writer</span>, <span class="pl-s1">data</span> <span class="pl-smi">T</span>) (<span class="pl-s1">err</span> <span class="pl-smi">error</span>) {
-	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">binary</span>.<span class="pl-en">Write</span>(<span class="pl-s1">r</span>, <span class="pl-s1">binary</span>.<span class="pl-c1">BigEndian</span>, <span class="pl-s1">data</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">err</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"writeBe error"</span>)
+<span class="pl-k">func</span> <span class="pl-s1">writeBe</span>[<span class="pl-s1">T</span> <span class="pl-smi">any</span>](<span class="pl-s1">r</span> io.<span class="pl-smi">Writer</span>, <span class="pl-s1">data</span> <span class="pl-smi">T</span>) (<span class="pl-s1">err</span> <span class="pl-smi">error</span>) {
+	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">binary</span>.<span class="pl-c1">Write</span>(<span class="pl-s1">r</span>, <span class="pl-s1">binary</span>.<span class="pl-c1">BigEndian</span>, <span class="pl-s1">data</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+		<span class="pl-s1">log</span>.<span class="pl-c1">Error</span>().<span class="pl-c1">Err</span>(<span class="pl-s1">err</span>).<span class="pl-c1">Msg</span>(<span class="pl-s">"writeBe error"</span>)
 	}
 	<span class="pl-k">return</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">listen</span>(<span class="pl-s1">option</span> <span class="pl-smi">Option</span>) <span class="pl-smi">error</span> {
+<span class="pl-k">func</span> <span class="pl-s1">listen</span>(<span class="pl-s1">option</span> <span class="pl-smi">Option</span>) <span class="pl-smi">error</span> {
 	<span class="pl-k">var</span> <span class="pl-s1">lc</span> net.<span class="pl-smi">ListenConfig</span>
-	<span class="pl-s1">lc</span>.<span class="pl-en">SetMultipathTCP</span>(<span class="pl-c1">true</span>)
+	<span class="pl-s1">lc</span>.<span class="pl-c1">SetMultipathTCP</span>(<span class="pl-c1">true</span>)
 	<span class="pl-s1">lc</span>.<span class="pl-c1">Control</span> <span class="pl-c1">=</span> <span class="pl-k">func</span>(<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-smi">string</span>, <span class="pl-s1">c</span> syscall.<span class="pl-smi">RawConn</span>) <span class="pl-smi">error</span> {
 		<span class="pl-k">var</span> <span class="pl-s1">err</span> <span class="pl-smi">error</span>
-		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">c</span>.<span class="pl-en">Control</span>(<span class="pl-k">func</span>(<span class="pl-s1">fd</span> <span class="pl-smi">uintptr</span>) {
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">c</span>.<span class="pl-c1">Control</span>(<span class="pl-k">func</span>(<span class="pl-s1">fd</span> <span class="pl-smi">uintptr</span>) {
 			<span class="pl-k">if</span> <span class="pl-s1">option</span>.<span class="pl-c1">nodelay</span> {
-				<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">unix</span>.<span class="pl-en">SetsockoptInt</span>(<span class="pl-en">int</span>(<span class="pl-s1">fd</span>), <span class="pl-s1">unix</span>.<span class="pl-c1">IPPROTO_TCP</span>, <span class="pl-s1">unix</span>.<span class="pl-c1">TCP_NODELAY</span>, <span class="pl-c1">1</span>)
+				<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">unix</span>.<span class="pl-c1">SetsockoptInt</span>(<span class="pl-s1">int</span>(<span class="pl-s1">fd</span>), <span class="pl-s1">unix</span>.<span class="pl-c1">IPPROTO_TCP</span>, <span class="pl-s1">unix</span>.<span class="pl-c1">TCP_NODELAY</span>, <span class="pl-c1">1</span>)
 			}
 			<span class="pl-k">if</span> <span class="pl-s1">option</span>.<span class="pl-c1">fastOpen</span> {
-				<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">unix</span>.<span class="pl-en">SetsockoptInt</span>(<span class="pl-en">int</span>(<span class="pl-s1">fd</span>), <span class="pl-s1">unix</span>.<span class="pl-c1">IPPROTO_TCP</span>, <span class="pl-s1">unix</span>.<span class="pl-c1">TCP_FASTOPEN</span>, <span class="pl-c1">1</span>)
+				<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">unix</span>.<span class="pl-c1">SetsockoptInt</span>(<span class="pl-s1">int</span>(<span class="pl-s1">fd</span>), <span class="pl-s1">unix</span>.<span class="pl-c1">IPPROTO_TCP</span>, <span class="pl-s1">unix</span>.<span class="pl-c1">TCP_FASTOPEN</span>, <span class="pl-c1">1</span>)
 			}
 			<span class="pl-k">if</span> <span class="pl-s1">option</span>.<span class="pl-c1">reuseAddr</span> {
-				<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">unix</span>.<span class="pl-en">SetsockoptInt</span>(<span class="pl-en">int</span>(<span class="pl-s1">fd</span>), <span class="pl-s1">unix</span>.<span class="pl-c1">SOL_SOCKET</span>, <span class="pl-s1">unix</span>.<span class="pl-c1">SO_REUSEADDR</span>, <span class="pl-c1">1</span>)
-				<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">unix</span>.<span class="pl-en">SetsockoptInt</span>(<span class="pl-en">int</span>(<span class="pl-s1">fd</span>), <span class="pl-s1">unix</span>.<span class="pl-c1">SOL_SOCKET</span>, <span class="pl-s1">unix</span>.<span class="pl-c1">SO_REUSEPORT</span>, <span class="pl-c1">1</span>)
+				<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">unix</span>.<span class="pl-c1">SetsockoptInt</span>(<span class="pl-s1">int</span>(<span class="pl-s1">fd</span>), <span class="pl-s1">unix</span>.<span class="pl-c1">SOL_SOCKET</span>, <span class="pl-s1">unix</span>.<span class="pl-c1">SO_REUSEADDR</span>, <span class="pl-c1">1</span>)
+				<span class="pl-s1">err</span> <span class="pl-c1">=</span> <span class="pl-s1">unix</span>.<span class="pl-c1">SetsockoptInt</span>(<span class="pl-s1">int</span>(<span class="pl-s1">fd</span>), <span class="pl-s1">unix</span>.<span class="pl-c1">SOL_SOCKET</span>, <span class="pl-s1">unix</span>.<span class="pl-c1">SO_REUSEPORT</span>, <span class="pl-c1">1</span>)
 			}
 		})
 		<span class="pl-k">return</span> <span class="pl-s1">err</span>
 	}
-	<span class="pl-s1">ln</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">lc</span>.<span class="pl-en">Listen</span>(<span class="pl-s1">context</span>.<span class="pl-en">Background</span>(), <span class="pl-s">"tcp"</span>, <span class="pl-s1">option</span>.<span class="pl-c1">addr</span>)
+	<span class="pl-s1">ln</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">lc</span>.<span class="pl-c1">Listen</span>(<span class="pl-s1">context</span>.<span class="pl-c1">Background</span>(), <span class="pl-s">"tcp"</span>, <span class="pl-s1">option</span>.<span class="pl-c1">addr</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
 		<span class="pl-k">return</span> <span class="pl-s1">err</span>
 	}
 
-	<span class="pl-s1">log</span>.<span class="pl-en">Info</span>().<span class="pl-en">Str</span>(<span class="pl-s">"addr"</span>, <span class="pl-s1">option</span>.<span class="pl-c1">addr</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"server start"</span>)
+	<span class="pl-s1">log</span>.<span class="pl-c1">Info</span>().<span class="pl-c1">Str</span>(<span class="pl-s">"addr"</span>, <span class="pl-s1">option</span>.<span class="pl-c1">addr</span>).<span class="pl-c1">Msg</span>(<span class="pl-s">"server start"</span>)
 
 	<span class="pl-k">for</span> {
-		<span class="pl-s1">conn</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">ln</span>.<span class="pl-en">Accept</span>()
+		<span class="pl-s1">conn</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">ln</span>.<span class="pl-c1">Accept</span>()
 		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-			<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">err</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"accept error"</span>)
+			<span class="pl-s1">log</span>.<span class="pl-c1">Error</span>().<span class="pl-c1">Err</span>(<span class="pl-s1">err</span>).<span class="pl-c1">Msg</span>(<span class="pl-s">"accept error"</span>)
 			<span class="pl-k">break</span>
 		}
-		<span class="pl-s1">stream</span> <span class="pl-c1">:=</span> <span class="pl-en">newStream</span>(<span class="pl-s1">conn</span>)
+		<span class="pl-s1">stream</span> <span class="pl-c1">:=</span> <span class="pl-s1">newStream</span>(<span class="pl-s1">conn</span>)
 
-		<span class="pl-s1">peek</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">stream</span>.<span class="pl-en">Peek</span>(<span class="pl-c1">1</span>)
-		<span class="pl-s1">log</span>.<span class="pl-en">Trace</span>().<span class="pl-en">Uint8</span>(<span class="pl-s">"type"</span>, <span class="pl-s1">peek</span>[<span class="pl-c1">0</span>]).<span class="pl-en">Str</span>(<span class="pl-s">"from"</span>, <span class="pl-s1">conn</span>.<span class="pl-en">LocalAddr</span>().<span class="pl-en">String</span>()).<span class="pl-en">Msg</span>(<span class="pl-s">"incomeing request"</span>)
+		<span class="pl-s1">peek</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">stream</span>.<span class="pl-c1">Peek</span>(<span class="pl-c1">1</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Trace</span>().<span class="pl-c1">Uint8</span>(<span class="pl-s">"type"</span>, <span class="pl-s1">peek</span>[<span class="pl-c1">0</span>]).<span class="pl-c1">Str</span>(<span class="pl-s">"from"</span>, <span class="pl-s1">conn</span>.<span class="pl-c1">LocalAddr</span>().<span class="pl-c1">String</span>()).<span class="pl-c1">Msg</span>(<span class="pl-s">"incomeing request"</span>)
 		<span class="pl-k">if</span> <span class="pl-s1">peek</span>[<span class="pl-c1">0</span>] <span class="pl-c1">==</span> <span class="pl-c1">0x05</span> {
-			<span class="pl-k">go</span> <span class="pl-en">serveSocks</span>(<span class="pl-s1">stream</span>)
+			<span class="pl-k">go</span> <span class="pl-s1">serveSocks</span>(<span class="pl-s1">stream</span>)
 		} <span class="pl-k">else</span> {
-			<span class="pl-k">go</span> <span class="pl-en">serveHTTP</span>(<span class="pl-s1">stream</span>)
+			<span class="pl-k">go</span> <span class="pl-s1">serveHTTP</span>(<span class="pl-s1">stream</span>)
 		}
 	}
 	<span class="pl-k">return</span> <span class="pl-c1">nil</span>
@@ -739,14 +739,14 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	<span class="pl-c1">Port</span>   <span class="pl-smi">string</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">newReq</span>(<span class="pl-s1">line</span> []<span class="pl-smi">string</span>) <span class="pl-c1">*</span><span class="pl-smi">Req</span> {
-	<span class="pl-s1">req</span> <span class="pl-c1">:=</span> <span class="pl-en">new</span>(<span class="pl-smi">Req</span>)
+<span class="pl-k">func</span> <span class="pl-s1">newReq</span>(<span class="pl-s1">line</span> []<span class="pl-smi">string</span>) <span class="pl-c1">*</span><span class="pl-smi">Req</span> {
+	<span class="pl-s1">req</span> <span class="pl-c1">:=</span> <span class="pl-s1">new</span>(<span class="pl-smi">Req</span>)
 	<span class="pl-s1">req</span>.<span class="pl-c1">Port</span> <span class="pl-c1">=</span> <span class="pl-s1">PORT</span>
 	<span class="pl-c">// first</span>
 	{
 		<span class="pl-c">// CONNECT www.google.com:443 HTTP/1.1\r\n</span>
 		<span class="pl-c">// GET http://www.google.com/ HTTP/1.1\r\n</span>
-		<span class="pl-s1">tmps</span> <span class="pl-c1">:=</span> <span class="pl-s1">strings</span>.<span class="pl-en">Split</span>(<span class="pl-s1">line</span>[<span class="pl-c1">0</span>], <span class="pl-s">" "</span>)
+		<span class="pl-s1">tmps</span> <span class="pl-c1">:=</span> <span class="pl-s1">strings</span>.<span class="pl-c1">Split</span>(<span class="pl-s1">line</span>[<span class="pl-c1">0</span>], <span class="pl-s">" "</span>)
 		<span class="pl-s1">req</span>.<span class="pl-c1">Method</span> <span class="pl-c1">=</span> <span class="pl-s1">tmps</span>[<span class="pl-c1">0</span>]
 	}
 
@@ -755,55 +755,55 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 		<span class="pl-c">// Host: www.google.com:443</span>
 		<span class="pl-c">// Host: www.google.com</span>
-		<span class="pl-s1">tmps</span> <span class="pl-c1">:=</span> <span class="pl-s1">strings</span>.<span class="pl-en">Split</span>(<span class="pl-s1">line</span>[<span class="pl-c1">1</span>], <span class="pl-s">":"</span>)
-		<span class="pl-s1">req</span>.<span class="pl-c1">Host</span> <span class="pl-c1">=</span> <span class="pl-s1">strings</span>.<span class="pl-en">TrimSpace</span>(<span class="pl-s1">tmps</span>[<span class="pl-c1">1</span>])
-		<span class="pl-k">if</span> <span class="pl-en">len</span>(<span class="pl-s1">tmps</span>) <span class="pl-c1">==</span> <span class="pl-c1">3</span> {
-			<span class="pl-s1">req</span>.<span class="pl-c1">Port</span> <span class="pl-c1">=</span> <span class="pl-s1">strings</span>.<span class="pl-en">TrimSpace</span>(<span class="pl-s1">tmps</span>[<span class="pl-c1">2</span>])
+		<span class="pl-s1">tmps</span> <span class="pl-c1">:=</span> <span class="pl-s1">strings</span>.<span class="pl-c1">Split</span>(<span class="pl-s1">line</span>[<span class="pl-c1">1</span>], <span class="pl-s">":"</span>)
+		<span class="pl-s1">req</span>.<span class="pl-c1">Host</span> <span class="pl-c1">=</span> <span class="pl-s1">strings</span>.<span class="pl-c1">TrimSpace</span>(<span class="pl-s1">tmps</span>[<span class="pl-c1">1</span>])
+		<span class="pl-k">if</span> <span class="pl-s1">len</span>(<span class="pl-s1">tmps</span>) <span class="pl-c1">==</span> <span class="pl-c1">3</span> {
+			<span class="pl-s1">req</span>.<span class="pl-c1">Port</span> <span class="pl-c1">=</span> <span class="pl-s1">strings</span>.<span class="pl-c1">TrimSpace</span>(<span class="pl-s1">tmps</span>[<span class="pl-c1">2</span>])
 		}
 	}
 	<span class="pl-k">return</span> <span class="pl-s1">req</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">serveHTTP</span>(<span class="pl-s1">stream</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) {
-	<span class="pl-s1">headers</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">string</span>, <span class="pl-c1">0</span>, <span class="pl-s1">HEADLEN</span>)
+<span class="pl-k">func</span> <span class="pl-s1">serveHTTP</span>(<span class="pl-s1">stream</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) {
+	<span class="pl-s1">headers</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]<span class="pl-smi">string</span>, <span class="pl-c1">0</span>, <span class="pl-s1">HEADLEN</span>)
 	<span class="pl-k">for</span> {
-		<span class="pl-s1">line</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">stream</span>.<span class="pl-en">Line</span>()
+		<span class="pl-s1">line</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">stream</span>.<span class="pl-c1">Line</span>()
 		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-			<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">err</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"read line error"</span>)
+			<span class="pl-s1">log</span>.<span class="pl-c1">Error</span>().<span class="pl-c1">Err</span>(<span class="pl-s1">err</span>).<span class="pl-c1">Msg</span>(<span class="pl-s">"read line error"</span>)
 			<span class="pl-k">return</span>
 		}
 
-		<span class="pl-k">if</span> <span class="pl-s1">line</span> <span class="pl-c1">==</span> <span class="pl-s1">LF</span> <span class="pl-c1">||</span> <span class="pl-en">len</span>(<span class="pl-s1">line</span>) <span class="pl-c1">==</span> <span class="pl-c1">0</span> {
+		<span class="pl-k">if</span> <span class="pl-s1">line</span> <span class="pl-c1">==</span> <span class="pl-s1">LF</span> <span class="pl-c1">||</span> <span class="pl-s1">len</span>(<span class="pl-s1">line</span>) <span class="pl-c1">==</span> <span class="pl-c1">0</span> {
 			<span class="pl-k">break</span>
 		}
-		<span class="pl-s1">headers</span> <span class="pl-c1">=</span> <span class="pl-en">append</span>(<span class="pl-s1">headers</span>, <span class="pl-s1">line</span>)
+		<span class="pl-s1">headers</span> <span class="pl-c1">=</span> <span class="pl-s1">append</span>(<span class="pl-s1">headers</span>, <span class="pl-s1">line</span>)
 	}
 
-	<span class="pl-s1">req</span> <span class="pl-c1">:=</span> <span class="pl-en">newReq</span>(<span class="pl-s1">headers</span>)
-	<span class="pl-s1">remoteAddr</span> <span class="pl-c1">:=</span> <span class="pl-s1">net</span>.<span class="pl-en">JoinHostPort</span>(<span class="pl-s1">req</span>.<span class="pl-c1">Host</span>, <span class="pl-s1">req</span>.<span class="pl-c1">Port</span>)
+	<span class="pl-s1">req</span> <span class="pl-c1">:=</span> <span class="pl-s1">newReq</span>(<span class="pl-s1">headers</span>)
+	<span class="pl-s1">remoteAddr</span> <span class="pl-c1">:=</span> <span class="pl-s1">net</span>.<span class="pl-c1">JoinHostPort</span>(<span class="pl-s1">req</span>.<span class="pl-c1">Host</span>, <span class="pl-s1">req</span>.<span class="pl-c1">Port</span>)
 
-	<span class="pl-s1">remote</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">net</span>.<span class="pl-en">Dial</span>(<span class="pl-s">"tcp"</span>, <span class="pl-s1">remoteAddr</span>)
+	<span class="pl-s1">remote</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">net</span>.<span class="pl-c1">Dial</span>(<span class="pl-s">"tcp"</span>, <span class="pl-s1">remoteAddr</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">err</span>).<span class="pl-en">Str</span>(<span class="pl-s">"to"</span>, <span class="pl-s1">remoteAddr</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"connect error"</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Error</span>().<span class="pl-c1">Err</span>(<span class="pl-s1">err</span>).<span class="pl-c1">Str</span>(<span class="pl-s">"to"</span>, <span class="pl-s1">remoteAddr</span>).<span class="pl-c1">Msg</span>(<span class="pl-s">"connect error"</span>)
 		<span class="pl-k">return</span>
 	}
 
 	<span class="pl-k">if</span> <span class="pl-s1">req</span>.<span class="pl-c1">Method</span> <span class="pl-c1">==</span> <span class="pl-s1">CONNECT</span> {
-		<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">stream</span>.<span class="pl-en">Write</span>(<span class="pl-s1">SUCCESS</span>)
+		<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">stream</span>.<span class="pl-c1">Write</span>(<span class="pl-s1">SUCCESS</span>)
 	} <span class="pl-k">else</span> {
 		<span class="pl-s1">buf</span> <span class="pl-c1">:=</span> bytes.<span class="pl-smi">Buffer</span>{}
-		<span class="pl-s1">buf</span>.<span class="pl-en">Grow</span>(<span class="pl-s1">HEADSIZE</span>)
+		<span class="pl-s1">buf</span>.<span class="pl-c1">Grow</span>(<span class="pl-s1">HEADSIZE</span>)
 		<span class="pl-k">for</span> <span class="pl-s1">_</span>, <span class="pl-s1">line</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">headers</span> {
-			<span class="pl-k">if</span> <span class="pl-s1">strings</span>.<span class="pl-en">HasPrefix</span>(<span class="pl-s1">line</span>, <span class="pl-s">"Proxy"</span>) {
+			<span class="pl-k">if</span> <span class="pl-s1">strings</span>.<span class="pl-c1">HasPrefix</span>(<span class="pl-s1">line</span>, <span class="pl-s">"Proxy"</span>) {
 				<span class="pl-k">continue</span>
 			}
-			<span class="pl-s1">buf</span>.<span class="pl-en">WriteString</span>(<span class="pl-s1">line</span>)
-			<span class="pl-s1">buf</span>.<span class="pl-en">WriteString</span>(<span class="pl-s1">LF</span>)
+			<span class="pl-s1">buf</span>.<span class="pl-c1">WriteString</span>(<span class="pl-s1">line</span>)
+			<span class="pl-s1">buf</span>.<span class="pl-c1">WriteString</span>(<span class="pl-s1">LF</span>)
 		}
-		<span class="pl-s1">buf</span>.<span class="pl-en">WriteString</span>(<span class="pl-s1">LF</span>)
-		<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">remote</span>.<span class="pl-en">Write</span>(<span class="pl-s1">buf</span>.<span class="pl-en">Bytes</span>())
+		<span class="pl-s1">buf</span>.<span class="pl-c1">WriteString</span>(<span class="pl-s1">LF</span>)
+		<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">remote</span>.<span class="pl-c1">Write</span>(<span class="pl-s1">buf</span>.<span class="pl-c1">Bytes</span>())
 	}
-	<span class="pl-en">relay</span>(<span class="pl-s1">stream</span>, <span class="pl-s1">remote</span>)
+	<span class="pl-s1">relay</span>(<span class="pl-s1">stream</span>, <span class="pl-s1">remote</span>)
 }</pre></div>
 <h1>socks5</h1>
 <div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">var</span> (
@@ -812,21 +812,21 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	<span class="pl-s1">errRep</span> <span class="pl-c1">=</span> []<span class="pl-smi">byte</span>{<span class="pl-c1">0x05</span>, <span class="pl-c1">0x04</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x01</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>, <span class="pl-c1">0x00</span>}
 )
 
-<span class="pl-k">func</span> <span class="pl-en">serveSocks</span>(<span class="pl-s1">stream</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) {
-	<span class="pl-s1">header</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-c1">2</span>)
-	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">header</span>)
+<span class="pl-k">func</span> <span class="pl-s1">serveSocks</span>(<span class="pl-s1">stream</span> <span class="pl-c1">*</span><span class="pl-smi">Stream</span>) {
+	<span class="pl-s1">header</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-c1">2</span>)
+	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">header</span>)
 
 	<span class="pl-s1">nmeth</span> <span class="pl-c1">:=</span> <span class="pl-s1">header</span>[<span class="pl-c1">1</span>]
 
-	<span class="pl-s1">methods</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-en">int</span>(<span class="pl-s1">nmeth</span>))
-	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">methods</span>)
+	<span class="pl-s1">methods</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-s1">int</span>(<span class="pl-s1">nmeth</span>))
+	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">methods</span>)
 
-	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">writeBe</span>(<span class="pl-s1">stream</span>, <span class="pl-s1">SUC</span>)
+	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">writeBe</span>(<span class="pl-s1">stream</span>, <span class="pl-s1">SUC</span>)
 
 	<span class="pl-c">// read request</span>
 
-	<span class="pl-s1">request</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-c1">4</span>)
-	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">request</span>)
+	<span class="pl-s1">request</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-c1">4</span>)
+	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">request</span>)
 
 	<span class="pl-s1">adtp</span> <span class="pl-c1">:=</span> <span class="pl-s1">request</span>[<span class="pl-c1">3</span>]
 
@@ -834,35 +834,35 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 	<span class="pl-k">switch</span> <span class="pl-s1">adtp</span> {
 	<span class="pl-k">case</span> <span class="pl-c1">1</span>:
-		<span class="pl-s1">hostBuf</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-s1">net</span>.<span class="pl-c1">IPv4len</span>)
-		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">hostBuf</span>)
-		<span class="pl-s1">host</span> <span class="pl-c1">=</span> <span class="pl-s1">net</span>.<span class="pl-en">IP</span>(<span class="pl-s1">hostBuf</span>).<span class="pl-en">String</span>()
+		<span class="pl-s1">hostBuf</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-s1">net</span>.<span class="pl-c1">IPv4len</span>)
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">hostBuf</span>)
+		<span class="pl-s1">host</span> <span class="pl-c1">=</span> <span class="pl-s1">net</span>.<span class="pl-c1">IP</span>(<span class="pl-s1">hostBuf</span>).<span class="pl-c1">String</span>()
 	<span class="pl-k">case</span> <span class="pl-c1">3</span>:
-		<span class="pl-s1">hostBuf</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-s1">net</span>.<span class="pl-c1">IPv6len</span>)
-		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">hostBuf</span>)
-		<span class="pl-s1">host</span> <span class="pl-c1">=</span> <span class="pl-s1">net</span>.<span class="pl-en">IP</span>(<span class="pl-s1">hostBuf</span>).<span class="pl-en">String</span>()
+		<span class="pl-s1">hostBuf</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-s1">net</span>.<span class="pl-c1">IPv6len</span>)
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">hostBuf</span>)
+		<span class="pl-s1">host</span> <span class="pl-c1">=</span> <span class="pl-s1">net</span>.<span class="pl-c1">IP</span>(<span class="pl-s1">hostBuf</span>).<span class="pl-c1">String</span>()
 	<span class="pl-k">default</span>:
 		<span class="pl-k">var</span> <span class="pl-s1">length</span> <span class="pl-smi">uint8</span>
-		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">length</span>)
-		<span class="pl-s1">buf</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-s1">length</span>)
-		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">buf</span>)
-		<span class="pl-s1">host</span> <span class="pl-c1">=</span> <span class="pl-en">string</span>(<span class="pl-s1">buf</span>)
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">length</span>)
+		<span class="pl-s1">buf</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-s1">length</span>)
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">buf</span>)
+		<span class="pl-s1">host</span> <span class="pl-c1">=</span> <span class="pl-s1">string</span>(<span class="pl-s1">buf</span>)
 	}
 
-	<span class="pl-s1">portBuf</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-c1">2</span>)
-	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">portBuf</span>)
-	<span class="pl-s1">port</span> <span class="pl-c1">:=</span> <span class="pl-s1">binary</span>.<span class="pl-c1">BigEndian</span>.<span class="pl-en">Uint16</span>(<span class="pl-s1">portBuf</span>)
+	<span class="pl-s1">portBuf</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>([]<span class="pl-smi">byte</span>, <span class="pl-c1">2</span>)
+	<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">readBe</span>(<span class="pl-s1">stream</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">portBuf</span>)
+	<span class="pl-s1">port</span> <span class="pl-c1">:=</span> <span class="pl-s1">binary</span>.<span class="pl-c1">BigEndian</span>.<span class="pl-c1">Uint16</span>(<span class="pl-s1">portBuf</span>)
 
-	<span class="pl-s1">targetAddr</span> <span class="pl-c1">:=</span> <span class="pl-s1">net</span>.<span class="pl-en">JoinHostPort</span>(<span class="pl-s1">host</span>, <span class="pl-s1">strconv</span>.<span class="pl-en">FormatInt</span>(<span class="pl-en">int64</span>(<span class="pl-s1">port</span>), <span class="pl-c1">10</span>))
+	<span class="pl-s1">targetAddr</span> <span class="pl-c1">:=</span> <span class="pl-s1">net</span>.<span class="pl-c1">JoinHostPort</span>(<span class="pl-s1">host</span>, <span class="pl-s1">strconv</span>.<span class="pl-c1">FormatInt</span>(<span class="pl-s1">int64</span>(<span class="pl-s1">port</span>), <span class="pl-c1">10</span>))
 
-	<span class="pl-s1">remote</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">net</span>.<span class="pl-en">Dial</span>(<span class="pl-s">"tcp"</span>, <span class="pl-s1">targetAddr</span>)
+	<span class="pl-s1">remote</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">net</span>.<span class="pl-c1">Dial</span>(<span class="pl-s">"tcp"</span>, <span class="pl-s1">targetAddr</span>)
 	<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-		<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">err</span>).<span class="pl-en">Str</span>(<span class="pl-s">"remote"</span>, <span class="pl-s1">targetAddr</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"connect error"</span>)
-		<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">stream</span>.<span class="pl-en">Write</span>(<span class="pl-s1">errRep</span>)
+		<span class="pl-s1">log</span>.<span class="pl-c1">Error</span>().<span class="pl-c1">Err</span>(<span class="pl-s1">err</span>).<span class="pl-c1">Str</span>(<span class="pl-s">"remote"</span>, <span class="pl-s1">targetAddr</span>).<span class="pl-c1">Msg</span>(<span class="pl-s">"connect error"</span>)
+		<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">stream</span>.<span class="pl-c1">Write</span>(<span class="pl-s1">errRep</span>)
 		<span class="pl-k">return</span>
 	}
-	<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">stream</span>.<span class="pl-en">Write</span>(<span class="pl-s1">SusRep</span>)
-	<span class="pl-en">relay</span>(<span class="pl-s1">stream</span>, <span class="pl-s1">remote</span>)
+	<span class="pl-s1">_</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">stream</span>.<span class="pl-c1">Write</span>(<span class="pl-s1">SusRep</span>)
+	<span class="pl-s1">relay</span>(<span class="pl-s1">stream</span>, <span class="pl-s1">remote</span>)
 }</pre></div>
 <h1>relay</h1>
 <div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">type</span> <span class="pl-smi">Resp</span> <span class="pl-k">struct</span> {
@@ -872,29 +872,29 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	<span class="pl-c1">to</span>   net.<span class="pl-smi">Addr</span>
 }
 
-<span class="pl-k">func</span> <span class="pl-en">relay</span>(<span class="pl-s1">from</span>, <span class="pl-s1">to</span> net.<span class="pl-smi">Conn</span>) {
+<span class="pl-k">func</span> <span class="pl-s1">relay</span>(<span class="pl-s1">from</span>, <span class="pl-s1">to</span> net.<span class="pl-smi">Conn</span>) {
 	<span class="pl-k">defer</span> <span class="pl-k">func</span>(<span class="pl-s1">from</span>, <span class="pl-s1">to</span> net.<span class="pl-smi">Conn</span>) {
-		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">from</span>.<span class="pl-en">Close</span>()
-		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">to</span>.<span class="pl-en">Close</span>()
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">from</span>.<span class="pl-c1">Close</span>()
+		<span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-s1">to</span>.<span class="pl-c1">Close</span>()
 	}(<span class="pl-s1">from</span>, <span class="pl-s1">to</span>)
 
-	<span class="pl-s1">channel</span> <span class="pl-c1">:=</span> <span class="pl-en">make</span>(<span class="pl-k">chan</span> <span class="pl-smi">Resp</span>, <span class="pl-c1">2</span>)
+	<span class="pl-s1">channel</span> <span class="pl-c1">:=</span> <span class="pl-s1">make</span>(<span class="pl-k">chan</span> <span class="pl-smi">Resp</span>, <span class="pl-c1">2</span>)
 
 	<span class="pl-k">go</span> <span class="pl-k">func</span>(<span class="pl-s1">dst</span>, <span class="pl-s1">src</span> net.<span class="pl-smi">Conn</span>) {
-		<span class="pl-s1">size</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">io</span>.<span class="pl-en">Copy</span>(<span class="pl-s1">dst</span>, <span class="pl-s1">src</span>)
-		<span class="pl-s1">channel</span> <span class="pl-c1">&lt;-</span> <span class="pl-smi">Resp</span>{<span class="pl-s1">len</span>: <span class="pl-s1">size</span>, <span class="pl-s1">err</span>: <span class="pl-s1">err</span>, <span class="pl-s1">from</span>: <span class="pl-s1">src</span>.<span class="pl-en">RemoteAddr</span>(), <span class="pl-s1">to</span>: <span class="pl-s1">dst</span>.<span class="pl-en">RemoteAddr</span>()}
+		<span class="pl-s1">size</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">io</span>.<span class="pl-c1">Copy</span>(<span class="pl-s1">dst</span>, <span class="pl-s1">src</span>)
+		<span class="pl-s1">channel</span> <span class="pl-c1">&lt;-</span> <span class="pl-smi">Resp</span>{<span class="pl-s1">len</span>: <span class="pl-s1">size</span>, <span class="pl-s1">err</span>: <span class="pl-s1">err</span>, <span class="pl-s1">from</span>: <span class="pl-s1">src</span>.<span class="pl-c1">RemoteAddr</span>(), <span class="pl-s1">to</span>: <span class="pl-s1">dst</span>.<span class="pl-c1">RemoteAddr</span>()}
 	}(<span class="pl-s1">from</span>, <span class="pl-s1">to</span>)
 
 	<span class="pl-k">go</span> <span class="pl-k">func</span>(<span class="pl-s1">dst</span>, <span class="pl-s1">src</span> net.<span class="pl-smi">Conn</span>) {
-		<span class="pl-s1">size</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">io</span>.<span class="pl-en">Copy</span>(<span class="pl-s1">dst</span>, <span class="pl-s1">src</span>)
-		<span class="pl-s1">channel</span> <span class="pl-c1">&lt;-</span> <span class="pl-smi">Resp</span>{<span class="pl-s1">len</span>: <span class="pl-s1">size</span>, <span class="pl-s1">err</span>: <span class="pl-s1">err</span>, <span class="pl-s1">from</span>: <span class="pl-s1">src</span>.<span class="pl-en">RemoteAddr</span>(), <span class="pl-s1">to</span>: <span class="pl-s1">dst</span>.<span class="pl-en">RemoteAddr</span>()}
+		<span class="pl-s1">size</span>, <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">io</span>.<span class="pl-c1">Copy</span>(<span class="pl-s1">dst</span>, <span class="pl-s1">src</span>)
+		<span class="pl-s1">channel</span> <span class="pl-c1">&lt;-</span> <span class="pl-smi">Resp</span>{<span class="pl-s1">len</span>: <span class="pl-s1">size</span>, <span class="pl-s1">err</span>: <span class="pl-s1">err</span>, <span class="pl-s1">from</span>: <span class="pl-s1">src</span>.<span class="pl-c1">RemoteAddr</span>(), <span class="pl-s1">to</span>: <span class="pl-s1">dst</span>.<span class="pl-c1">RemoteAddr</span>()}
 	}(<span class="pl-s1">to</span>, <span class="pl-s1">from</span>)
 
 	<span class="pl-k">for</span> <span class="pl-s1">resp</span> <span class="pl-c1">:=</span> <span class="pl-k">range</span> <span class="pl-s1">channel</span> {
 		<span class="pl-k">if</span> <span class="pl-s1">resp</span>.<span class="pl-c1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> <span class="pl-c1">&amp;&amp;</span> <span class="pl-s1">resp</span>.<span class="pl-c1">err</span> <span class="pl-c1">!=</span> <span class="pl-s1">io</span>.<span class="pl-c1">EOF</span> {
-			<span class="pl-s1">log</span>.<span class="pl-en">Error</span>().<span class="pl-en">Err</span>(<span class="pl-s1">resp</span>.<span class="pl-c1">err</span>).<span class="pl-en">Str</span>(<span class="pl-s">"from"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">from</span>.<span class="pl-en">String</span>()).<span class="pl-en">Str</span>(<span class="pl-s">"to"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">to</span>.<span class="pl-en">String</span>()).<span class="pl-en">Msg</span>(<span class="pl-s">"relay error"</span>)
+			<span class="pl-s1">log</span>.<span class="pl-c1">Error</span>().<span class="pl-c1">Err</span>(<span class="pl-s1">resp</span>.<span class="pl-c1">err</span>).<span class="pl-c1">Str</span>(<span class="pl-s">"from"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">from</span>.<span class="pl-c1">String</span>()).<span class="pl-c1">Str</span>(<span class="pl-s">"to"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">to</span>.<span class="pl-c1">String</span>()).<span class="pl-c1">Msg</span>(<span class="pl-s">"relay error"</span>)
 		} <span class="pl-k">else</span> {
-			<span class="pl-s1">log</span>.<span class="pl-en">Info</span>().<span class="pl-en">Str</span>(<span class="pl-s">"from"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">from</span>.<span class="pl-en">String</span>()).<span class="pl-en">Str</span>(<span class="pl-s">"to"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">to</span>.<span class="pl-en">String</span>()).<span class="pl-en">Int64</span>(<span class="pl-s">"transfer"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">len</span>).<span class="pl-en">Msg</span>(<span class="pl-s">"relay success"</span>)
+			<span class="pl-s1">log</span>.<span class="pl-c1">Info</span>().<span class="pl-c1">Str</span>(<span class="pl-s">"from"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">from</span>.<span class="pl-c1">String</span>()).<span class="pl-c1">Str</span>(<span class="pl-s">"to"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">to</span>.<span class="pl-c1">String</span>()).<span class="pl-c1">Int64</span>(<span class="pl-s">"transfer"</span>, <span class="pl-s1">resp</span>.<span class="pl-c1">len</span>).<span class="pl-c1">Msg</span>(<span class="pl-s">"relay success"</span>)
 		}
 	}
 }</pre></div></div>
@@ -962,6 +962,7 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 function openComments(){
     cm=document.getElementById("comments");
     cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
     cmButton.innerHTML="loading";
     span=document.createElement("span");
     span.setAttribute("class","AnimatedEllipsis");

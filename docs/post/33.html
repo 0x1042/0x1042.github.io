@@ -184,16 +184,16 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-k">import</span> <span class="pl-s1">torch</span>.<span class="pl-s1">nn</span> <span class="pl-k">as</span> <span class="pl-s1">nn</span>
 <span class="pl-k">import</span> <span class="pl-s1">torch</span>.<span class="pl-s1">utils</span>.<span class="pl-s1">data</span> <span class="pl-k">as</span> <span class="pl-s1">data</span>
 
-<span class="pl-s1">train_data</span> <span class="pl-c1">=</span> <span class="pl-s1">datasets</span>.<span class="pl-v">MNIST</span>(<span class="pl-s1">root</span><span class="pl-c1">=</span><span class="pl-s">'data/mnist'</span>, <span class="pl-s1">train</span><span class="pl-c1">=</span><span class="pl-c1">True</span>, <span class="pl-s1">transform</span><span class="pl-c1">=</span><span class="pl-s1">transforms</span>.<span class="pl-v">ToTensor</span>(), <span class="pl-s1">download</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
-<span class="pl-s1">test_data</span> <span class="pl-c1">=</span> <span class="pl-s1">datasets</span>.<span class="pl-v">MNIST</span>(<span class="pl-s1">root</span><span class="pl-c1">=</span><span class="pl-s">'data/mnist'</span>, <span class="pl-s1">train</span><span class="pl-c1">=</span><span class="pl-c1">False</span>, <span class="pl-s1">transform</span><span class="pl-c1">=</span><span class="pl-s1">transforms</span>.<span class="pl-v">ToTensor</span>(), <span class="pl-s1">download</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)</pre></div>
+<span class="pl-s1">train_data</span> <span class="pl-c1">=</span> <span class="pl-s1">datasets</span>.<span class="pl-c1">MNIST</span>(<span class="pl-s1">root</span><span class="pl-c1">=</span><span class="pl-s">'data/mnist'</span>, <span class="pl-s1">train</span><span class="pl-c1">=</span><span class="pl-c1">True</span>, <span class="pl-s1">transform</span><span class="pl-c1">=</span><span class="pl-s1">transforms</span>.<span class="pl-c1">ToTensor</span>(), <span class="pl-s1">download</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">test_data</span> <span class="pl-c1">=</span> <span class="pl-s1">datasets</span>.<span class="pl-c1">MNIST</span>(<span class="pl-s1">root</span><span class="pl-c1">=</span><span class="pl-s">'data/mnist'</span>, <span class="pl-s1">train</span><span class="pl-c1">=</span><span class="pl-c1">False</span>, <span class="pl-s1">transform</span><span class="pl-c1">=</span><span class="pl-s1">transforms</span>.<span class="pl-c1">ToTensor</span>(), <span class="pl-s1">download</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)</pre></div>
 <blockquote>
 <p>由于数据规模，不可能将所有的数据加载一次训练。常规的做法是将数据分batch。</p>
 </blockquote>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">batch_size</span> <span class="pl-c1">=</span> <span class="pl-c1">128</span>
-<span class="pl-s1">train_loader</span> <span class="pl-c1">=</span> <span class="pl-s1">data</span>.<span class="pl-v">DataLoader</span>(<span class="pl-s1">dataset</span><span class="pl-c1">=</span><span class="pl-s1">train_data</span>, <span class="pl-s1">batch_size</span><span class="pl-c1">=</span><span class="pl-s1">batch_size</span>, <span class="pl-s1">shuffle</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
-<span class="pl-s1">test_loader</span> <span class="pl-c1">=</span> <span class="pl-s1">data</span>.<span class="pl-v">DataLoader</span>(<span class="pl-s1">dataset</span><span class="pl-c1">=</span><span class="pl-s1">test_data</span>, <span class="pl-s1">batch_size</span><span class="pl-c1">=</span><span class="pl-s1">batch_size</span>, <span class="pl-s1">shuffle</span><span class="pl-c1">=</span><span class="pl-c1">False</span>)</pre></div>
+<span class="pl-s1">train_loader</span> <span class="pl-c1">=</span> <span class="pl-s1">data</span>.<span class="pl-c1">DataLoader</span>(<span class="pl-s1">dataset</span><span class="pl-c1">=</span><span class="pl-s1">train_data</span>, <span class="pl-s1">batch_size</span><span class="pl-c1">=</span><span class="pl-s1">batch_size</span>, <span class="pl-s1">shuffle</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">test_loader</span> <span class="pl-c1">=</span> <span class="pl-s1">data</span>.<span class="pl-c1">DataLoader</span>(<span class="pl-s1">dataset</span><span class="pl-c1">=</span><span class="pl-s1">test_data</span>, <span class="pl-s1">batch_size</span><span class="pl-c1">=</span><span class="pl-s1">batch_size</span>, <span class="pl-s1">shuffle</span><span class="pl-c1">=</span><span class="pl-c1">False</span>)</pre></div>
 <h2>定义网络模型</h2>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">class</span> <span class="pl-v">MLP</span>(<span class="pl-s1">nn</span>.<span class="pl-v">Module</span>):
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-k">class</span> <span class="pl-c1">MLP</span>(<span class="pl-s1">nn</span>.<span class="pl-c1">Module</span>):
     <span class="pl-s">"""</span>
 <span class="pl-s">    constructor</span>
 <span class="pl-s">    input size: 输入数据的维度</span>
@@ -202,17 +202,17 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-s">    """</span>
 
     <span class="pl-k">def</span> <span class="pl-en">__init__</span>(<span class="pl-s1">self</span>, <span class="pl-s1">input_size</span>, <span class="pl-s1">hidden_size</span>, <span class="pl-s1">output_size</span>):
-        <span class="pl-en">super</span>(<span class="pl-v">MLP</span>, <span class="pl-s1">self</span>).<span class="pl-en">__init__</span>()
+        <span class="pl-en">super</span>(<span class="pl-c1">MLP</span>, <span class="pl-s1">self</span>).<span class="pl-c1">__init__</span>()
         <span class="pl-c"># 第一个全连接层</span>
-        <span class="pl-s1">self</span>.<span class="pl-s1">fc1</span> <span class="pl-c1">=</span> <span class="pl-s1">nn</span>.<span class="pl-v">Linear</span>(<span class="pl-s1">input_size</span>, <span class="pl-s1">hidden_size</span>)
+        <span class="pl-s1">self</span>.<span class="pl-c1">fc1</span> <span class="pl-c1">=</span> <span class="pl-s1">nn</span>.<span class="pl-c1">Linear</span>(<span class="pl-s1">input_size</span>, <span class="pl-s1">hidden_size</span>)
         <span class="pl-c"># 定义激活函数</span>
-        <span class="pl-s1">self</span>.<span class="pl-s1">relu</span> <span class="pl-c1">=</span> <span class="pl-s1">nn</span>.<span class="pl-v">ReLU</span>()
+        <span class="pl-s1">self</span>.<span class="pl-c1">relu</span> <span class="pl-c1">=</span> <span class="pl-s1">nn</span>.<span class="pl-c1">ReLU</span>()
 
         <span class="pl-c"># 定义第二个全连接层</span>
-        <span class="pl-s1">self</span>.<span class="pl-s1">fc2</span> <span class="pl-c1">=</span> <span class="pl-s1">nn</span>.<span class="pl-v">Linear</span>(<span class="pl-s1">hidden_size</span>, <span class="pl-s1">hidden_size</span>)
+        <span class="pl-s1">self</span>.<span class="pl-c1">fc2</span> <span class="pl-c1">=</span> <span class="pl-s1">nn</span>.<span class="pl-c1">Linear</span>(<span class="pl-s1">hidden_size</span>, <span class="pl-s1">hidden_size</span>)
 
         <span class="pl-c"># 定义第三个全连接层</span>
-        <span class="pl-s1">self</span>.<span class="pl-s1">fc3</span> <span class="pl-c1">=</span> <span class="pl-s1">nn</span>.<span class="pl-v">Linear</span>(<span class="pl-s1">hidden_size</span>, <span class="pl-s1">output_size</span>)
+        <span class="pl-s1">self</span>.<span class="pl-c1">fc3</span> <span class="pl-c1">=</span> <span class="pl-s1">nn</span>.<span class="pl-c1">Linear</span>(<span class="pl-s1">hidden_size</span>, <span class="pl-s1">output_size</span>)
 
     <span class="pl-k">def</span> <span class="pl-en">forward</span>(<span class="pl-s1">self</span>, <span class="pl-s1">x</span>):
         <span class="pl-s">"""</span>
@@ -221,14 +221,14 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-s">        :return: </span>
 <span class="pl-s">        """</span>
         <span class="pl-c"># 第一层运算</span>
-        <span class="pl-s1">out</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-en">fc1</span>(<span class="pl-s1">x</span>)
+        <span class="pl-s1">out</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-c1">fc1</span>(<span class="pl-s1">x</span>)
         <span class="pl-c"># 将上一层的输出传给激活函数</span>
-        <span class="pl-s1">out</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-en">relu</span>(<span class="pl-s1">out</span>)
+        <span class="pl-s1">out</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-c1">relu</span>(<span class="pl-s1">out</span>)
         <span class="pl-c"># 将上一层的输出传给fc2</span>
-        <span class="pl-s1">out</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-en">fc2</span>(<span class="pl-s1">out</span>)
+        <span class="pl-s1">out</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-c1">fc2</span>(<span class="pl-s1">out</span>)
         <span class="pl-c"># 同样需要激活函数</span>
-        <span class="pl-s1">out</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-en">relu</span>(<span class="pl-s1">out</span>)
-        <span class="pl-s1">out</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-en">fc3</span>(<span class="pl-s1">out</span>)
+        <span class="pl-s1">out</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-c1">relu</span>(<span class="pl-s1">out</span>)
+        <span class="pl-s1">out</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-c1">fc3</span>(<span class="pl-s1">out</span>)
         <span class="pl-k">return</span> <span class="pl-s1">out</span>
 
 
@@ -236,51 +236,51 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-s1">hidden_size</span> <span class="pl-c1">=</span> <span class="pl-c1">512</span>
 <span class="pl-s1">output_size</span> <span class="pl-c1">=</span> <span class="pl-c1">10</span>
 
-<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-v">MLP</span>(<span class="pl-s1">input_size</span>, <span class="pl-s1">hidden_size</span>, <span class="pl-s1">output_size</span>)</pre></div>
+<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-en">MLP</span>(<span class="pl-s1">input_size</span>, <span class="pl-s1">hidden_size</span>, <span class="pl-s1">output_size</span>)</pre></div>
 <h2>定义损失函数</h2>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># 定义损失函数 </span>
 <span class="pl-c"># 分类问题，使用交叉墒函数</span>
-<span class="pl-s1">criterion</span> <span class="pl-c1">=</span> <span class="pl-s1">nn</span>.<span class="pl-v">CrossEntropyLoss</span>()</pre></div>
+<span class="pl-s1">criterion</span> <span class="pl-c1">=</span> <span class="pl-s1">nn</span>.<span class="pl-c1">CrossEntropyLoss</span>()</pre></div>
 <h2>定义优化器</h2>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># 定义优化器</span>
 <span class="pl-s1">lr</span> <span class="pl-c1">=</span> <span class="pl-c1">0.001</span>
-<span class="pl-s1">optimizer</span> <span class="pl-c1">=</span> <span class="pl-s1">optim</span>.<span class="pl-v">Adam</span>(<span class="pl-s1">model</span>.<span class="pl-en">parameters</span>(), <span class="pl-s1">lr</span><span class="pl-c1">=</span><span class="pl-s1">lr</span>)</pre></div>
+<span class="pl-s1">optimizer</span> <span class="pl-c1">=</span> <span class="pl-s1">optim</span>.<span class="pl-c1">Adam</span>(<span class="pl-s1">model</span>.<span class="pl-c1">parameters</span>(), <span class="pl-s1">lr</span><span class="pl-c1">=</span><span class="pl-s1">lr</span>)</pre></div>
 <h2>训练</h2>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">num_epochs</span> <span class="pl-c1">=</span> <span class="pl-c1">10</span>
 <span class="pl-k">for</span> <span class="pl-s1">epoch</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-s1">num_epochs</span>):
     <span class="pl-k">for</span> <span class="pl-s1">i</span>, (<span class="pl-s1">images</span>, <span class="pl-s1">labels</span>) <span class="pl-c1">in</span> <span class="pl-en">enumerate</span>(<span class="pl-s1">train_loader</span>):
         <span class="pl-c"># 将image转换成向量</span>
-        <span class="pl-s1">images</span> <span class="pl-c1">=</span> <span class="pl-s1">images</span>.<span class="pl-en">reshape</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>, <span class="pl-c1">28</span> <span class="pl-c1">*</span> <span class="pl-c1">28</span>)
+        <span class="pl-s1">images</span> <span class="pl-c1">=</span> <span class="pl-s1">images</span>.<span class="pl-c1">reshape</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>, <span class="pl-c1">28</span> <span class="pl-c1">*</span> <span class="pl-c1">28</span>)
         <span class="pl-c"># 将数据送到网络中</span>
         <span class="pl-s1">outputs</span> <span class="pl-c1">=</span> <span class="pl-en">model</span>(<span class="pl-s1">images</span>)
         <span class="pl-c"># 计算损失</span>
         <span class="pl-s1">loss</span> <span class="pl-c1">=</span> <span class="pl-en">criterion</span>(<span class="pl-s1">outputs</span>, <span class="pl-s1">labels</span>)
         <span class="pl-c"># 梯度清零</span>
-        <span class="pl-s1">optimizer</span>.<span class="pl-en">zero_grad</span>()
+        <span class="pl-s1">optimizer</span>.<span class="pl-c1">zero_grad</span>()
         <span class="pl-c"># 反向传播</span>
-        <span class="pl-s1">loss</span>.<span class="pl-en">backward</span>()
+        <span class="pl-s1">loss</span>.<span class="pl-c1">backward</span>()
         <span class="pl-c"># 更新参数</span>
-        <span class="pl-s1">optimizer</span>.<span class="pl-en">step</span>()
+        <span class="pl-s1">optimizer</span>.<span class="pl-c1">step</span>()
 
         <span class="pl-k">if</span> (<span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span>) <span class="pl-c1">%</span> <span class="pl-c1">100</span> <span class="pl-c1">==</span> <span class="pl-c1">0</span>:
-            <span class="pl-en">print</span>(<span class="pl-s">f'Epoch [<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">epoch</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">}</span></span>/<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">num_epochs</span><span class="pl-kos">}</span></span>], Step [<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">}</span></span>/<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-en">len</span>(<span class="pl-s1">train_loader</span>)<span class="pl-kos">}</span></span>], Loss: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">loss</span>.<span class="pl-en">item</span>():.4f<span class="pl-kos">}</span></span>'</span>, )</pre></div>
+            <span class="pl-en">print</span>(<span class="pl-s">f'Epoch [<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">epoch</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">}</span></span>/<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">num_epochs</span><span class="pl-kos">}</span></span>], Step [<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">i</span> <span class="pl-c1">+</span> <span class="pl-c1">1</span><span class="pl-kos">}</span></span>/<span class="pl-s1"><span class="pl-kos">{</span><span class="pl-en">len</span>(<span class="pl-s1">train_loader</span>)<span class="pl-kos">}</span></span>], Loss: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-s1">loss</span>.<span class="pl-c1">item</span>():.4f<span class="pl-kos">}</span></span>'</span>, )</pre></div>
 <h2>测试</h2>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># test</span>
 
-<span class="pl-k">with</span> <span class="pl-s1">torch</span>.<span class="pl-en">no_grad</span>():
+<span class="pl-k">with</span> <span class="pl-s1">torch</span>.<span class="pl-c1">no_grad</span>():
     <span class="pl-s1">correct</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
     <span class="pl-s1">total</span> <span class="pl-c1">=</span> <span class="pl-c1">0</span>
 
     <span class="pl-k">for</span> <span class="pl-s1">images</span>, <span class="pl-s1">labels</span> <span class="pl-c1">in</span> <span class="pl-s1">test_loader</span>:
-        <span class="pl-s1">images</span> <span class="pl-c1">=</span> <span class="pl-s1">images</span>.<span class="pl-en">reshape</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>, <span class="pl-c1">28</span> <span class="pl-c1">*</span> <span class="pl-c1">28</span>)
+        <span class="pl-s1">images</span> <span class="pl-c1">=</span> <span class="pl-s1">images</span>.<span class="pl-c1">reshape</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>, <span class="pl-c1">28</span> <span class="pl-c1">*</span> <span class="pl-c1">28</span>)
         <span class="pl-s1">outputs</span> <span class="pl-c1">=</span> <span class="pl-en">model</span>(<span class="pl-s1">images</span>)
         <span class="pl-c"># 取出最大值对应的索引 即预测值</span>
-        <span class="pl-s1">_</span>, <span class="pl-s1">predicted</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-en">max</span>(<span class="pl-s1">outputs</span>.<span class="pl-s1">data</span>, <span class="pl-c1">1</span>)
-        <span class="pl-s1">total</span> <span class="pl-c1">+=</span> <span class="pl-s1">labels</span>.<span class="pl-en">size</span>(<span class="pl-c1">0</span>)
-        <span class="pl-s1">correct</span> <span class="pl-c1">+=</span> (<span class="pl-s1">predicted</span> <span class="pl-c1">==</span> <span class="pl-s1">labels</span>).<span class="pl-en">sum</span>().<span class="pl-en">item</span>()
+        <span class="pl-s1">_</span>, <span class="pl-s1">predicted</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">max</span>(<span class="pl-s1">outputs</span>.<span class="pl-c1">data</span>, <span class="pl-c1">1</span>)
+        <span class="pl-s1">total</span> <span class="pl-c1">+=</span> <span class="pl-s1">labels</span>.<span class="pl-c1">size</span>(<span class="pl-c1">0</span>)
+        <span class="pl-s1">correct</span> <span class="pl-c1">+=</span> (<span class="pl-s1">predicted</span> <span class="pl-c1">==</span> <span class="pl-s1">labels</span>).<span class="pl-c1">sum</span>().<span class="pl-c1">item</span>()
     <span class="pl-en">print</span>(<span class="pl-s">f'Accuracy of the network on the 10000 test images: <span class="pl-s1"><span class="pl-kos">{</span><span class="pl-c1">100</span> <span class="pl-c1">*</span> <span class="pl-s1">correct</span> <span class="pl-c1">/</span> <span class="pl-s1">total</span><span class="pl-kos">}</span></span>'</span>)</pre></div>
 <h2>保存模型</h2>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">torch</span>.<span class="pl-en">save</span>(<span class="pl-s1">model</span>, <span class="pl-s">'mnist.pkl'</span>)</pre></div></div>
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">torch</span>.<span class="pl-c1">save</span>(<span class="pl-s1">model</span>, <span class="pl-s">'mnist.pkl'</span>)</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
@@ -345,6 +345,7 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 function openComments(){
     cm=document.getElementById("comments");
     cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
     cmButton.innerHTML="loading";
     span=document.createElement("span");
     span.setAttribute("class","AnimatedEllipsis");

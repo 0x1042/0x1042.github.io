@@ -325,16 +325,16 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <li><a href="#sanitier"><code class="notranslate">sanitier</code></a></li>
 </ul>
 <h1>配置</h1>
-<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-c1">option</span>(ENABLE_SANITIZE <span class="pl-s">"Enable feature"</span> <span class="pl-k">ON</span>)
+<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-k">option</span>(ENABLE_SANITIZE <span class="pl-s">"Enable feature"</span> <span class="pl-k">ON</span>)
 
 <span class="pl-k">if</span>(ENABLE_SANITIZE) 
-  <span class="pl-c1">add_compile_options</span>(<span class="pl-s">"-fno-omit-frame-pointer"</span>) 
-  <span class="pl-c1">add_compile_options</span>(<span class="pl-s">"-fno-optimize-sibling-calls"</span>)
-  <span class="pl-c"><span class="pl-c">#</span> add_compile_options("-fsanitize=address")</span>
-  <span class="pl-c1">add_compile_options</span>(<span class="pl-s">"-fsanitize=thread"</span>)
-  <span class="pl-c1">add_compile_options</span>(<span class="pl-s">"-fsanitize-address-use-after-scope"</span>)
-  <span class="pl-c"><span class="pl-c">#</span> set(CMAKE_EXE_LINKER_FLAGS "-fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=address" ) </span>
-  <span class="pl-c1">set</span>(CMAKE_EXE_LINKER_FLAGS <span class="pl-s">"-fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=thread"</span> ) 
+<span class="pl-k">  add_compile_options</span>(<span class="pl-s">"-fno-omit-frame-pointer"</span>) 
+<span class="pl-k">  add_compile_options</span>(<span class="pl-s">"-fno-optimize-sibling-calls"</span>)
+  <span class="pl-c"># add_compile_options("-fsanitize=address")</span>
+<span class="pl-k">  add_compile_options</span>(<span class="pl-s">"-fsanitize=thread"</span>)
+<span class="pl-k">  add_compile_options</span>(<span class="pl-s">"-fsanitize-address-use-after-scope"</span>)
+  <span class="pl-c"># set(CMAKE_EXE_LINKER_FLAGS "-fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=address" ) </span>
+<span class="pl-k">  set</span>(<span class="pl-v">CMAKE_EXE_LINKER_FLAGS</span> <span class="pl-s">"-fno-omit-frame-pointer -fno-optimize-sibling-calls -fsanitize=thread"</span> ) 
 <span class="pl-k">endif</span>()</pre></div>
 <h1>测试</h1>
 <div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>functional<span class="pl-pds">&gt;</span></span>
@@ -505,6 +505,7 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 function openComments(){
     cm=document.getElementById("comments");
     cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
     cmButton.innerHTML="loading";
     span=document.createElement("span");
     span.setAttribute("class","AnimatedEllipsis");

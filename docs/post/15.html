@@ -225,27 +225,27 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-s1">y_data</span> <span class="pl-c1">=</span> [<span class="pl-c1">70</span>, <span class="pl-c1">80</span>, <span class="pl-c1">90</span>, <span class="pl-c1">100</span>]
 
 <span class="pl-c"># 散点图</span>
-<span class="pl-s1">plt</span>.<span class="pl-en">scatter</span>(<span class="pl-s1">x_data</span>, <span class="pl-s1">y_data</span>) </pre></div>
+<span class="pl-s1">plt</span>.<span class="pl-c1">scatter</span>(<span class="pl-s1">x_data</span>, <span class="pl-s1">y_data</span>) </pre></div>
 <h2>构建模型</h2>
 <div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-c"># 定义一个神经网络模型</span>
 <span class="pl-c"># Sequential 连续的(这一层的输入一定是上一层的输出)</span>
-<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-s1">models</span>.<span class="pl-v">Sequential</span>()
+<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-s1">models</span>.<span class="pl-c1">Sequential</span>()
 
 <span class="pl-c"># 给模型添加层 </span>
-<span class="pl-s1">model</span>.<span class="pl-en">add</span>(<span class="pl-s1">layers</span>.<span class="pl-v">Dense</span>(<span class="pl-s1">units</span><span class="pl-c1">=</span><span class="pl-c1">1</span>, <span class="pl-s1">input_dim</span><span class="pl-c1">=</span><span class="pl-c1">1</span>))
-<span class="pl-s1">model</span>.<span class="pl-en">summary</span>()
+<span class="pl-s1">model</span>.<span class="pl-c1">add</span>(<span class="pl-s1">layers</span>.<span class="pl-c1">Dense</span>(<span class="pl-s1">units</span><span class="pl-c1">=</span><span class="pl-c1">1</span>, <span class="pl-s1">input_dim</span><span class="pl-c1">=</span><span class="pl-c1">1</span>))
+<span class="pl-s1">model</span>.<span class="pl-c1">summary</span>()
 
 <span class="pl-c"># 定义损失函数和优化器 </span>
 <span class="pl-c"># mean_squared_error: 均方误差 </span>
 <span class="pl-c"># SGD 随机梯度下降，学习率是0.1</span>
-<span class="pl-s1">model</span>.<span class="pl-en">compile</span>(<span class="pl-s1">loss</span><span class="pl-c1">=</span><span class="pl-v">MSE</span>, <span class="pl-s1">optimizer</span><span class="pl-c1">=</span><span class="pl-v">SGD</span>(<span class="pl-c1">0.01</span>), <span class="pl-s1">metrics</span><span class="pl-c1">=</span>[<span class="pl-s">'accuracy'</span>])</pre></div>
+<span class="pl-s1">model</span>.<span class="pl-c1">compile</span>(<span class="pl-s1">loss</span><span class="pl-c1">=</span><span class="pl-c1">MSE</span>, <span class="pl-s1">optimizer</span><span class="pl-c1">=</span><span class="pl-en">SGD</span>(<span class="pl-c1">0.01</span>), <span class="pl-s1">metrics</span><span class="pl-c1">=</span>[<span class="pl-s">'accuracy'</span>])</pre></div>
 <h2>训练</h2>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">inputs</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-v">Variable</span>(<span class="pl-s1">name</span><span class="pl-c1">=</span><span class="pl-s">"x_data"</span>, <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">tf</span>.<span class="pl-s1">float32</span>, <span class="pl-s1">initial_value</span><span class="pl-c1">=</span><span class="pl-s1">x_data</span>)
-<span class="pl-s1">labels</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-v">Variable</span>(<span class="pl-s1">name</span><span class="pl-c1">=</span><span class="pl-s">"y_data"</span>, <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">tf</span>.<span class="pl-s1">float32</span>, <span class="pl-s1">initial_value</span><span class="pl-c1">=</span><span class="pl-s1">y_data</span>)
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">inputs</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">Variable</span>(<span class="pl-s1">name</span><span class="pl-c1">=</span><span class="pl-s">"x_data"</span>, <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">tf</span>.<span class="pl-c1">float32</span>, <span class="pl-s1">initial_value</span><span class="pl-c1">=</span><span class="pl-s1">x_data</span>)
+<span class="pl-s1">labels</span> <span class="pl-c1">=</span> <span class="pl-s1">tf</span>.<span class="pl-c1">Variable</span>(<span class="pl-s1">name</span><span class="pl-c1">=</span><span class="pl-s">"y_data"</span>, <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">tf</span>.<span class="pl-c1">float32</span>, <span class="pl-s1">initial_value</span><span class="pl-c1">=</span><span class="pl-s1">y_data</span>)
 
-<span class="pl-s1">history</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-en">fit</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-s1">inputs</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-s1">labels</span>, <span class="pl-s1">batch_size</span><span class="pl-c1">=</span><span class="pl-c1">10</span>, <span class="pl-s1">epochs</span><span class="pl-c1">=</span><span class="pl-c1">1000</span>)</pre></div>
+<span class="pl-s1">history</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-c1">fit</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-s1">inputs</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-s1">labels</span>, <span class="pl-s1">batch_size</span><span class="pl-c1">=</span><span class="pl-c1">10</span>, <span class="pl-s1">epochs</span><span class="pl-c1">=</span><span class="pl-c1">1000</span>)</pre></div>
 <h2>测试</h2>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">predict_y</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-en">predict</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span>[<span class="pl-c1">1024</span>])
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">predict_y</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-c1">predict</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span>[<span class="pl-c1">1024</span>])
 <span class="pl-c"># [[10450.493]]</span>
 <span class="pl-en">print</span>(<span class="pl-s1">predict_y</span>)</pre></div>
 <h2>多变量线性回归模型</h2>
@@ -258,42 +258,42 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <span class="pl-k">import</span> <span class="pl-s1">pandas</span> <span class="pl-k">as</span> <span class="pl-s1">pd</span>
 <span class="pl-k">from</span> <span class="pl-s1">tensorflow</span> <span class="pl-k">import</span> <span class="pl-s1">keras</span>
 <span class="pl-k">import</span> <span class="pl-s1">matplotlib</span>.<span class="pl-s1">pyplot</span> <span class="pl-k">as</span> <span class="pl-s1">plt</span>
-<span class="pl-k">from</span> <span class="pl-s1">tensorflow</span>.<span class="pl-s1">keras</span>.<span class="pl-s1">losses</span> <span class="pl-k">import</span> <span class="pl-v">MSE</span>
+<span class="pl-k">from</span> <span class="pl-s1">tensorflow</span>.<span class="pl-s1">keras</span>.<span class="pl-s1">losses</span> <span class="pl-k">import</span> <span class="pl-c1">MSE</span>
 
 <span class="pl-c"># 数据处理 </span>
-<span class="pl-s1">data</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-en">read_csv</span>(<span class="pl-s">'data/dataset_train.csv'</span>)
-<span class="pl-s1">data</span>.<span class="pl-en">head</span>(<span class="pl-c1">10</span>)
+<span class="pl-s1">data</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-c1">read_csv</span>(<span class="pl-s">'data/dataset_train.csv'</span>)
+<span class="pl-s1">data</span>.<span class="pl-c1">head</span>(<span class="pl-c1">10</span>)
 
-<span class="pl-s1">x</span> <span class="pl-c1">=</span> <span class="pl-s1">data</span>.<span class="pl-s1">iloc</span>[<span class="pl-c1">0</span>:, <span class="pl-c1">1</span>:<span class="pl-c1">9</span>]
+<span class="pl-s1">x</span> <span class="pl-c1">=</span> <span class="pl-s1">data</span>.<span class="pl-c1">iloc</span>[<span class="pl-c1">0</span>:, <span class="pl-c1">1</span>:<span class="pl-c1">9</span>]
 
-<span class="pl-s1">y</span> <span class="pl-c1">=</span> <span class="pl-s1">data</span>.<span class="pl-s1">median_house_value</span>
+<span class="pl-s1">y</span> <span class="pl-c1">=</span> <span class="pl-s1">data</span>.<span class="pl-c1">median_house_value</span>
 
 <span class="pl-c"># 定义模型 </span>
 
-<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-s1">keras</span>.<span class="pl-s1">models</span>.<span class="pl-v">Sequential</span>()
-<span class="pl-s1">model</span>.<span class="pl-en">add</span>(<span class="pl-s1">keras</span>.<span class="pl-s1">layers</span>.<span class="pl-v">Dense</span>(<span class="pl-c1">1</span>, <span class="pl-s1">input_shape</span><span class="pl-c1">=</span>(<span class="pl-s1">x</span>.<span class="pl-s1">shape</span>[<span class="pl-c1">1</span>],)))
-<span class="pl-s1">model</span>.<span class="pl-en">summary</span>()
+<span class="pl-s1">model</span> <span class="pl-c1">=</span> <span class="pl-s1">keras</span>.<span class="pl-c1">models</span>.<span class="pl-c1">Sequential</span>()
+<span class="pl-s1">model</span>.<span class="pl-c1">add</span>(<span class="pl-s1">keras</span>.<span class="pl-c1">layers</span>.<span class="pl-c1">Dense</span>(<span class="pl-c1">1</span>, <span class="pl-s1">input_shape</span><span class="pl-c1">=</span>(<span class="pl-s1">x</span>.<span class="pl-c1">shape</span>[<span class="pl-c1">1</span>],)))
+<span class="pl-s1">model</span>.<span class="pl-c1">summary</span>()
 
 <span class="pl-c"># 添加优化器和损失函数 </span>
-<span class="pl-s1">model</span>.<span class="pl-en">compile</span>(<span class="pl-s1">loss</span><span class="pl-c1">=</span><span class="pl-v">MSE</span>, <span class="pl-s1">optimizer</span><span class="pl-c1">=</span><span class="pl-s">'adam'</span>,    <span class="pl-s1">metrics</span><span class="pl-c1">=</span>[<span class="pl-s">'acc'</span>])
+<span class="pl-s1">model</span>.<span class="pl-c1">compile</span>(<span class="pl-s1">loss</span><span class="pl-c1">=</span><span class="pl-c1">MSE</span>, <span class="pl-s1">optimizer</span><span class="pl-c1">=</span><span class="pl-s">'adam'</span>,    <span class="pl-s1">metrics</span><span class="pl-c1">=</span>[<span class="pl-s">'acc'</span>])
 
 <span class="pl-c"># 训练</span>
-<span class="pl-s1">hist</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-en">fit</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-s1">x</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-s1">y</span>, <span class="pl-s1">epochs</span><span class="pl-c1">=</span><span class="pl-c1">200</span>, <span class="pl-s1">workers</span><span class="pl-c1">=</span><span class="pl-c1">16</span>, <span class="pl-s1">use_multiprocessing</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">hist</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-c1">fit</span>(<span class="pl-s1">x</span><span class="pl-c1">=</span><span class="pl-s1">x</span>, <span class="pl-s1">y</span><span class="pl-c1">=</span><span class="pl-s1">y</span>, <span class="pl-s1">epochs</span><span class="pl-c1">=</span><span class="pl-c1">200</span>, <span class="pl-s1">workers</span><span class="pl-c1">=</span><span class="pl-c1">16</span>, <span class="pl-s1">use_multiprocessing</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
 
-<span class="pl-s1">model</span>.<span class="pl-en">save</span>(<span class="pl-s1">filepath</span><span class="pl-c1">=</span><span class="pl-s">'./house'</span>)</pre></div>
+<span class="pl-s1">model</span>.<span class="pl-c1">save</span>(<span class="pl-s1">filepath</span><span class="pl-c1">=</span><span class="pl-s">'./house'</span>)</pre></div>
 <h3>验证</h3>
-<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">test</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-en">read_csv</span>(<span class="pl-s">'data/dataset_test.csv'</span>)
-<span class="pl-s1">test</span>.<span class="pl-en">head</span>(<span class="pl-c1">10</span>)
+<div class="highlight highlight-source-python"><pre class="notranslate"><span class="pl-s1">test</span> <span class="pl-c1">=</span> <span class="pl-s1">pd</span>.<span class="pl-c1">read_csv</span>(<span class="pl-s">'data/dataset_test.csv'</span>)
+<span class="pl-s1">test</span>.<span class="pl-c1">head</span>(<span class="pl-c1">10</span>)
 
 <span class="pl-c"># 切割测试集为x和y，用模型进行预测</span>
-<span class="pl-s1">test_x</span> <span class="pl-c1">=</span> <span class="pl-s1">test</span>.<span class="pl-s1">iloc</span>[<span class="pl-c1">0</span>:, <span class="pl-c1">1</span>:<span class="pl-c1">9</span>]
-<span class="pl-s1">test_y</span> <span class="pl-c1">=</span> <span class="pl-s1">test</span>.<span class="pl-s1">median_house_value</span>
-<span class="pl-s1">predict_y</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-en">predict</span>(<span class="pl-s1">test_x</span>)
-<span class="pl-s1">x</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-en">linspace</span>(<span class="pl-c1">0</span>, <span class="pl-c1">100</span>, <span class="pl-c1">100</span>)
+<span class="pl-s1">test_x</span> <span class="pl-c1">=</span> <span class="pl-s1">test</span>.<span class="pl-c1">iloc</span>[<span class="pl-c1">0</span>:, <span class="pl-c1">1</span>:<span class="pl-c1">9</span>]
+<span class="pl-s1">test_y</span> <span class="pl-c1">=</span> <span class="pl-s1">test</span>.<span class="pl-c1">median_house_value</span>
+<span class="pl-s1">predict_y</span> <span class="pl-c1">=</span> <span class="pl-s1">model</span>.<span class="pl-c1">predict</span>(<span class="pl-s1">test_x</span>)
+<span class="pl-s1">x</span> <span class="pl-c1">=</span> <span class="pl-s1">np</span>.<span class="pl-c1">linspace</span>(<span class="pl-c1">0</span>, <span class="pl-c1">100</span>, <span class="pl-c1">100</span>)
 
 <span class="pl-c"># 绘制预测结果</span>
-<span class="pl-s1">plt</span>.<span class="pl-en">plot</span>(<span class="pl-s1">x</span>, <span class="pl-s1">test_y</span>[:<span class="pl-c1">100</span>], <span class="pl-s">"x-"</span>, <span class="pl-s1">label</span><span class="pl-c1">=</span><span class="pl-s">"real"</span>)
-<span class="pl-s1">plt</span>.<span class="pl-en">plot</span>(<span class="pl-s1">x</span>, <span class="pl-s1">predict_y</span>[:<span class="pl-c1">100</span>], <span class="pl-s">"+-"</span>, <span class="pl-s1">label</span><span class="pl-c1">=</span><span class="pl-s">"predict"</span>)</pre></div>
+<span class="pl-s1">plt</span>.<span class="pl-c1">plot</span>(<span class="pl-s1">x</span>, <span class="pl-s1">test_y</span>[:<span class="pl-c1">100</span>], <span class="pl-s">"x-"</span>, <span class="pl-s1">label</span><span class="pl-c1">=</span><span class="pl-s">"real"</span>)
+<span class="pl-s1">plt</span>.<span class="pl-c1">plot</span>(<span class="pl-s1">x</span>, <span class="pl-s1">predict_y</span>[:<span class="pl-c1">100</span>], <span class="pl-s">"+-"</span>, <span class="pl-s1">label</span><span class="pl-c1">=</span><span class="pl-s">"predict"</span>)</pre></div>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/0x1042/0x1042.github.io/assets/7525242/eeebac15-828d-4195-9c85-5b2a54be8498"><img src="https://github.com/0x1042/0x1042.github.io/assets/7525242/eeebac15-828d-4195-9c85-5b2a54be8498" alt="house" style="max-width: 100%;"></a></p>
 <h1>参考</h1>
 <p><a href="https://minghuiwu.gitbook.io/tfbook/di-si-zhang-dan-bian-liang-xian-xing-hui-gui-tesnsorflow-shi-zhan/di-si-zhang-dan-bian-liang-xian-xing-hui-gui-tesnsorflow-shi-zhan/4.8-xian-xing-hui-gui-wen-ti-tensorflow-shi-zhan" rel="nofollow">tfbook</a><br>
@@ -363,6 +363,7 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 function openComments(){
     cm=document.getElementById("comments");
     cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
     cmButton.innerHTML="loading";
     span=document.createElement("span");
     span.setAttribute("class","AnimatedEllipsis");

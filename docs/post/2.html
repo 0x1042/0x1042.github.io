@@ -98,38 +98,38 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 )
 
 <span class="pl-c">// BaseParser  线上基线版本</span>
-<span class="pl-k">func</span> <span class="pl-en">BaseParser</span>[<span class="pl-s1">T</span> proto.<span class="pl-smi">Message</span>](<span class="pl-s1">buf</span> []<span class="pl-smi">byte</span>, <span class="pl-s1">t</span> <span class="pl-smi">T</span>) <span class="pl-smi">error</span> {
-	<span class="pl-k">return</span> <span class="pl-s1">proto</span>.<span class="pl-en">Unmarshal</span>(<span class="pl-s1">buf</span>, <span class="pl-s1">t</span>)
+<span class="pl-k">func</span> <span class="pl-s1">BaseParser</span>[<span class="pl-s1">T</span> proto.<span class="pl-smi">Message</span>](<span class="pl-s1">buf</span> []<span class="pl-smi">byte</span>, <span class="pl-s1">t</span> <span class="pl-smi">T</span>) <span class="pl-smi">error</span> {
+	<span class="pl-k">return</span> <span class="pl-s1">proto</span>.<span class="pl-c1">Unmarshal</span>(<span class="pl-s1">buf</span>, <span class="pl-s1">t</span>)
 }
 
 <span class="pl-c">// AbtestParser  新版本</span>
-<span class="pl-k">func</span> <span class="pl-en">AbtestParser</span>[<span class="pl-s1">T</span> proto.<span class="pl-smi">Message</span>](<span class="pl-s1">buf</span> []<span class="pl-smi">byte</span>, <span class="pl-s1">t</span> <span class="pl-smi">T</span>) <span class="pl-smi">error</span> {
+<span class="pl-k">func</span> <span class="pl-s1">AbtestParser</span>[<span class="pl-s1">T</span> proto.<span class="pl-smi">Message</span>](<span class="pl-s1">buf</span> []<span class="pl-smi">byte</span>, <span class="pl-s1">t</span> <span class="pl-smi">T</span>) <span class="pl-smi">error</span> {
 	<span class="pl-s1">opt</span> <span class="pl-c1">:=</span> proto.<span class="pl-smi">UnmarshalOptions</span>{
 		<span class="pl-s1">DiscardUnknown</span>: <span class="pl-c1">true</span>,
 	}
-	<span class="pl-k">return</span> <span class="pl-s1">opt</span>.<span class="pl-en">Unmarshal</span>(<span class="pl-s1">buf</span>, <span class="pl-s1">t</span>)
+	<span class="pl-k">return</span> <span class="pl-s1">opt</span>.<span class="pl-c1">Unmarshal</span>(<span class="pl-s1">buf</span>, <span class="pl-s1">t</span>)
 }</pre></div>
 <h1>性能差异</h1>
 <p>抓取一个场景的数据，单个message 序列化之后在30kb左右，从benchmark看，可以提升34%的性能，内存分配下降97%。实际效果取决于裁剪字段站比，需要实际场景测试验证，不具有参考价值。</p>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-en">BenchmarkBaseParser</span>(<span class="pl-s1">b</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">B</span>) {
-	<span class="pl-s1">b</span>.<span class="pl-en">ResetTimer</span>()
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-s1">BenchmarkBaseParser</span>(<span class="pl-s1">b</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">B</span>) {
+	<span class="pl-s1">b</span>.<span class="pl-c1">ResetTimer</span>()
 	<span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">:=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">b</span>.<span class="pl-c1">N</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span> {
 		<span class="pl-s1">target</span> <span class="pl-c1">:=</span> simple.<span class="pl-smi">BidRequest</span>{}
 
-		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">BaseParser</span>(<span class="pl-s1">buf</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">target</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-			<span class="pl-en">panic</span>(<span class="pl-s1">err</span>)
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">BaseParser</span>(<span class="pl-s1">buf</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">target</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+			<span class="pl-s1">panic</span>(<span class="pl-s1">err</span>)
 		}
 	}
 }
 
-<span class="pl-k">func</span> <span class="pl-en">BenchmarkAbtestParser</span>(<span class="pl-s1">b</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">B</span>) {
-	<span class="pl-s1">b</span>.<span class="pl-en">ResetTimer</span>()
+<span class="pl-k">func</span> <span class="pl-s1">BenchmarkAbtestParser</span>(<span class="pl-s1">b</span> <span class="pl-c1">*</span>testing.<span class="pl-smi">B</span>) {
+	<span class="pl-s1">b</span>.<span class="pl-c1">ResetTimer</span>()
 
 	<span class="pl-k">for</span> <span class="pl-s1">i</span> <span class="pl-c1">:=</span> <span class="pl-c1">0</span>; <span class="pl-s1">i</span> <span class="pl-c1">&lt;</span> <span class="pl-s1">b</span>.<span class="pl-c1">N</span>; <span class="pl-s1">i</span><span class="pl-c1">++</span> {
 		<span class="pl-s1">target</span> <span class="pl-c1">:=</span> simple.<span class="pl-smi">BidRequest</span>{}
 
-		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-en">AbtestParser</span>(<span class="pl-s1">buf</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">target</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
-			<span class="pl-en">panic</span>(<span class="pl-s1">err</span>)
+		<span class="pl-k">if</span> <span class="pl-s1">err</span> <span class="pl-c1">:=</span> <span class="pl-s1">AbtestParser</span>(<span class="pl-s1">buf</span>, <span class="pl-c1">&amp;</span><span class="pl-s1">target</span>); <span class="pl-s1">err</span> <span class="pl-c1">!=</span> <span class="pl-c1">nil</span> {
+			<span class="pl-s1">panic</span>(<span class="pl-s1">err</span>)
 		}
 	}
 }</pre></div>
@@ -222,6 +222,7 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 function openComments(){
     cm=document.getElementById("comments");
     cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
     cmButton.innerHTML="loading";
     span=document.createElement("span");
     span.setAttribute("class","AnimatedEllipsis");

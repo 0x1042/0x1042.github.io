@@ -152,15 +152,15 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h1>配置</h1>
-<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-c1">set</span>(CMAKE_CXX_FLAGS <span class="pl-s">"<span class="pl-smi">${CMAKE_CXX_FLAGS}</span> -stdlib=libc++"</span>)
-<span class="pl-c1">link_directories</span>(/usr/local/opt/llvm/lib/c++)
+<div class="highlight highlight-source-cmake"><pre class="notranslate"><span class="pl-k">set</span>(<span class="pl-v">CMAKE_CXX_FLAGS</span> <span class="pl-s">"<span class="pl-k">${CMAKE_CXX_FLAGS}</span> -stdlib=libc++"</span>)
+<span class="pl-k">link_directories</span>(/usr/local/opt/llvm/lib/c++)
 
-<span class="pl-c1">find_package</span>(OpenMP <span class="pl-k">COMPONENTS</span> CXX)
-<span class="pl-c1">target_link_libraries</span>(
-  <span class="pl-smi">${PROJECT_NAME}</span>
-  <span class="pl-k">PUBLIC</span> OpenMP::OpenMP_CXX
-  <span class="pl-k">PUBLIC</span> c++abi
-  <span class="pl-k">PUBLIC</span> c++
+<span class="pl-k">find_package</span>(OpenMP COMPONENTS CXX)
+<span class="pl-k">target_link_libraries</span>(
+  <span class="pl-k">${PROJECT_NAME}</span>
+  <span class="pl-e">PUBLIC</span> OpenMP::OpenMP_CXX
+  <span class="pl-e">PUBLIC</span> c++abi
+  <span class="pl-e">PUBLIC</span> c++
 )</pre></div>
 <h1>使用</h1>
 <div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">auto</span> <span class="pl-en">batch_get2</span>(<span class="pl-k">const</span> std::vector&lt;std::string&gt; &amp; urls, std::vector&lt;std::string&gt; &amp; resps) -&gt; int {
@@ -241,6 +241,7 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 function openComments(){
     cm=document.getElementById("comments");
     cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
     cmButton.innerHTML="loading";
     span=document.createElement("span");
     span.setAttribute("class","AnimatedEllipsis");

@@ -10,113 +10,207 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="# 说明
+<meta name="description" content="# 添加依赖
 
-> 仅限于读取类定义
+```meson
+// meson.build
 
-```cpp
+libcriterion = dependency(
+    'criterion',
+    method: 'pkg-config',
+    required: true,
+)
 
-#include <memory>
-#include <string>
+lib_xmacro_sources = files(
+    'xmacro.c',
+    'xmacro.h',
+)
 
-#include <cxxabi.h>
+libxmacro = shared_library(
+    'xmacro',
+    lib_xmacro_sources,
+    dependencies: [
+        libcriterion,
+    ],
+)
 
-template <typename T>
-struct Name {
-    Name() {
-        std::unique_ptr<char, decltype(free) *> real_name(abi::__cxa_demangle(typeid(T).name(), nullptr, nullptr, nullptr), free);
-        this->name = std::string(real_name.get());
-    }
 
-    std::string name{};
-};
+samples = [
+    'xmacro_test.c',
+]
+
+foreach sample : samples
+    e = executable(
+        sample + '.bin',
+        sample,
+        dependencies: [libcriterion],
+        link_with: [libxmacro],
+    )
+    test('sample / ' + sample, e)
+endforeach
 
 ```
 
-测试 
 
-```cpp
-namespace tests {
+# 使用 
 
-namespace a::b::c {
-    class A {};
-} // namespace a::b::c
+```c
+#include 'xmacro.h'
+#include <criterion/criterion.h>
+#include <criterion/logging.h>
+#include <criterion/options.h>
+#include <string.h>
 
-namespace na {
-    class B {};
-} // namespace na
+Test(http_mhd, to_str) {
 
-namespace a::b::d {
-    struct C {};
-} // namespace a::b::d
+  {
+    const char *tmp = mhd_to_str(HTTP_GET);
+    cr_log_info('HTTP_GET %s ', tmp);
+    cr_assert(tmp, 'GET');
+  }
 
-TEST_CASE('test name', '[name]') {
-    // tests::a::b::c::A
-    LOG(INFO) << 'infra::Name<a::b::c::A>().name:' << infra::Name<a::b::c::A>().name;
-    // tests::na::B
-    LOG(INFO) << 'infra::Name<na::B>().name:' << infra::Name<na::B>().name;
-    // tests::a::b::d::C
-    LOG(INFO) << 'infra::Name<a::b::d::C>().name:' << infra::Name<a::b::d::C>().name;
+  {
+    const char *tmp = mhd_to_str(HTTP_CONNECT);
+    cr_log_info('HTTP_CONNECT %s ', tmp);
+    cr_assert(tmp, 'CONNECT');
+  }
 }
-} // namespace tests
+
+Test(http_mhd, from_str) {
+  {
+    http_method_t tmp = str_to_mhd('GET');
+    cr_log_info('GET %d ', tmp);
+    cr_assert_eq(tmp, HTTP_GET);
+  }
+  {
+    http_method_t tmp = str_to_mhd('Post');
+    cr_log_info('Post %d ', tmp);
+    cr_assert_eq(tmp, HTTP_POST);
+  }
+  {
+    http_method_t tmp = str_to_mhd('TRACE');
+    cr_log_info('TRACE %d ', tmp);
+    cr_assert_eq(tmp, HTTP_TRACE);
+  }
+}
+
+```
+
+# 编译
+
+```
+build_asan:
+  meson setup buildDir -Db_sanitize=address -Db_lundef=false
+  meson compile -C buildDir
+  ln -sf buildDir/compile_commands.json .
+
+run_test:
+    ./buildDir/xmacro_test.c.bin --verbos --full-stats
 ```
 。">
-<meta property="og:title" content="c++中获取类定义的完整名字">
-<meta property="og:description" content="# 说明
+<meta property="og:title" content="criterion 单元测试使用">
+<meta property="og:description" content="# 添加依赖
 
-> 仅限于读取类定义
+```meson
+// meson.build
 
-```cpp
+libcriterion = dependency(
+    'criterion',
+    method: 'pkg-config',
+    required: true,
+)
 
-#include <memory>
-#include <string>
+lib_xmacro_sources = files(
+    'xmacro.c',
+    'xmacro.h',
+)
 
-#include <cxxabi.h>
+libxmacro = shared_library(
+    'xmacro',
+    lib_xmacro_sources,
+    dependencies: [
+        libcriterion,
+    ],
+)
 
-template <typename T>
-struct Name {
-    Name() {
-        std::unique_ptr<char, decltype(free) *> real_name(abi::__cxa_demangle(typeid(T).name(), nullptr, nullptr, nullptr), free);
-        this->name = std::string(real_name.get());
-    }
 
-    std::string name{};
-};
+samples = [
+    'xmacro_test.c',
+]
+
+foreach sample : samples
+    e = executable(
+        sample + '.bin',
+        sample,
+        dependencies: [libcriterion],
+        link_with: [libxmacro],
+    )
+    test('sample / ' + sample, e)
+endforeach
 
 ```
 
-测试 
 
-```cpp
-namespace tests {
+# 使用 
 
-namespace a::b::c {
-    class A {};
-} // namespace a::b::c
+```c
+#include 'xmacro.h'
+#include <criterion/criterion.h>
+#include <criterion/logging.h>
+#include <criterion/options.h>
+#include <string.h>
 
-namespace na {
-    class B {};
-} // namespace na
+Test(http_mhd, to_str) {
 
-namespace a::b::d {
-    struct C {};
-} // namespace a::b::d
+  {
+    const char *tmp = mhd_to_str(HTTP_GET);
+    cr_log_info('HTTP_GET %s ', tmp);
+    cr_assert(tmp, 'GET');
+  }
 
-TEST_CASE('test name', '[name]') {
-    // tests::a::b::c::A
-    LOG(INFO) << 'infra::Name<a::b::c::A>().name:' << infra::Name<a::b::c::A>().name;
-    // tests::na::B
-    LOG(INFO) << 'infra::Name<na::B>().name:' << infra::Name<na::B>().name;
-    // tests::a::b::d::C
-    LOG(INFO) << 'infra::Name<a::b::d::C>().name:' << infra::Name<a::b::d::C>().name;
+  {
+    const char *tmp = mhd_to_str(HTTP_CONNECT);
+    cr_log_info('HTTP_CONNECT %s ', tmp);
+    cr_assert(tmp, 'CONNECT');
+  }
 }
-} // namespace tests
+
+Test(http_mhd, from_str) {
+  {
+    http_method_t tmp = str_to_mhd('GET');
+    cr_log_info('GET %d ', tmp);
+    cr_assert_eq(tmp, HTTP_GET);
+  }
+  {
+    http_method_t tmp = str_to_mhd('Post');
+    cr_log_info('Post %d ', tmp);
+    cr_assert_eq(tmp, HTTP_POST);
+  }
+  {
+    http_method_t tmp = str_to_mhd('TRACE');
+    cr_log_info('TRACE %d ', tmp);
+    cr_assert_eq(tmp, HTTP_TRACE);
+  }
+}
+
+```
+
+# 编译
+
+```
+build_asan:
+  meson setup buildDir -Db_sanitize=address -Db_lundef=false
+  meson compile -C buildDir
+  ln -sf buildDir/compile_commands.json .
+
+run_test:
+    ./buildDir/xmacro_test.c.bin --verbos --full-stats
 ```
 。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="http://gorust.us.kg/post/13.html">
+<meta property="og:url" content="http://gorust.us.kg/post/41.html">
 <meta property="og:image" content="https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png">
-<title>c++中获取类定义的完整名字</title>
+<title>criterion 单元测试使用</title>
 <link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
 
 
@@ -159,7 +253,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
 <body>
     <div id="header">
-<h1 class="postTitle">c++中获取类定义的完整名字</h1>
+<h1 class="postTitle">criterion 单元测试使用</h1>
 <div class="title-right">
     <a href="http://gorust.us.kg" id="buttonHome" class="btn btn-invisible circle" title="首页">
         <svg class="octicon" width="16" height="16">
@@ -167,7 +261,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
         </svg>
     </a>
     
-    <a href="https://github.com/0x1042/0x1042.github.io/issues/13" target="_blank" class="btn btn-invisible circle" title="Issue">
+    <a href="https://github.com/0x1042/0x1042.github.io/issues/41" target="_blank" class="btn btn-invisible circle" title="Issue">
         <svg class="octicon" width="16" height="16">
             <path id="pathIssue" fill-rule="evenodd"></path>
         </svg>
@@ -183,49 +277,91 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>说明</h1>
-<blockquote>
-<p>仅限于读取类定义</p>
-</blockquote>
-<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>memory<span class="pl-pds">&gt;</span></span>
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>string<span class="pl-pds">&gt;</span></span>
+<div class="markdown-body" id="postBody"><h1>添加依赖</h1>
+<div class="highlight highlight-source-meson"><pre class="notranslate"><span class="pl-k">//</span> <span class="pl-c1">meson</span>.build
 
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>cxxabi.h<span class="pl-pds">&gt;</span></span>
+libcriterion <span class="pl-k">=</span> <span class="pl-c1">dependency</span>(
+    <span class="pl-s"><span class="pl-pds">'</span>criterion<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">method</span>: <span class="pl-s"><span class="pl-pds">'</span>pkg-config<span class="pl-pds">'</span></span>,
+    <span class="pl-smi">required</span>: <span class="pl-c1">true</span>,
+)
 
-<span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
-<span class="pl-k">struct</span> <span class="pl-en">Name</span> {
-    <span class="pl-en">Name</span>() {
-        std::unique_ptr&lt;<span class="pl-k">char</span>, <span class="pl-c1">decltype</span>(free) *&gt; <span class="pl-c1">real_name</span>(<span class="pl-c1">abi::__cxa_demangle</span>(<span class="pl-c1">typeid</span>(T).<span class="pl-c1">name</span>(), <span class="pl-c1">nullptr</span>, <span class="pl-c1">nullptr</span>, <span class="pl-c1">nullptr</span>), free);
-        <span class="pl-c1">this</span>-&gt;<span class="pl-smi">name</span> = <span class="pl-c1">std::string</span>(real_name.<span class="pl-c1">get</span>());
-    }
+lib_xmacro_sources <span class="pl-k">=</span> <span class="pl-c1">files</span>(
+    <span class="pl-s"><span class="pl-pds">'</span>xmacro.c<span class="pl-pds">'</span></span>,
+    <span class="pl-s"><span class="pl-pds">'</span>xmacro.h<span class="pl-pds">'</span></span>,
+)
 
-    std::string name{};
-};
+libxmacro <span class="pl-k">=</span> <span class="pl-c1">shared_library</span>(
+    <span class="pl-s"><span class="pl-pds">'</span>xmacro<span class="pl-pds">'</span></span>,
+    lib_xmacro_sources,
+    <span class="pl-smi">dependencies</span>: [
+        libcriterion,
+    ],
+)
+
+
+samples <span class="pl-k">=</span> [
+    <span class="pl-s"><span class="pl-pds">'</span>xmacro_test.c<span class="pl-pds">'</span></span>,
+]
+
+<span class="pl-k">foreach</span> <span class="pl-smi">sample </span>: samples
+    e <span class="pl-k">=</span> <span class="pl-c1">executable</span>(
+        sample <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>.bin<span class="pl-pds">'</span></span>,
+        sample,
+        <span class="pl-smi">dependencies</span>: [libcriterion],
+        <span class="pl-smi">link_with</span>: [libxmacro],
+    )
+    <span class="pl-c1">test</span>(<span class="pl-s"><span class="pl-pds">'</span>sample / <span class="pl-pds">'</span></span> <span class="pl-k">+</span> sample, e)
+<span class="pl-k">endforeach</span>
 </pre></div>
-<p>测试</p>
-<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">namespace</span> <span class="pl-en">tests</span> {
+<h1>使用</h1>
+<div class="highlight highlight-source-c"><pre class="notranslate"><span class="pl-k">#include</span> <span class="pl-s">"xmacro.h"</span>
+<span class="pl-k">#include</span> <span class="pl-s">&lt;criterion/criterion.h&gt;</span>
+<span class="pl-k">#include</span> <span class="pl-s">&lt;criterion/logging.h&gt;</span>
+<span class="pl-k">#include</span> <span class="pl-s">&lt;criterion/options.h&gt;</span>
+<span class="pl-k">#include</span> <span class="pl-s">&lt;string.h&gt;</span>
 
-<span class="pl-k">namespace</span> <span class="pl-en">a</span>::b::c {
-    <span class="pl-k">class</span> <span class="pl-en">A</span> {};
-} <span class="pl-c"><span class="pl-c">//</span> namespace a::b::c</span>
+<span class="pl-en">Test</span>(<span class="pl-s1">http_mhd</span>, <span class="pl-s1">to_str</span>) {
 
-<span class="pl-k">namespace</span> <span class="pl-en">na</span> {
-    <span class="pl-k">class</span> <span class="pl-en">B</span> {};
-} <span class="pl-c"><span class="pl-c">//</span> namespace na</span>
+  {
+    <span class="pl-k">const</span> <span class="pl-smi">char</span> <span class="pl-c1">*</span><span class="pl-s1">tmp</span> <span class="pl-c1">=</span> <span class="pl-en">mhd_to_str</span>(<span class="pl-c1">HTTP_GET</span>);
+    <span class="pl-en">cr_log_info</span>(<span class="pl-s">"HTTP_GET %s "</span>, <span class="pl-s1">tmp</span>);
+    <span class="pl-en">cr_assert</span>(<span class="pl-s1">tmp</span>, <span class="pl-s">"GET"</span>);
+  }
 
-<span class="pl-k">namespace</span> <span class="pl-en">a</span>::b::d {
-    <span class="pl-k">struct</span> <span class="pl-en">C</span> {};
-} <span class="pl-c"><span class="pl-c">//</span> namespace a::b::d</span>
-
-<span class="pl-en">TEST_CASE</span>(<span class="pl-s"><span class="pl-pds">"</span>test name<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>[name]<span class="pl-pds">"</span></span>) {
-    <span class="pl-c"><span class="pl-c">//</span> tests::a::b::c::A</span>
-    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>infra::Name&lt;a::b::c::A&gt;().name:<span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;a::b::c::A&gt;().<span class="pl-smi">name</span>;
-    <span class="pl-c"><span class="pl-c">//</span> tests::na::B</span>
-    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>infra::Name&lt;na::B&gt;().name:<span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;na::B&gt;().<span class="pl-smi">name</span>;
-    <span class="pl-c"><span class="pl-c">//</span> tests::a::b::d::C</span>
-    <span class="pl-c1">LOG</span>(INFO) &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>infra::Name&lt;a::b::d::C&gt;().name:<span class="pl-pds">"</span></span> &lt;&lt; infra::Name&lt;a::b::d::C&gt;().<span class="pl-smi">name</span>;
+  {
+    <span class="pl-k">const</span> <span class="pl-smi">char</span> <span class="pl-c1">*</span><span class="pl-s1">tmp</span> <span class="pl-c1">=</span> <span class="pl-en">mhd_to_str</span>(<span class="pl-c1">HTTP_CONNECT</span>);
+    <span class="pl-en">cr_log_info</span>(<span class="pl-s">"HTTP_CONNECT %s "</span>, <span class="pl-s1">tmp</span>);
+    <span class="pl-en">cr_assert</span>(<span class="pl-s1">tmp</span>, <span class="pl-s">"CONNECT"</span>);
+  }
 }
-} <span class="pl-c"><span class="pl-c">//</span> namespace tests</span></pre></div></div>
+
+<span class="pl-en">Test</span>(<span class="pl-s1">http_mhd</span>, <span class="pl-s1">from_str</span>) {
+  {
+    <span class="pl-smi">http_method_t</span> <span class="pl-s1">tmp</span> <span class="pl-c1">=</span> <span class="pl-en">str_to_mhd</span>(<span class="pl-s">"GET"</span>);
+    <span class="pl-en">cr_log_info</span>(<span class="pl-s">"GET %d "</span>, <span class="pl-s1">tmp</span>);
+    <span class="pl-en">cr_assert_eq</span>(<span class="pl-s1">tmp</span>, <span class="pl-c1">HTTP_GET</span>);
+  }
+  {
+    <span class="pl-smi">http_method_t</span> <span class="pl-s1">tmp</span> <span class="pl-c1">=</span> <span class="pl-en">str_to_mhd</span>(<span class="pl-s">"Post"</span>);
+    <span class="pl-en">cr_log_info</span>(<span class="pl-s">"Post %d "</span>, <span class="pl-s1">tmp</span>);
+    <span class="pl-en">cr_assert_eq</span>(<span class="pl-s1">tmp</span>, <span class="pl-c1">HTTP_POST</span>);
+  }
+  {
+    <span class="pl-smi">http_method_t</span> <span class="pl-s1">tmp</span> <span class="pl-c1">=</span> <span class="pl-en">str_to_mhd</span>(<span class="pl-s">"TRACE"</span>);
+    <span class="pl-en">cr_log_info</span>(<span class="pl-s">"TRACE %d "</span>, <span class="pl-s1">tmp</span>);
+    <span class="pl-en">cr_assert_eq</span>(<span class="pl-s1">tmp</span>, <span class="pl-c1">HTTP_TRACE</span>);
+  }
+}</pre></div>
+<h1>编译</h1>
+<pre class="notranslate"><code class="notranslate">build_asan:
+  meson setup buildDir -Db_sanitize=address -Db_lundef=false
+  meson compile -C buildDir
+  ln -sf buildDir/compile_commands.json .
+
+run_test:
+    ./buildDir/xmacro_test.c.bin --verbos --full-stats
+</code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

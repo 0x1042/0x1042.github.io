@@ -324,25 +324,25 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 	<span class="pl-s1">key</span> [<span class="pl-c1">32</span>]<span class="pl-smi">byte</span>
 )
 
-<span class="pl-k">func</span> <span class="pl-en">HighHash</span>(<span class="pl-s1">input</span> <span class="pl-smi">string</span>) <span class="pl-smi">string</span> {
-	<span class="pl-s1">hash</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">highwayhash</span>.<span class="pl-en">New64</span>(<span class="pl-s1">key</span>[:])
-	<span class="pl-s1">hash</span>.<span class="pl-en">Write</span>([]<span class="pl-smi">byte</span>(<span class="pl-s1">input</span>))
-	<span class="pl-s1">checksum</span> <span class="pl-c1">:=</span> <span class="pl-s1">hash</span>.<span class="pl-en">Sum</span>(<span class="pl-c1">nil</span>)
-	<span class="pl-k">return</span> <span class="pl-s1">hex</span>.<span class="pl-en">EncodeToString</span>(<span class="pl-s1">checksum</span>)
+<span class="pl-k">func</span> <span class="pl-s1">HighHash</span>(<span class="pl-s1">input</span> <span class="pl-smi">string</span>) <span class="pl-smi">string</span> {
+	<span class="pl-s1">hash</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">highwayhash</span>.<span class="pl-c1">New64</span>(<span class="pl-s1">key</span>[:])
+	<span class="pl-s1">hash</span>.<span class="pl-c1">Write</span>([]<span class="pl-smi">byte</span>(<span class="pl-s1">input</span>))
+	<span class="pl-s1">checksum</span> <span class="pl-c1">:=</span> <span class="pl-s1">hash</span>.<span class="pl-c1">Sum</span>(<span class="pl-c1">nil</span>)
+	<span class="pl-k">return</span> <span class="pl-s1">hex</span>.<span class="pl-c1">EncodeToString</span>(<span class="pl-s1">checksum</span>)
 }
 
-<span class="pl-k">func</span> <span class="pl-en">HighHashFile</span>(<span class="pl-s1">path</span> <span class="pl-smi">string</span>) <span class="pl-smi">string</span> {
-	<span class="pl-s1">hash</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">highwayhash</span>.<span class="pl-en">New64</span>(<span class="pl-s1">key</span>[:])
-	<span class="pl-s1">file</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">os</span>.<span class="pl-en">Open</span>(<span class="pl-s1">path</span>)
-	<span class="pl-s1">io</span>.<span class="pl-en">Copy</span>(<span class="pl-s1">hash</span>, <span class="pl-s1">file</span>)
-	<span class="pl-k">return</span> <span class="pl-s1">hex</span>.<span class="pl-en">EncodeToString</span>(<span class="pl-s1">hash</span>.<span class="pl-en">Sum</span>(<span class="pl-c1">nil</span>))
+<span class="pl-k">func</span> <span class="pl-s1">HighHashFile</span>(<span class="pl-s1">path</span> <span class="pl-smi">string</span>) <span class="pl-smi">string</span> {
+	<span class="pl-s1">hash</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">highwayhash</span>.<span class="pl-c1">New64</span>(<span class="pl-s1">key</span>[:])
+	<span class="pl-s1">file</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">os</span>.<span class="pl-c1">Open</span>(<span class="pl-s1">path</span>)
+	<span class="pl-s1">io</span>.<span class="pl-c1">Copy</span>(<span class="pl-s1">hash</span>, <span class="pl-s1">file</span>)
+	<span class="pl-k">return</span> <span class="pl-s1">hex</span>.<span class="pl-c1">EncodeToString</span>(<span class="pl-s1">hash</span>.<span class="pl-c1">Sum</span>(<span class="pl-c1">nil</span>))
 }</pre></div>
 <h2>128 bit</h2>
-<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-en">HighHash128</span>(<span class="pl-s1">input</span> <span class="pl-smi">string</span>) <span class="pl-smi">string</span> {
-	<span class="pl-s1">hash</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">highwayhash</span>.<span class="pl-en">New128</span>(<span class="pl-s1">key</span>[:])
-	<span class="pl-s1">hash</span>.<span class="pl-en">Write</span>([]<span class="pl-smi">byte</span>(<span class="pl-s1">input</span>))
-	<span class="pl-s1">checksum</span> <span class="pl-c1">:=</span> <span class="pl-s1">hash</span>.<span class="pl-en">Sum</span>(<span class="pl-c1">nil</span>)
-	<span class="pl-k">return</span> <span class="pl-s1">hex</span>.<span class="pl-en">EncodeToString</span>(<span class="pl-s1">checksum</span>)
+<div class="highlight highlight-source-go"><pre class="notranslate"><span class="pl-k">func</span> <span class="pl-s1">HighHash128</span>(<span class="pl-s1">input</span> <span class="pl-smi">string</span>) <span class="pl-smi">string</span> {
+	<span class="pl-s1">hash</span>, <span class="pl-s1">_</span> <span class="pl-c1">:=</span> <span class="pl-s1">highwayhash</span>.<span class="pl-c1">New128</span>(<span class="pl-s1">key</span>[:])
+	<span class="pl-s1">hash</span>.<span class="pl-c1">Write</span>([]<span class="pl-smi">byte</span>(<span class="pl-s1">input</span>))
+	<span class="pl-s1">checksum</span> <span class="pl-c1">:=</span> <span class="pl-s1">hash</span>.<span class="pl-c1">Sum</span>(<span class="pl-c1">nil</span>)
+	<span class="pl-k">return</span> <span class="pl-s1">hex</span>.<span class="pl-c1">EncodeToString</span>(<span class="pl-s1">checksum</span>)
 }</pre></div>
 <h1>c++</h1>
 <h2>64bit</h2>
@@ -467,6 +467,7 @@ document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
 function openComments(){
     cm=document.getElementById("comments");
     cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
     cmButton.innerHTML="loading";
     span=document.createElement("span");
     span.setAttribute("class","AnimatedEllipsis");

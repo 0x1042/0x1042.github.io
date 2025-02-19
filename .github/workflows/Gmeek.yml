@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     name: Generate blog
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     if: github.event.repository.owner.id == github.event.sender.id
     permissions: write-all
     steps:
@@ -26,10 +26,13 @@ jobs:
           echo "====== check config.josn end  ======"
           sudo apt-get install jq
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: "3.13"
 
       - name: Clone source code
         run: |
@@ -37,8 +40,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install -r /opt/Gmeek/requirements.txt
+          uv pip install -r /opt/Gmeek/requirements.txt
 
       - name: Generate new html
         run: |
@@ -47,8 +49,8 @@ jobs:
           python Gmeek.py ${{ secrets.GITHUB_TOKEN }} ${{ github.repository }} --issue_number '${{ github.event.issue.number }}'
           cp -a /opt/Gmeek/docs ${{ github.workspace }} 
           cp -a /opt/Gmeek/backup ${{ github.workspace }} 
-          cp /opt/Gmeek/blogBase.json ${{ github.workspace }} 
-          
+          cp /opt/Gmeek/blogBase.json ${{ github.workspace }}
+
       - name: update html
         run: |
           git config --local user.email "$(jq -r ".email" config.json)"
@@ -57,15 +59,15 @@ jobs:
           git commit -a -m '🎉auto update by Gmeek action' || echo "nothing to commit"
           git push || echo "nothing to push"
           sleep 3
-          
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'docs/.'
-          
+          path: "docs/."
+
   deploy:
     name: Deploy blog
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     needs: build
     permissions:
       contents: write

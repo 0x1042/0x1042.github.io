@@ -40,7 +40,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          uv pip install -r /opt/Gmeek/requirements.txt
+          uv pip install --system -r /opt/Gmeek/requirements.txt
 
       - name: Generate new html
         run: |

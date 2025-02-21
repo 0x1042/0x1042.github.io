@@ -147,7 +147,7 @@ TEST(check, check1) {
 
   EXPECT_NE(base, 0);
   EXPECT_NE(simd, 0);
-  EXPECT_DOUBLE_EQ(base, simd);
+  EXPECT_FLOAT_EQ(base, simd);
 }
 
 TEST(check, check2) {
@@ -161,7 +161,7 @@ TEST(check, check2) {
 
   EXPECT_NE(base, 0);
   EXPECT_NE(simd, 0);
-  EXPECT_DOUBLE_EQ(base, simd);
+  EXPECT_FLOAT_EQ(base, simd);
 }
 
 int main(int argc, char **argv) {

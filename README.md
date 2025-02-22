@@ -1,6 +1,6 @@
-# Daily :link: http://gorust.us.kg 
-### :page_facing_up: [44](http://gorust.us.kg/tag.html) 
+# Daily :link: https://0x1042.github.io/ 
+### :page_facing_up: [44](https://0x1042.github.io//tag.html) 
 ### :speech_balloon: 0 
 ### :hibiscus: 150237 
-### :alarm_clock: 2025-02-21 23:24:44 
+### :alarm_clock: 2025-02-22 22:18:38 
 ### Powered by :heart: [Gmeek](https://github.com/Meekdai/Gmeek)

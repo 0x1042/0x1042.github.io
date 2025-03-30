@@ -1,5 +1,121 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Tue, 11 Mar 2025 17:44:52 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>c++ basic</title><link>https://0x1042.github.io//post/46.html</link><description># 构造函数
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sun, 30 Mar 2025 11:30:46 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>交叉编译c++</title><link>https://0x1042.github.io//post/47.html</link><description># 安装 
+
+## 安装基础依赖 
+
+```shell
+sudo apt update
+sudo apt install build-essential git curl make gcc libncurses-dev
+```
+
+## 安装编译器
+
+```
+git clone https://github.com/richfelker/musl-cross-make.git
+
+cat &lt;&lt; EOF &gt; config.mak
+GCC_VER = 11.2.0
+TARGET = mipsel-linux-musl
+OUTPUT = /opt/musl-cross
+GNU_SITE = https://mirrors.tuna.tsinghua.edu.cn/gnu/
+EOF
+```
+
+&gt; target 支持
+
+- `aarch64[_be]-linux-musl`
+- `arm[eb]-linux-musleabi[hf]`
+- `i*86-linux-musl`
+- `microblaze[el]-linux-musl`
+- `mips-linux-musl`
+- `mips[el]-linux-musl[sf]`
+- `mips64[el]-linux-musl[n32][sf]`
+- `powerpc-linux-musl[sf]`
+- `powerpc64[le]-linux-musl`
+- `riscv64-linux-musl`
+- `s390x-linux-musl`
+- `sh*[eb]-linux-musl[fdpic][sf]`
+- `x86_64-linux-musl[x32]`
+
+
+&gt; Here Document
+
+- 语法
+
+```shell
+命令 &lt;&lt; 终止符
+多行文本内容...
+终止符
+
+eg:
+
+cat &lt;&lt; EOF 
+hello
+world
+EOF 
+
+ssh user@host &lt;&lt; EOF
+ls -l
+df -h
+EOF
+
+```
+
+## 编译
+
+```shell
+make -j$(nproc)
+sudo make install
+echo 'export PATH='/opt/musl-cross/bin:$PATH'' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+```
+
+## 验证
+
+```shell
+/opt/musl-cross/bin/mipsel-linux-musl-c++ --version
+```
+
+# `with meson`
+
+## 配置
+
+```shell
+
+cat &lt;&lt; EOF &gt; mips.ini
+[constants]
+toolchain = '/opt/musl-cross'
+sysroot = toolchain + '/mipsel-linux-musl'
+
+[binaries]
+c = toolchain + '/bin/mipsel-linux-musl-cc'
+cpp = toolchain + '/bin/mipsel-linux-musl-c++'
+ar = toolchain + '/bin/mipsel-linux-musl-ar'
+strip = toolchain + '/bin/mipsel-linux-musl-strip'
+
+[properties]
+sys_root = sysroot
+debug = false
+strip = true
+
+[host_machine]
+system = 'linux'
+cpu_family = 'mips'
+cpu = 'mipsel'
+endian = 'little'
+
+EOF
+```
+
+## 编译
+
+```shell
+meson setup target -Db_lto=true -Dbuildtype=release --cross-file mips.ini -Dstrip=true
+meson compile -C target --verbose
+meson install -C target --destdir=./install
+
+```
+。</description><guid isPermaLink="true">https://0x1042.github.io//post/47.html</guid><pubDate>Sun, 30 Mar 2025 11:30:29 +0000</pubDate></item><item><title>c++ basic</title><link>https://0x1042.github.io//post/46.html</link><description># 构造函数
 
 ```c++
 Object a; // 默认构造函数

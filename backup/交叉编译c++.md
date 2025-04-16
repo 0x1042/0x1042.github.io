@@ -13,7 +13,7 @@ sudo apt install build-essential git curl make gcc libncurses-dev
 git clone https://github.com/richfelker/musl-cross-make.git
 
 cat << EOF > config.mak
-GCC_VER = 11.2.0
+GCC_VER = 14.2.0
 TARGET = mipsel-linux-musl
 OUTPUT = /opt/musl-cross
 GNU_SITE = https://mirrors.tuna.tsinghua.edu.cn/gnu/

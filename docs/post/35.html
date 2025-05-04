@@ -10,7 +10,9 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="# terminal 打开报错 
+<meta name="description" content="# vscode 
+
+## terminal 打开报错 
 
 ```
 SecCodeCheckValidity: Error Domain=NSOSStatusErrorDomain Code=-67062 '(null)' (-67062)
@@ -22,9 +24,27 @@ SecCodeCheckValidity: Error Domain=NSOSStatusErrorDomain Code=-67062 '(null)' (-
 xattr -cr  /Applications/Visual\ Studio\ Code.app
 sudo codesign --force --deep --sign - /Applications/Visual\ Studio\ Code.app
 ``` 
-。">
+
+# apt 
+
+## install warning
+
+```
+Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+```
+
+## 修复
+
+[askubuntu.com](https://askubuntu.com/questions/1398344/apt-key-deprecation-warning-when-updating-system-key-is-stored-in-legacy-trust)
+
+```
+cd /etc/apt
+sudo cp trusted.gpg trusted.gpg.d
+```。">
 <meta property="og:title" content="misc error">
-<meta property="og:description" content="# terminal 打开报错 
+<meta property="og:description" content="# vscode 
+
+## terminal 打开报错 
 
 ```
 SecCodeCheckValidity: Error Domain=NSOSStatusErrorDomain Code=-67062 '(null)' (-67062)
@@ -36,7 +56,23 @@ SecCodeCheckValidity: Error Domain=NSOSStatusErrorDomain Code=-67062 '(null)' (-
 xattr -cr  /Applications/Visual\ Studio\ Code.app
 sudo codesign --force --deep --sign - /Applications/Visual\ Studio\ Code.app
 ``` 
-。">
+
+# apt 
+
+## install warning
+
+```
+Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+```
+
+## 修复
+
+[askubuntu.com](https://askubuntu.com/questions/1398344/apt-key-deprecation-warning-when-updating-system-key-is-stored-in-legacy-trust)
+
+```
+cd /etc/apt
+sudo cp trusted.gpg trusted.gpg.d
+```。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://0x1042.github.io//post/35.html">
 <meta property="og:image" content="https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png">
@@ -107,12 +143,22 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>terminal 打开报错</h1>
+<div class="markdown-body" id="postBody"><h1>vscode</h1>
+<h2>terminal 打开报错</h2>
 <pre class="notranslate"><code class="notranslate">SecCodeCheckValidity: Error Domain=NSOSStatusErrorDomain Code=-67062 "(null)" (-67062)
 </code></pre>
 <h2>修复</h2>
 <pre class="notranslate"><code class="notranslate">xattr -cr  /Applications/Visual\ Studio\ Code.app
 sudo codesign --force --deep --sign - /Applications/Visual\ Studio\ Code.app
+</code></pre>
+<h1>apt</h1>
+<h2>install warning</h2>
+<pre class="notranslate"><code class="notranslate">Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+</code></pre>
+<h2>修复</h2>
+<p><a href="https://askubuntu.com/questions/1398344/apt-key-deprecation-warning-when-updating-system-key-is-stored-in-legacy-trust" rel="nofollow">askubuntu.com</a></p>
+<pre class="notranslate"><code class="notranslate">cd /etc/apt
+sudo cp trusted.gpg trusted.gpg.d
 </code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 

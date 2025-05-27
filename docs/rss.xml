@@ -1,5 +1,49 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sun, 04 May 2025 13:23:56 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>交叉编译c++</title><link>https://0x1042.github.io//post/47.html</link><description># 安装 
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Tue, 27 May 2025 18:01:59 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>trait</title><link>https://0x1042.github.io//post/48.html</link><description>
+# trait
+
+## 定义
+
+- 是一个&lt;ins&gt;**类模板**&lt;/ins&gt;,通常是&lt;ins&gt;**struct**&lt;/ins&gt;
+- 用于在&lt;ins&gt;**编译时获取或者查询某个类型T的信息或者属性**&lt;/ins&gt;
+- 不包含运行时数据,通常通过&lt;ins&gt;**static constexpr 成员**&lt;/ins&gt;或者&lt;ins&gt;**嵌套类型别名(using type = ...)**&lt;/ins&gt;
+
+
+## 功能
+
+- 类型信息查询. 比如&lt;ins&gt;**`std::is_integral&lt;T&gt;`**&lt;/ins&gt; 查询`T`是否是整形
+- 类型转换/关联. 比如&lt;ins&gt;**`std::remove_pointer&lt;T*&gt;::type`**&lt;/ins&gt; 移除`T`的指针属性
+- 条件编译. 与 &lt;ins&gt;**std::enable_if 或 if constexpr**&lt;/ins&gt; 结合,根据类型特性选择不同的代码路径
+
+## 原理
+
+- 主模板 (Primary Template): &lt;ins&gt;**定义通用的情况或默认值**&lt;/ins&gt;
+- 模板特化 (Template Specialization): 为&lt;ins&gt;**特定类型或满足特定条件的类型提供特定的信息**&lt;/ins&gt;
+
+
+## 🌰
+
+```c++
+
+// step 1
+// 主模板 定义通用情况
+template &lt;typename T&gt;
+struct is_my_void {
+  static constexpr bool value = false;
+};
+
+// step 2
+// 特化模板 定义特例情况
+template &lt;&gt; struct
+is_my_void&lt;void&gt; {
+  static constexpr bool value = true;
+};
+
+// step3 可选 定义辅助变量
+template &lt;typename T&gt;
+inline constexpr bool is_my_void_v = is_my_void&lt;T&gt;::value;
+```
+。</description><guid isPermaLink="true">https://0x1042.github.io//post/48.html</guid><pubDate>Tue, 27 May 2025 18:01:43 +0000</pubDate></item><item><title>交叉编译c++</title><link>https://0x1042.github.io//post/47.html</link><description># 安装 
 
 ## 安装基础依赖 
 

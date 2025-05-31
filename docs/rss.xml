@@ -1,5 +1,44 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Tue, 27 May 2025 18:01:59 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>trait</title><link>https://0x1042.github.io//post/48.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sat, 31 May 2025 10:59:14 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>value</title><link>https://0x1042.github.io//post/49.html</link><description># value
+
+## 分类
+
+```mermaid
+graph LR
+    A[expression] --&gt; B[glvalue]
+    A[expression] --&gt; C[rvalue]
+    B --&gt; D[lvalue]
+    B --&gt; E[xvalue]
+    C --&gt; E[xvalue]
+    C --&gt; F[prvalue]
+```
+
+- glvalue = lvalue + xvalue , 有identity, 可以被取地址
+- rvalue = xvalue + prvalue , 可以移动
+
+## 如何区分
+
+&gt; [!Tip]
+&gt; 1. 有名字(`identity`)的都是左值, 即便是右值引用 变量本身,当它被用作表达式时,也是左值
+&gt; 2. 可以被取地址的,都是左值
+&gt; 3. &lt;ins&gt;**字符串字面量是左值**&lt;/ins&gt;,&lt;ins&gt;**其他字面量(42/MyClass{})是右值**&lt;/ins&gt;
+&gt; 4. `std::move(arg) `的结果是 `xvalue`
+&gt; 5. 临时对象 `MyClass()` 是 `prvalue`
+
+
+## 函数返回值
+
+1. &lt;ins&gt;**返回左值引用 (T&amp; func())：结果是 lvalue.**&lt;/ins&gt;
+2. &lt;ins&gt;**返回右值引用 (T&amp;&amp; func())：结果是 xvalue.**&lt;/ins&gt;
+3. &lt;ins&gt;**返回非引用类型/值类型 (T func())：结果是 prvalue.**&lt;/ins&gt;
+
+
+## 字符串字面量
+
+&gt; [!IMPORTANT]
+&gt; `'hello world'` 是左值
+
+- 字符串字面量在程序编译后，会被存储在内存的特定区域（通常是只读数据段）。</description><guid isPermaLink="true">https://0x1042.github.io//post/49.html</guid><pubDate>Sat, 31 May 2025 10:58:58 +0000</pubDate></item><item><title>trait</title><link>https://0x1042.github.io//post/48.html</link><description>
 # trait
 
 ## 定义

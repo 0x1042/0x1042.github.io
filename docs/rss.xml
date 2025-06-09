@@ -1,5 +1,279 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sat, 31 May 2025 15:44:38 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>decltype &amp;&amp; declval</title><link>https://0x1042.github.io//post/50.html</link><description>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Mon, 09 Jun 2025 17:53:15 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>iterator</title><link>https://0x1042.github.io//post/51.html</link><description># 迭代器
+
+## 原理
+
+&lt;ins&gt;**当编译器看到 `for (auto&amp; element : container)` 时，它会大致将其转换为如下的等价代码:**&lt;/ins&gt;
+
+```C++
+auto&amp;&amp; __range = container; // 获取容器引用
+auto __begin = std::begin(__range); // 获取起始迭代器
+auto __end = std::end(__range);     // 获取结束迭代器
+for (; __begin != __end; ++__begin) { // 循环直到结束
+    auto&amp; element = *__begin;        // 解引用迭代器获取元素
+    // ... 循环体 ...
+}
+```
+
+## 分类 
+
+```mermaid
+graph LR
+    A[type] --&gt; B[容器的封装类型]
+    A[type] --&gt; C[variant]
+    A[type] --&gt; D[普通类型]
+```
+
+## 容器的封装类型
+
+&gt; [!IMPORTANT]
+&gt; &lt;ins&gt;**实现`begin/end` 等函数即可**&lt;/ins&gt;
+
+
+```c++
+class VecWrap {
+public:
+    VecWrap(std::initializer_list&lt;int64_t&gt; list)
+        : data_(list) {}
+
+    auto begin() -&gt; std::vector&lt;int64_t&gt;::iterator { return data_.begin(); }
+
+    auto end() -&gt; std::vector&lt;int64_t&gt;::iterator { return data_.end(); }
+
+    [[nodiscard]] auto begin() const -&gt; std::vector&lt;int64_t&gt;::const_iterator { return data_.begin(); }
+
+    [[nodiscard]] auto end() const -&gt; std::vector&lt;int64_t&gt;::const_iterator { return data_.end(); }
+
+    [[nodiscard]] auto size() const -&gt; size_t { return data_.size(); }
+
+    [[nodiscard]] auto empty() const -&gt; bool { return data_.empty(); }
+
+private:
+    std::vector&lt;int64_t&gt; data_;
+};
+```
+
+## `variant`
+
+```C++
+struct Items {
+    using ItemVec = std::variant&lt;
+        std::monostate,
+        std::vector&lt;Item1Ptr&gt;,
+        std::vector&lt;Item2Ptr&gt;,
+        std::vector&lt;Item3Ptr&gt;,
+        std::vector&lt;Item4Ptr&gt;&gt;;
+
+    ItemVec vec_;
+};
+
+void Items::range() {
+    std::visit(
+        [&amp;](const auto&amp; vec) {
+            using VectorType = std::decay_t&lt;decltype(vec)&gt;;
+
+            if constexpr (std::is_same_v&lt;std::vector&lt;Item1Ptr&gt;, VectorType&gt;)
+            {
+                LOG(INFO) &lt;&lt; 'Content of vector&lt;A&gt;:' &lt;&lt; std::endl;
+                for (const Item1Ptr&amp; item : vec)
+                {
+                    LOG(INFO) &lt;&lt; 'is a. ' &lt;&lt; item-&gt;ida &lt;&lt; ' ' &lt;&lt; item-&gt;namea;
+                }
+            } else if constexpr (std::is_same_v&lt;std::vector&lt;Item2Ptr&gt;, VectorType&gt;)
+            {
+                LOG(INFO) &lt;&lt; 'Content of vector&lt;A&gt;:' &lt;&lt; std::endl;
+                for (const Item2Ptr&amp; item : vec)
+                {
+                    LOG(INFO) &lt;&lt; 'is b. ' &lt;&lt; item-&gt;idb &lt;&lt; ' ' &lt;&lt; item-&gt;nameb;
+                }
+            } else if constexpr (std::is_same_v&lt;std::vector&lt;Item3Ptr&gt;, VectorType&gt;)
+            {
+                LOG(INFO) &lt;&lt; 'Content of vector&lt;A&gt;:' &lt;&lt; std::endl;
+                for (const Item3Ptr&amp; item : vec)
+                {
+                    LOG(INFO) &lt;&lt; 'is c. ' &lt;&lt; item-&gt;idc &lt;&lt; ' ' &lt;&lt; item-&gt;namec;
+                }
+            } else if constexpr (std::is_same_v&lt;std::vector&lt;Item4Ptr&gt;, VectorType&gt;)
+            {
+                LOG(INFO) &lt;&lt; 'Content of vector&lt;A&gt;:' &lt;&lt; std::endl;
+                for (const Item4Ptr&amp; item : vec)
+                {
+                    LOG(INFO) &lt;&lt; 'is d. ' &lt;&lt; item-&gt;idd &lt;&lt; ' ' &lt;&lt; item-&gt;named;
+                }
+            }
+        },
+        vec_);
+}
+```
+
+## 普通类型
+
+&gt; [!IMPORTANT]
+&gt; &lt;ins&gt;**实现 容器类 (Container Class)：负责存储数据和状态**&lt;/ins&gt;
+&gt; &lt;ins&gt;**迭代器类 (Iterator Class)：一个独立的类（通常作为容器的嵌套类），它知道如何在容器中导航（移动到下一个元素）并访问当前元素**&lt;/ins&gt;
+
+### step1
+&gt; [!IMPORTANT]
+&gt; &lt;ins&gt;**定义容器和迭代器的基本结构**&lt;/ins&gt;
+
+```C++
+template &lt;typename T, size_t N&gt;
+class FixedArray {
+private:
+    T data_[N];
+    size_t size_;
+
+public:
+    FixedArray()
+        : size_(0) {}
+
+    // 内部迭代器类
+    class iterator {
+    public:
+        using iterator_category = std::random_access_iterator_tag; // 1. 类别：这是最强大的，支持随机访问
+        using value_type = T; // 2. 所指元素的类型
+        using difference_type = std::ptrdiff_t; // 3. 两个迭代器相减的结果类型
+        using pointer = T*; // 4. 指向元素的指针类型
+        using reference = T&amp;; // 5. 解引用返回的引用类型
+    };
+};
+```
+
+### step2
+&gt; [!IMPORTANT]
+&gt; &lt;ins&gt;**实现迭代器类 (iterator)**&lt;/ins&gt;
+
+```C++
+    class iterator {
+    public:
+        using iterator_category = std::random_access_iterator_tag; // 1. 类别：这是最强大的，支持随机访问
+        using value_type = T; // 2. 所指元素的类型
+        using difference_type = std::ptrdiff_t; // 3. 两个迭代器相减的结果类型
+        using pointer = T*; // 4. 指向元素的指针类型
+        using reference = T&amp;; // 5. 解引用返回的引用类型
+
+    public:
+        explicit iterator(pointer ptr)
+            : ptr_(ptr) {}
+
+        // --- 核心操作符 ---
+        // 1. 解引用 (Dereference) -&gt; 获取元素
+        auto operator*() const -&gt; reference { return *ptr_; }
+        auto operator-&gt;() const -&gt; pointer { return ptr_; }
+
+
+        // 2. 前置递增 (Prefix Increment) -&gt; 移动到下一个
+        auto operator++() -&gt; iterator&amp; {
+            ++ptr_;
+            return *this;
+        }
+        // 后置递增 (Postfix Increment)
+        auto operator++(int) -&gt; iterator {
+            iterator temp = *this;
+            ++(*this);
+            return temp;
+        }
+
+
+        // 3. 比较 (Comparison) -&gt; for循环的终止条件
+        auto operator==(const iterator&amp; other) const -&gt; bool { return ptr_ == other.ptr_; }
+        auto operator!=(const iterator&amp; other) const -&gt; bool { return ptr_ != other.ptr_; }
+
+        // --- (可选) 为 random_access_iterator_tag 提供更多操作符 ---
+        auto operator--() -&gt; iterator&amp; {
+            --ptr_;
+            return *this;
+        }
+        auto operator--(int) -&gt; iterator {
+            iterator temp = *this;
+            --(*this);
+            return temp;
+        }
+        auto operator+=(difference_type offset) -&gt; iterator&amp; {
+            ptr_ += offset;
+            return *this;
+        }
+        auto operator+(difference_type offset) const -&gt; iterator {
+            iterator temp = *this;
+            temp += offset;
+            return temp;
+        }
+        auto operator-=(difference_type offset) -&gt; iterator&amp; {
+            ptr_ -= offset;
+            return *this;
+        }
+        auto operator-(difference_type offset) const -&gt; iterator {
+            iterator temp = *this;
+            temp -= offset;
+            return temp;
+        }
+        auto operator-(const iterator&amp; other) const -&gt; difference_type { return ptr_ - other.ptr_; }
+        auto operator[](difference_type offset) const -&gt; reference { return ptr_[offset]; }
+        auto operator&lt;(const iterator&amp; other) const -&gt; bool { return ptr_ &lt; other.ptr_; }
+
+    private:
+        pointer ptr_;
+    };
+```
+
+### step3 
+
+&gt; [!IMPORTANT]
+&gt; &lt;ins&gt;**在容器中实现 begin() 和 end()**&lt;/ins&gt;
+
+```C++
+public:
+    iterator begin() {
+        return iterator(data_); // 创建一个指向数组头部的迭代器
+    }
+
+    iterator end() {
+        return iterator(data_ + N); // 创建一个指向数组末尾之后一个位置的迭代器
+    }
+```
+
+### step4 
+&gt; [!IMPORTANT]
+&gt; &lt;ins&gt;**const 正确性 - 实现 const_iterator**&lt;/ins&gt;
+
+```C++
+public:
+    // (接在 iterator 类定义之后)
+    class const_iterator {
+        // 实现与 iterator 类似, 但所有返回的引用和指针都是 const
+    public:
+        using iterator_category = std::random_access_iterator_tag;
+        using value_type        = T;
+        using difference_type   = std::ptrdiff_t;
+        using pointer           = const T*; // 注意这里是 const
+        using reference         = const T&amp;; // 注意这里是 const
+
+    private:
+        pointer ptr_;
+
+    public:
+        explicit const_iterator(pointer ptr) : ptr_(ptr) {}
+
+        reference operator*() const { return *ptr_; }
+        const_iterator&amp; operator++() { ++ptr_; return *this; }
+        bool operator!=(const const_iterator&amp; other) const { return ptr_ != other.ptr_; }
+    };
+
+
+    // --- 非 const 版本，返回可修改的迭代器 ---
+    iterator begin() { return iterator(data_); }
+    iterator end()   { return iterator(data_ + N); }
+
+    // --- const 版本，返回只读的迭代器 ---
+    const_iterator begin() const { return const_iterator(data_); }
+    const_iterator end() const   { return const_iterator(data_ + N); }
+
+    // --- 显式的 const 版本 (最佳实践) ---
+    const_iterator cbegin() const { return const_iterator(data_); }
+    const_iterator cend() const   { return const_iterator(data_ + N); 
+}
+```
+。</description><guid isPermaLink="true">https://0x1042.github.io//post/51.html</guid><pubDate>Mon, 09 Jun 2025 17:52:57 +0000</pubDate></item><item><title>decltype &amp;&amp; declval</title><link>https://0x1042.github.io//post/50.html</link><description>
 # decltype 
 
 &lt;ins&gt;**decltype是一个关键字,而不是函数,用于在编译期推断一个表达式的类型,不会实际计算表达式的值**&lt;/ins&gt;

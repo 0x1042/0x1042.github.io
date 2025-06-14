@@ -1,5 +1,64 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Mon, 09 Jun 2025 17:53:15 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>iterator</title><link>https://0x1042.github.io//post/51.html</link><description># 迭代器
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sat, 14 Jun 2025 06:48:28 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>async</title><link>https://0x1042.github.io//post/52.html</link><description># 异步
+
+## 线程
+
+同步的实现
+
+```C++
+auto get(const std::string &amp;url) -&gt; std::string {
+  ScopedTimer timer(__PRETTY_FUNCTION__);
+  cpr::Response rsp = cpr::Get(cpr::Url{url});
+  return rsp.text;
+}
+```
+
+### `std::async`
+
+```C++
+auto get_async(const std::string &amp;url) -&gt; std::future&lt;std::string&gt; {
+  return std::async(std::launch::async, get, url);
+}
+
+TEST(get, get2) {
+  const std::string url = 'https://www.bilibili.com';
+  auto &amp;&amp;rsp = get_async(url);
+  LOG(INFO) &lt;&lt; 'get async start ';
+  const auto &amp;content = rsp.get();
+  LOG(INFO) &lt;&lt; 'content is ' &lt;&lt; content;
+}
+```
+
+### `std::packaged_task`
+
+&gt; [!Tip]
+&gt; &lt;ins&gt;**1. packaged_task 参数是一个无参的可调用对象**&lt;/ins&gt;
+&gt; &lt;ins&gt;**2. 在任务被执行前，先获取它的 future**&lt;/ins&gt;
+&gt; &lt;ins&gt;**3. 将任务提交到线程池**&lt;/ins&gt;
+
+```c++
+auto get_async2(const std::string &amp;url) -&gt; std::future&lt;std::string&gt; {
+  auto fn = [url]() { return get(url); };
+
+  std::packaged_task&lt;std::string()&gt; task(std::move(fn));
+  std::future&lt;std::string&gt; future = task.get_future();
+  thread_pool()-&gt;add([t = std::move(task)]() mutable { t(); });
+
+  return future;
+}
+```
+
+### `folly::via`
+
+```C++
+auto get_async3(const std::string &amp;url) -&gt; folly::Future&lt;std::string&gt; {
+  return folly::via(thread_pool().get(), [url]() { return get(url); });
+}
+```
+
+## 协程
+
+&gt; todo。</description><guid isPermaLink="true">https://0x1042.github.io//post/52.html</guid><pubDate>Sat, 14 Jun 2025 06:48:12 +0000</pubDate></item><item><title>iterator</title><link>https://0x1042.github.io//post/51.html</link><description># 迭代器
 
 ## 原理
 

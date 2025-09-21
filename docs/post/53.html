@@ -10,13 +10,15 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="# 连接到GPU实例
+<meta name="description" content="# 环境搭建 
+
+## 连接到GPU实例
 
 > change runtime type -> GPU
 
 <img width='1098' height='992' alt='Image' src='https://github.com/user-attachments/assets/d4ad2c85-d936-496d-bbe4-fcfef1c7ee2e' />
 
-# 检查状态 
+## 检查状态 
 
 ```python
 !nvcc --version
@@ -51,14 +53,14 @@ Sun Sep 21 07:02:16 2025
 +-----------------------------------------------------------------------------------------+
 ```
 
-# 安装插件 
+## 安装插件 
 
 ```python
 !pip install nvcc4jupyter
 %load_ext nvcc4jupyter
 ```
 
-# 修复版本 
+## 修复版本 
 
 from [learning-cuda-on-a-budget-on-google](https://leetarxiv.substack.com/p/learning-cuda-on-a-budget-on-google)
 
@@ -92,15 +94,70 @@ int main() {
 <img width='2190' height='962' alt='Image' src='https://github.com/user-attachments/assets/7e5977be-514c-46df-a8fc-98587725b3d5' />
 
 
-。">
+# 基本术语
+
+
+## 函数修饰符
+
+| 修饰符                | 含义                                    | 备注                                                     |
+| --------------------- | --------------------------------------- | -------------------------------------------------------- |
+| `__global__`          | 标记核函数                              | 在`host`(CPU) 端调用，由`device`（GPU）端执行            |
+| `__device__`          | 标记设备函数                            | 只能在 GPU 上调用和执行，不能从 CPU 端直接调用           |
+| `__host__`            | 标记主机函数，在CPU上执行（默认修饰符） | 只能在 CPU 上调用和执行（实际上 C++ 普通函数默认就host） |
+| `__host__ __device__` |                                         | 可以同时在CPU和GPU上编译执行                             |
+
+## 变量修饰符
+
+| 修饰符         | 含义                                |
+| -------------- | ----------------------------------- |
+| `__shared__`   | 声明共享内存变量，`block`内线程共享 |
+| `__constant__` | 声明常量内存变量，只读且有缓存      |
+| `__device__`   | 声明全局设备变量                    |
+
+
+## 执行模型
+
+| 概念     | 含义                                                                         |
+| -------- | ---------------------------------------------------------------------------- |
+| `Kernel` | 在GPU上并行执行的函数，类似于CPU的函数但会被数千个线程同时执行               |
+| `Grid`   | block 的集合，一个 kernel 启动时会指定一个 grid，grid 内包含多个 block       |
+| `Block`  | 线程的集合，一个 kernel 的执行可以分为多个 block，每个 block 内有多个 thread |
+| `Thread` | GPU 的最小执行单元，每个 kernel 启动后会并行运行许多线程                     |
+
+
+## 内存层级 
+
+## 内置变量 
+
+
+| 概念              | 含义                    |
+| ----------------- | ----------------------- |
+| `threadIdx.x/y/z` | 当前线程在block中的索引 |
+| `blockIdx.x/y/z`  | 当前block在grid中的索引 |
+| `blockDim.x/y/z`  | block的维度大小         |
+| `gridDim.x/y/z`   | grid的维度大小          |
+
+
+
+# 语法
+
+```
+<<<Dg, Db, Ns, S>>>(args)
+- Dg. Grid维度 
+- Db. Block维度
+- Ns. 动态共享内存大小
+- S. Stream，用于异步执行
+```。">
 <meta property="og:title" content="google colab cuda 编程">
-<meta property="og:description" content="# 连接到GPU实例
+<meta property="og:description" content="# 环境搭建 
+
+## 连接到GPU实例
 
 > change runtime type -> GPU
 
 <img width='1098' height='992' alt='Image' src='https://github.com/user-attachments/assets/d4ad2c85-d936-496d-bbe4-fcfef1c7ee2e' />
 
-# 检查状态 
+## 检查状态 
 
 ```python
 !nvcc --version
@@ -135,14 +192,14 @@ Sun Sep 21 07:02:16 2025
 +-----------------------------------------------------------------------------------------+
 ```
 
-# 安装插件 
+## 安装插件 
 
 ```python
 !pip install nvcc4jupyter
 %load_ext nvcc4jupyter
 ```
 
-# 修复版本 
+## 修复版本 
 
 from [learning-cuda-on-a-budget-on-google](https://leetarxiv.substack.com/p/learning-cuda-on-a-budget-on-google)
 
@@ -176,7 +233,60 @@ int main() {
 <img width='2190' height='962' alt='Image' src='https://github.com/user-attachments/assets/7e5977be-514c-46df-a8fc-98587725b3d5' />
 
 
-。">
+# 基本术语
+
+
+## 函数修饰符
+
+| 修饰符                | 含义                                    | 备注                                                     |
+| --------------------- | --------------------------------------- | -------------------------------------------------------- |
+| `__global__`          | 标记核函数                              | 在`host`(CPU) 端调用，由`device`（GPU）端执行            |
+| `__device__`          | 标记设备函数                            | 只能在 GPU 上调用和执行，不能从 CPU 端直接调用           |
+| `__host__`            | 标记主机函数，在CPU上执行（默认修饰符） | 只能在 CPU 上调用和执行（实际上 C++ 普通函数默认就host） |
+| `__host__ __device__` |                                         | 可以同时在CPU和GPU上编译执行                             |
+
+## 变量修饰符
+
+| 修饰符         | 含义                                |
+| -------------- | ----------------------------------- |
+| `__shared__`   | 声明共享内存变量，`block`内线程共享 |
+| `__constant__` | 声明常量内存变量，只读且有缓存      |
+| `__device__`   | 声明全局设备变量                    |
+
+
+## 执行模型
+
+| 概念     | 含义                                                                         |
+| -------- | ---------------------------------------------------------------------------- |
+| `Kernel` | 在GPU上并行执行的函数，类似于CPU的函数但会被数千个线程同时执行               |
+| `Grid`   | block 的集合，一个 kernel 启动时会指定一个 grid，grid 内包含多个 block       |
+| `Block`  | 线程的集合，一个 kernel 的执行可以分为多个 block，每个 block 内有多个 thread |
+| `Thread` | GPU 的最小执行单元，每个 kernel 启动后会并行运行许多线程                     |
+
+
+## 内存层级 
+
+## 内置变量 
+
+
+| 概念              | 含义                    |
+| ----------------- | ----------------------- |
+| `threadIdx.x/y/z` | 当前线程在block中的索引 |
+| `blockIdx.x/y/z`  | 当前block在grid中的索引 |
+| `blockDim.x/y/z`  | block的维度大小         |
+| `gridDim.x/y/z`   | grid的维度大小          |
+
+
+
+# 语法
+
+```
+<<<Dg, Db, Ns, S>>>(args)
+- Dg. Grid维度 
+- Db. Block维度
+- Ns. 动态共享内存大小
+- S. Stream，用于异步执行
+```。">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://0x1042.github.io//post/53.html">
 <meta property="og:image" content="https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png">
@@ -247,12 +357,13 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>连接到GPU实例</h1>
+<div class="markdown-body" id="postBody"><h1>环境搭建</h1>
+<h2>连接到GPU实例</h2>
 <blockquote>
 <p>change runtime type -&gt; GPU</p>
 </blockquote>
 <p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/d4ad2c85-d936-496d-bbe4-fcfef1c7ee2e"><img width="1098" height="992" alt="Image" src="https://github.com/user-attachments/assets/d4ad2c85-d936-496d-bbe4-fcfef1c7ee2e" style="max-width: 100%; height: auto; max-height: 992px;"></a></p>
-<h1>检查状态</h1>
+<h2>检查状态</h2>
 <div class="highlight highlight-source-python"><pre class="notranslate">!n<span class="pl-s1">vcc</span> <span class="pl-c1">-</span><span class="pl-c1">-</span><span class="pl-s1">version</span>
 !n<span class="pl-s1">vidia</span><span class="pl-c1">-</span><span class="pl-s1">smi</span></pre></div>
 <pre class="notranslate"><code class="notranslate">nvcc: NVIDIA (R) Cuda compiler driver
@@ -281,10 +392,10 @@ Sun Sep 21 07:02:16 2025
 |  No running processes found                                                             |
 +-----------------------------------------------------------------------------------------+
 </code></pre>
-<h1>安装插件</h1>
+<h2>安装插件</h2>
 <div class="highlight highlight-source-python"><pre class="notranslate">!p<span class="pl-s1">ip</span> <span class="pl-s1">install</span> <span class="pl-s1">nvcc4jupyter</span>
 <span class="pl-c1">%</span><span class="pl-s1">load_ext</span> <span class="pl-s1">nvcc4jupyter</span></pre></div>
-<h1>修复版本</h1>
+<h2>修复版本</h2>
 <p>from <a href="https://leetarxiv.substack.com/p/learning-cuda-on-a-budget-on-google" rel="nofollow">learning-cuda-on-a-budget-on-google</a></p>
 <pre class="notranslate"><code class="notranslate">%%cuda -c "-I /does/not/exist -arch sm_75"
 </code></pre>
@@ -307,7 +418,125 @@ Sun Sep 21 07:02:16 2025
   }
   <span class="pl-k">return</span> <span class="pl-c1">0</span>;
 }</pre></div>
-<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/7e5977be-514c-46df-a8fc-98587725b3d5"><img width="2000" height="962" alt="Image" src="https://github.com/user-attachments/assets/7e5977be-514c-46df-a8fc-98587725b3d5" style="max-width: 100%; height: auto; max-height: 962px;"></a></p></div>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/7e5977be-514c-46df-a8fc-98587725b3d5"><img width="2000" height="962" alt="Image" src="https://github.com/user-attachments/assets/7e5977be-514c-46df-a8fc-98587725b3d5" style="max-width: 100%; height: auto; max-height: 962px;"></a></p>
+<h1>基本术语</h1>
+<h2>函数修饰符</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>修饰符</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">__global__</code></td>
+<td>标记核函数</td>
+<td>在<code class="notranslate">host</code>(CPU) 端调用，由<code class="notranslate">device</code>（GPU）端执行</td>
+</tr>
+<tr>
+<td><code class="notranslate">__device__</code></td>
+<td>标记设备函数</td>
+<td>只能在 GPU 上调用和执行，不能从 CPU 端直接调用</td>
+</tr>
+<tr>
+<td><code class="notranslate">__host__</code></td>
+<td>标记主机函数，在CPU上执行（默认修饰符）</td>
+<td>只能在 CPU 上调用和执行（实际上 C++ 普通函数默认就host）</td>
+</tr>
+<tr>
+<td><code class="notranslate">__host__ __device__</code></td>
+<td></td>
+<td>可以同时在CPU和GPU上编译执行</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>变量修饰符</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>修饰符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">__shared__</code></td>
+<td>声明共享内存变量，<code class="notranslate">block</code>内线程共享</td>
+</tr>
+<tr>
+<td><code class="notranslate">__constant__</code></td>
+<td>声明常量内存变量，只读且有缓存</td>
+</tr>
+<tr>
+<td><code class="notranslate">__device__</code></td>
+<td>声明全局设备变量</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>执行模型</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>概念</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">Kernel</code></td>
+<td>在GPU上并行执行的函数，类似于CPU的函数但会被数千个线程同时执行</td>
+</tr>
+<tr>
+<td><code class="notranslate">Grid</code></td>
+<td>block 的集合，一个 kernel 启动时会指定一个 grid，grid 内包含多个 block</td>
+</tr>
+<tr>
+<td><code class="notranslate">Block</code></td>
+<td>线程的集合，一个 kernel 的执行可以分为多个 block，每个 block 内有多个 thread</td>
+</tr>
+<tr>
+<td><code class="notranslate">Thread</code></td>
+<td>GPU 的最小执行单元，每个 kernel 启动后会并行运行许多线程</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>内存层级</h2>
+<h2>内置变量</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>概念</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">threadIdx.x/y/z</code></td>
+<td>当前线程在block中的索引</td>
+</tr>
+<tr>
+<td><code class="notranslate">blockIdx.x/y/z</code></td>
+<td>当前block在grid中的索引</td>
+</tr>
+<tr>
+<td><code class="notranslate">blockDim.x/y/z</code></td>
+<td>block的维度大小</td>
+</tr>
+<tr>
+<td><code class="notranslate">gridDim.x/y/z</code></td>
+<td>grid的维度大小</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h1>语法</h1>
+<pre class="notranslate"><code class="notranslate">&lt;&lt;&lt;Dg, Db, Ns, S&gt;&gt;&gt;(args)
+- Dg. Grid维度 
+- Db. Block维度
+- Ns. 动态共享内存大小
+- S. Stream，用于异步执行
+</code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

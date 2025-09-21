@@ -1,5 +1,87 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sat, 14 Jun 2025 06:48:28 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>async</title><link>https://0x1042.github.io//post/52.html</link><description># 异步
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sun, 21 Sep 2025 07:15:38 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>google colab cuda 编程</title><link>https://0x1042.github.io//post/53.html</link><description># 连接到GPU实例
+
+&gt; change runtime type -&gt; GPU
+
+&lt;img width='1098' height='992' alt='Image' src='https://github.com/user-attachments/assets/d4ad2c85-d936-496d-bbe4-fcfef1c7ee2e' /&gt;
+
+# 检查状态 
+
+```python
+!nvcc --version
+!nvidia-smi
+```
+
+```
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2024 NVIDIA Corporation
+Built on Thu_Jun__6_02:18:23_PDT_2024
+Cuda compilation tools, release 12.5, V12.5.82
+Build cuda_12.5.r12.5/compiler.34385749_0
+Sun Sep 21 07:02:16 2025       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.54.15              Driver Version: 550.54.15      CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla T4                       Off |   00000000:00:04.0 Off |                    0 |
+| N/A   60C    P8             10W /   70W |       0MiB /  15360MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+```
+
+# 安装插件 
+
+```python
+!pip install nvcc4jupyter
+%load_ext nvcc4jupyter
+```
+
+# 修复版本 
+
+from [learning-cuda-on-a-budget-on-google](https://leetarxiv.substack.com/p/learning-cuda-on-a-budget-on-google)
+
+```
+%%cuda -c '-I /does/not/exist -arch sm_75'
+```
+
+# hello world
+
+```cuda
+%%cuda -c '-I /does/not/exist -arch sm_75'
+#include &lt;stdio.h&gt;
+
+// This is a special function that runs on the GPU (device) instead of the CPU (host)
+__global__ void kernel() {
+  printf('Hello world!\n');
+}
+
+int main() {
+  // Invoke the kernel function on the GPU with one block of one thread
+  kernel&lt;&lt;&lt;1,1&gt;&gt;&gt;();
+
+  // Check for error codes (remember to do this for _every_ CUDA function)
+  if(cudaDeviceSynchronize() != cudaSuccess) {
+    fprintf(stderr, 'CUDA Error: %s\n', cudaGetErrorString(cudaPeekAtLastError()));
+  }
+  return 0;
+}
+```
+
+&lt;img width='2190' height='962' alt='Image' src='https://github.com/user-attachments/assets/7e5977be-514c-46df-a8fc-98587725b3d5' /&gt;
+
+
+。</description><guid isPermaLink="true">https://0x1042.github.io//post/53.html</guid><pubDate>Sun, 21 Sep 2025 07:15:22 +0000</pubDate></item><item><title>async</title><link>https://0x1042.github.io//post/52.html</link><description># 异步
 
 ## 线程
 

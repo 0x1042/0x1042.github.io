@@ -1,5 +1,65 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sun, 21 Sep 2025 07:52:41 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>google colab cuda 编程</title><link>https://0x1042.github.io//post/53.html</link><description># 环境搭建 
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sat, 27 Sep 2025 09:37:53 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>bazel 基本使用</title><link>https://0x1042.github.io//post/54.html</link><description># bazel samples
+
+## `use protobuf`
+
+- `MODULE.bazel`
+
+```bazel{highlight=1 .line-numbers}
+bazel_dep(name = 'protobuf', version = '32.1')
+bazel_dep(name = 'rules_proto', version = '7.1.0')
+```
+
+- `app/BUILD.bazel`
+
+```bazel{highlight=1 .line-numbers}
+load('@protobuf//bazel:cc_proto_library.bzl', 'cc_proto_library')
+load('@rules_cc//cc:defs.bzl', 'cc_binary', 'cc_library')
+load('@rules_proto//proto:defs.bzl', 'proto_library')
+
+proto_library(
+    name = 'graph_proto',
+    srcs = [
+        'idls/graph.proto',
+    ],
+    visibility = ['//visibility:public'],
+)
+
+cc_proto_library(
+    name = 'graph_cc_proto',
+    visibility = ['//visibility:public'],
+    deps = [':graph_proto'],
+)
+```
+
+## `replace malloc`
+
+```starlark{highlight=1 .line-numbers}
+bazel_dep(name = 'mimalloc', version = '2.2.4')
+
+cc_binary(
+    name = 'unittest2',
+    srcs = [
+        'main.cc',
+    ],
+    copts = DEFAULT_COPTS,
+    linkopts = DEFAULT_LINKOPTS,
+    malloc = '@mimalloc',
+    deps = [
+        '@mimalloc//:mimalloc-api'
+    ],
+)
+```
+
+```CPP{highlight=1 .line-numbers}
+#include &lt;mimalloc.h&gt;
+
+auto main(int argc, char ** argv) -&gt; int {
+    LOG(INFO) &lt;&lt; 'mimalloc version ' &lt;&lt; mi_version();
+    return RUN_ALL_TESTS();
+}
+```
+。</description><guid isPermaLink="true">https://0x1042.github.io//post/54.html</guid><pubDate>Sat, 27 Sep 2025 09:37:32 +0000</pubDate></item><item><title>google colab cuda 编程</title><link>https://0x1042.github.io//post/53.html</link><description># 环境搭建 
 
 ## 连接到GPU实例
 

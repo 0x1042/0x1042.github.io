@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sat, 27 Sep 2025 09:37:53 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>bazel 基本使用</title><link>https://0x1042.github.io//post/54.html</link><description># bazel samples
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sat, 27 Sep 2025 09:46:39 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>bazel 基本使用</title><link>https://0x1042.github.io//post/54.html</link><description># bazel samples
 
 ## `use protobuf`
 
@@ -59,6 +59,53 @@ auto main(int argc, char ** argv) -&gt; int {
     return RUN_ALL_TESTS();
 }
 ```
+
+## `asan`
+
+```
+# .bazelrc
+# Address Sanitizer
+build:asan --strip=never
+build:asan --copt=-fsanitize=address
+build:asan --copt=-fno-omit-frame-pointer
+build:asan --copt=-fno-optimize-sibling-calls
+build:asan --copt=-g
+build:asan --copt=-O0
+build:asan --linkopt=-fsanitize=address
+
+# Undefined Behavior Sanitizer
+build:ubsan --copt=-fsanitize=undefined
+build:ubsan --copt=-fsanitize-trap=undefined
+build:ubsan --copt=-O0
+build:ubsan --copt=-fno-omit-frame-pointer
+build:ubsan --copt=-fno-optimize-sibling-calls
+build:ubsan --copt=-g
+build:ubsan --linkopt=-fsanitize=undefined
+
+# Thread Sanitizer
+build:tsan --copt=-fsanitize=thread
+build:tsan --copt=-fno-omit-frame-pointer
+build:tsan --copt=-fno-optimize-sibling-calls
+build:tsan --copt=-g
+build:tsan --copt=-O1
+build:tsan --linkopt=-fsanitize=thread
+
+# Leak Sanitizer
+build:lsan --copt=-fsanitize=leak
+build:lsan --copt=-fno-omit-frame-pointer
+build:lsan --copt=-fno-optimize-sibling-calls
+build:lsan --copt=-g
+build:lsan --linkopt=-fsanitize=leak
+
+# Memory Sanitizer (仅 clang)
+build:msan --copt=-fsanitize=memory
+build:msan --copt=-fno-omit-frame-pointer
+build:msan --copt=-fno-optimize-sibling-calls
+build:msan --copt=-g
+build:msan --copt=-O1
+build:msan --linkopt=-fsanitize=memory
+```
+
 。</description><guid isPermaLink="true">https://0x1042.github.io//post/54.html</guid><pubDate>Sat, 27 Sep 2025 09:37:32 +0000</pubDate></item><item><title>google colab cuda 编程</title><link>https://0x1042.github.io//post/53.html</link><description># 环境搭建 
 
 ## 连接到GPU实例

@@ -14,9 +14,30 @@
 # decltype 
 
 <ins>**decltype是一个关键字,而不是函数,用于在编译期推断一个表达式的类型,不会实际计算表达式的值**</ins>
-
+<ins>**对于任何被声明的变量 x，decltype((x)) 永远返回一个左值引用**</ins>
 
 > [!IMPORTANT]
+> `decltype` 的参数是「变量名」或者「表达式」. 
+> 当参数是 变量名时，返回变量声明时的类型 
+> 当参数是 表达式时，返回表达式的类型和值类别
+
+
+1. 如果表达式是一个无括号的标识符或类成员访问, 返回该实体的声明类型
+2. 如果表达式是函数调用或函数调用形式的操作符重载,返回函数返回类型
+3. 如果表达式是左值，返回T&
+4. 如果表达式是将亡值（xvalue），返回 T&&
+5.  如果表达式是纯右值（prvalue），返回 T
+
+```C++
+int32_t x = 10;
+int32_t y = 20; 
+decltype(x);  参数是x, 类型是「变量名」，返回 int32_t
+decltype((x)); 参数是 (x), 类型是 「表达式」,
+
+```
+
+
+> [!NOTE]
 > decltype(expression): 如果 expression 是一个未加括号的 id-expression (标识符表达式，如变量名) 或者一个未加括号的类成员访问表达式 ( object.member 或 pointer->member ), 返回该标识符或成员被声明时的类型 (declared type)
 > - 例如，如果 int x = 0;，那么 decltype(x) 就是 int。">
 <meta property="og:title" content="decltype && declval">
@@ -24,9 +45,30 @@
 # decltype 
 
 <ins>**decltype是一个关键字,而不是函数,用于在编译期推断一个表达式的类型,不会实际计算表达式的值**</ins>
-
+<ins>**对于任何被声明的变量 x，decltype((x)) 永远返回一个左值引用**</ins>
 
 > [!IMPORTANT]
+> `decltype` 的参数是「变量名」或者「表达式」. 
+> 当参数是 变量名时，返回变量声明时的类型 
+> 当参数是 表达式时，返回表达式的类型和值类别
+
+
+1. 如果表达式是一个无括号的标识符或类成员访问, 返回该实体的声明类型
+2. 如果表达式是函数调用或函数调用形式的操作符重载,返回函数返回类型
+3. 如果表达式是左值，返回T&
+4. 如果表达式是将亡值（xvalue），返回 T&&
+5.  如果表达式是纯右值（prvalue），返回 T
+
+```C++
+int32_t x = 10;
+int32_t y = 20; 
+decltype(x);  参数是x, 类型是「变量名」，返回 int32_t
+decltype((x)); 参数是 (x), 类型是 「表达式」,
+
+```
+
+
+> [!NOTE]
 > decltype(expression): 如果 expression 是一个未加括号的 id-expression (标识符表达式，如变量名) 或者一个未加括号的类成员访问表达式 ( object.member 或 pointer->member ), 返回该标识符或成员被声明时的类型 (declared type)
 > - 例如，如果 int x = 0;，那么 decltype(x) 就是 int。">
 <meta property="og:type" content="article">
@@ -69,7 +111,7 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     font-size: 12px;
 }
 </style>
-<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-important {border-left-color:var(--borderColor-done-emphasis, var(--color-done-emphasis));background-color:var(--color-done-subtle);}.markdown-alert.markdown-alert-important .markdown-alert-title {color: var(--fgColor-done,var(--color-done-fg));}</style>
+<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-note {border-left-color:var(--borderColor-accent-emphasis, var(--color-accent-emphasis));background-color:var(--color-accent-subtle);}.markdown-alert.markdown-alert-note .markdown-alert-title {color: var(--fgColor-accent,var(--color-accent-fg));}</style><style>.markdown-alert.markdown-alert-tip {border-left-color:var(--borderColor-success-emphasis, var(--color-success-emphasis));background-color:var(--color-success-subtle);}.markdown-alert.markdown-alert-tip .markdown-alert-title {color: var(--fgColor-success,var(--color-success-fg));}</style><style>.markdown-alert.markdown-alert-important {border-left-color:var(--borderColor-done-emphasis, var(--color-done-emphasis));background-color:var(--color-done-subtle);}.markdown-alert.markdown-alert-important .markdown-alert-title {color: var(--fgColor-done,var(--color-done-fg));}</style>
 
 
 
@@ -100,15 +142,32 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
     <div id="content">
 <div class="markdown-body" id="postBody"><h1>decltype</h1>
-<p><ins><strong>decltype是一个关键字,而不是函数,用于在编译期推断一个表达式的类型,不会实际计算表达式的值</strong></ins></p>
-<div class="markdown-alert markdown-alert-important"><p class="markdown-alert-title"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p>decltype(expression): 如果 expression 是一个未加括号的 id-expression (标识符表达式，如变量名) 或者一个未加括号的类成员访问表达式 ( object.member 或 pointer-&gt;member ), 返回该标识符或成员被声明时的类型 (declared type)</p>
+<p><ins><strong>decltype是一个关键字,而不是函数,用于在编译期推断一个表达式的类型,不会实际计算表达式的值</strong></ins><br>
+<ins><strong>对于任何被声明的变量 x，decltype((x)) 永远返回一个左值引用</strong></ins></p>
+<div class="markdown-alert markdown-alert-important"><p class="markdown-alert-title"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p><code class="notranslate">decltype</code> 的参数是「变量名」或者「表达式」.<br>
+当参数是 变量名时，返回变量声明时的类型<br>
+当参数是 表达式时，返回表达式的类型和值类别</p>
+</div>
+<ol>
+<li>如果表达式是一个无括号的标识符或类成员访问, 返回该实体的声明类型</li>
+<li>如果表达式是函数调用或函数调用形式的操作符重载,返回函数返回类型</li>
+<li>如果表达式是左值，返回T&amp;</li>
+<li>如果表达式是将亡值（xvalue），返回 T&amp;&amp;</li>
+<li>如果表达式是纯右值（prvalue），返回 T</li>
+</ol>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-c1">int32_t</span> x = <span class="pl-c1">10</span>;
+<span class="pl-c1">int32_t</span> y = <span class="pl-c1">20</span>; 
+<span class="pl-en">decltype</span>(x);  参数是x, 类型是「变量名」，返回 <span class="pl-c1">int32_t</span>
+<span class="pl-en">decltype</span>((x)); 参数是 (x), 类型是 「表达式」,
+</pre></div>
+<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p>decltype(expression): 如果 expression 是一个未加括号的 id-expression (标识符表达式，如变量名) 或者一个未加括号的类成员访问表达式 ( object.member 或 pointer-&gt;member ), 返回该标识符或成员被声明时的类型 (declared type)</p>
 <ul>
 <li>例如，如果 int x = 0;，那么 decltype(x) 就是 int。</li>
 <li>如果 const int&amp; y = x;，那么 decltype(y) 就是 const int&amp;。</li>
 <li>如果 struct S { double m; }; S s;，那么 decltype(s.m) 就是 double</li>
 </ul>
 </div>
-<div class="markdown-alert markdown-alert-important"><p class="markdown-alert-title"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p><code class="notranslate">decltype((expression))</code>: 如果 <code class="notranslate">expression</code> 是任何其他类型的表达式 (例如，函数调用、字面量、带括号的标识符、算术运算等), 返回表达式的值类别 (value category) 和类型.</p>
+<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p><code class="notranslate">decltype((expression))</code>: 如果 <code class="notranslate">expression</code> 是任何其他类型的表达式 (例如，函数调用、字面量、带括号的标识符、算术运算等), 返回表达式的值类别 (value category) 和类型.</p>
 <ul>
 <li>如果 <code class="notranslate">expression</code> 的结果是一个左值 (lvalue)，类型为 T，那么 <code class="notranslate">decltype(expression)</code> 是 T&amp; (左值引用)</li>
 <li>如果 <code class="notranslate">expression</code> 的结果是一个将亡值 (xvalue)，类型为 T，那么 <code class="notranslate">decltype(expression)</code> 是 T&amp;&amp; (右值引用)</li>
@@ -118,7 +177,11 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </ul>
 </div>
 <div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">int</span> x = <span class="pl-c1">0</span>;
-<span class="pl-k">const</span> <span class="pl-k">int</span>&amp; y = x;</pre></div>
+<span class="pl-k">const</span> <span class="pl-k">int</span>&amp; y = x;
+<span class="pl-k">int</span> <span class="pl-en">func</span>();
+
+<span class="pl-k">struct</span> <span class="pl-en">A</span> { <span class="pl-k">double</span> d; };
+A a;</pre></div>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>
@@ -129,33 +192,112 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <tbody>
 <tr>
 <td><code class="notranslate">decltype(x)</code></td>
-<td><code class="notranslate">int</code></td>
+<td>x是无括号的标识符，返回x的类型，int</td>
 </tr>
 <tr>
-<td><code class="notranslate">decltype(y)</code></td>
-<td><code class="notranslate">const int&amp;</code></td>
+<td><code class="notranslate">decltype(a.d)</code></td>
+<td>a.d是类成员变量访问，返回double</td>
+</tr>
+<tr>
+<td><code class="notranslate">decltype(func())</code></td>
+<td>参数是函数调用，返回func的返回值，即int</td>
 </tr>
 <tr>
 <td><code class="notranslate">decltype((x))</code></td>
-<td><code class="notranslate">int&amp;</code></td>
+<td>(x) 是左值，返回T&amp;，即int&amp;</td>
 </tr>
 <tr>
-<td><code class="notranslate">decltype((y))</code></td>
-<td><code class="notranslate">(y)</code>是一个表达式, 类型是 const int., y本身是一个左值,按照规则,<code class="notranslate">decltype((y))</code> = <code class="notranslate">const int&amp;</code></td>
+<td><code class="notranslate">decltype(x+y)</code></td>
+<td>x+y是纯右值，无法对&amp;(x+y)取地址,返回T,即int</td>
+</tr>
+<tr>
+<td><code class="notranslate">decltype(std::move(x))</code></td>
+<td>std::move(x)是将亡值,返回T&amp;&amp;,即int&amp;&amp;</td>
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
 <p><ins><strong>表达式 (xxx) 本身的值类别通常是左值 (lvalue) (因为变量 xxx 是一个左值，加括号不改变其左值性)</strong></ins></p>
-<div class="markdown-alert markdown-alert-important"><p class="markdown-alert-title"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p>decltype(xxx) vs decltype((xxx)) (当 xxx 是变量名时):<br>
+<div class="markdown-alert markdown-alert-tip"><p class="markdown-alert-title"><svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p><p>decltype(xxx) vs decltype((xxx)) (当 xxx 是变量名时):<br>
 decltype(x): x 的声明类型。<br>
 decltype((x)): 如果 x 是 T 类型并且是左值，结果是 T&amp;。<br>
 表达式类型的定义: <ins><strong>表达式的类型总是非引用类型</strong></ins><br>
 表达式类型的定义: <ins><strong>表达式 (y) 的类型就是被引用对象的类型（加上cv限定符）</strong></ins></p>
 </div>
+<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p>x是表达式,decltype((x)) 永远返回左值引用</p>
+</div>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">int</span> x = <span class="pl-c1">10</span>;
+<span class="pl-k">int</span>* ptr = &amp;x;
+<span class="pl-k">const</span> <span class="pl-k">int</span> cx = <span class="pl-c1">20</span>;
+<span class="pl-k">int</span>&amp; z = x;
+<span class="pl-k">int</span>&amp;&amp; w = <span class="pl-c1">20</span>;</pre></div>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>expression</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">decltype((x))</code></td>
+<td>x是左值，返回int&amp;</td>
+</tr>
+<tr>
+<td><code class="notranslate">decltype((ptr))</code></td>
+<td>ptr是左值，返回int*&amp;</td>
+</tr>
+<tr>
+<td><code class="notranslate">decltype((cx))</code></td>
+<td>cx是左值，返回const int&amp;</td>
+</tr>
+<tr>
+<td><code class="notranslate">decltype((z))</code></td>
+<td>z是左值（可以取地址）,类型是 int&amp;，返回左值引用，即(int&amp;)&amp;， 根据引用折叠规则，即int&amp;</td>
+</tr>
+<tr>
+<td><code class="notranslate">decltype((w))</code></td>
+<td>w是左值（可以取地址）,类型是 int&amp;&amp;，返回左值引用，即(int&amp;&amp;)&amp;， 根据引用折叠规则，即int&amp;</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h1>引用折叠规则</h1>
+<p><ins><strong>只要有一个左值引用，结果就是左值引用</strong></ins><br>
+<ins><strong>只有当两个都是右值引用 &amp;&amp; 时，结果才是右值引用 &amp;&amp;.</strong></ins></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>初始引用</th>
+<th>加上</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">T&amp;</code></td>
+<td><code class="notranslate">&amp;</code></td>
+<td><code class="notranslate">T&amp;</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">T&amp;</code></td>
+<td><code class="notranslate">&amp;&amp;	</code></td>
+<td><code class="notranslate">T&amp;</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">T&amp;&amp;</code></td>
+<td><code class="notranslate">&amp;</code></td>
+<td><code class="notranslate">T&amp;</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">T&amp;&amp;</code></td>
+<td><code class="notranslate">&amp;&amp;	</code></td>
+<td><code class="notranslate">T&amp;&amp;</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <h1>declval</h1>
 <h2>定义</h2>
 <p><ins><strong>在不实际创建对象的情况下，获得一个假设存在的对象的“引用”</strong></ins></p>
-<div class="markdown-alert markdown-alert-important"><p class="markdown-alert-title"><svg class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p>如果 T 是一个对象类型 (例如 int, MyClass)，declval() 返回 T&amp;&amp; (右值引用)。<br>
+<div class="markdown-alert markdown-alert-tip"><p class="markdown-alert-title"><svg class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p><p>如果 T 是一个对象类型 (例如 int, MyClass)，declval() 返回 T&amp;&amp; (右值引用)。<br>
 如果 T 是一个左值引用类型 (例如 int&amp;, MyClass&amp;)，declval() 返回 T&amp; (左值引用)。<br>
 如果 T 是一个右值引用类型 (例如 int&amp;&amp;, MyClass&amp;&amp;)，declval() 返回 T&amp;&amp; (右值引用)。<br>
 (注意：引用折叠规则 T&amp; &amp;&amp; -&gt; T&amp;, T&amp;&amp; &amp;&amp; -&gt; T&amp;&amp;)</p>
@@ -183,7 +325,52 @@ decltype((x)): 如果 x 是 T 类型并且是左值，结果是 T&amp;。<br>
 
 <span class="pl-en">decltype</span>(Widget{}.compute()) x; <span class="pl-c"><span class="pl-c">//</span> 错误：无法构造 Widget 对象</span>
 
-<span class="pl-en">decltype</span>(std::declval&lt;Widget&gt;().compute()) x; <span class="pl-c"><span class="pl-c">//</span> x 的类型是 double</span></pre></div></div>
+<span class="pl-en">decltype</span>(std::declval&lt;Widget&gt;().compute()) x; <span class="pl-c"><span class="pl-c">//</span> x 的类型是 double</span></pre></div>
+<h1>实践</h1>
+<h2>完美转发返回类型</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> Container, <span class="pl-k">typename</span> Index&gt;
+<span class="pl-k">static</span> <span class="pl-k">auto</span> <span class="pl-en">get_element</span>(Container &amp; c, Index i) -&gt; decltype(c[i]) {
+    <span class="pl-k">return</span> c[i];
+}</pre></div>
+<h2>保留精确类型（C++14 decltype(auto)）</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">static</span> <span class="pl-k">auto</span> <span class="pl-en">forward_value</span>(T &amp;&amp; t) -&gt; decltype(<span class="pl-k">auto</span>) {
+    <span class="pl-k">return</span> std::forward&lt;T&gt;(t);
+}</pre></div>
+<h2>获取成员类型</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template </span>&lt;<span class="pl-k">typename</span> T&gt;
+<span class="pl-k">class</span> <span class="pl-en">MyContainer</span> {
+<span class="pl-k">private:</span>
+    T container_;
+
+<span class="pl-k">public:</span>
+    <span class="pl-c"><span class="pl-c">//</span> 使用 decltype 获取迭代器的准确类型</span>
+    <span class="pl-k">using</span> value_type = <span class="pl-k">decltype</span>(*container_.begin());
+    <span class="pl-k">using</span> iterator = <span class="pl-k">decltype</span>(container_.begin());
+
+    <span class="pl-k">auto</span> <span class="pl-en">begin</span>() -&gt; iterator { <span class="pl-k">return</span> container_.<span class="pl-c1">begin</span>(); }
+};</pre></div>
+<h2>泛型编程</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template</span>&lt;<span class="pl-k">typename</span> T, <span class="pl-k">typename</span> U&gt;
+<span class="pl-k">auto</span> <span class="pl-en">add</span>(T t, U u) -&gt; decltype(t + u) {
+    <span class="pl-k">return</span> t + u;
+}</pre></div>
+<h2>去除cv</h2>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">template</span>&lt;<span class="pl-k">typename</span> T&gt;
+std::<span class="pl-c1">decay_t</span>&lt;<span class="pl-k">decltype</span>(t)&gt; <span class="pl-en">copy</span>(T&amp;&amp; t) {
+    <span class="pl-k">return</span> std::forward&lt;T&gt;(t);
+} </pre></div>
+<h2>与 std::declval 结合</h2>
+<blockquote>
+<p>在没有实际对象的情况下，推导一个成员函数在某个类型上被调用后的返回类型</p>
+</blockquote>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>utility<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-k">struct</span> <span class="pl-en">Foo</span> {
+    <span class="pl-k">int</span> <span class="pl-en">bar</span>(<span class="pl-k">double</span>) { <span class="pl-k">return</span> <span class="pl-c1">0</span>; }
+};
+<span class="pl-k">using</span> BarReturnType = <span class="pl-k">decltype</span>(std::declval&lt;Foo&gt;().bar(std::declval&lt;<span class="pl-k">double</span>&gt;()));
+</pre></div></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

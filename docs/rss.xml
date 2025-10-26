@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sun, 12 Oct 2025 14:43:28 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>Cmake Presets</title><link>https://0x1042.github.io//post/55.html</link><description># 配置
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sun, 26 Oct 2025 07:09:27 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>Cmake Presets</title><link>https://0x1042.github.io//post/55.html</link><description># 配置
 
 `CMakePresets.json
 `
@@ -728,9 +728,30 @@ public:
 # decltype 
 
 &lt;ins&gt;**decltype是一个关键字,而不是函数,用于在编译期推断一个表达式的类型,不会实际计算表达式的值**&lt;/ins&gt;
-
+&lt;ins&gt;**对于任何被声明的变量 x，decltype((x)) 永远返回一个左值引用**&lt;/ins&gt;
 
 &gt; [!IMPORTANT]
+&gt; `decltype` 的参数是「变量名」或者「表达式」. 
+&gt; 当参数是 变量名时，返回变量声明时的类型 
+&gt; 当参数是 表达式时，返回表达式的类型和值类别
+
+
+1. 如果表达式是一个无括号的标识符或类成员访问, 返回该实体的声明类型
+2. 如果表达式是函数调用或函数调用形式的操作符重载,返回函数返回类型
+3. 如果表达式是左值，返回T&amp;
+4. 如果表达式是将亡值（xvalue），返回 T&amp;&amp;
+5.  如果表达式是纯右值（prvalue），返回 T
+
+```C++
+int32_t x = 10;
+int32_t y = 20; 
+decltype(x);  参数是x, 类型是「变量名」，返回 int32_t
+decltype((x)); 参数是 (x), 类型是 「表达式」,
+
+```
+
+
+&gt; [!NOTE]
 &gt; decltype(expression): 如果 expression 是一个未加括号的 id-expression (标识符表达式，如变量名) 或者一个未加括号的类成员访问表达式 ( object.member 或 pointer-&gt;member ), 返回该标识符或成员被声明时的类型 (declared type)
 &gt; - 例如，如果 int x = 0;，那么 decltype(x) 就是 int。</description><guid isPermaLink="true">https://0x1042.github.io//post/50.html</guid><pubDate>Sat, 31 May 2025 15:44:17 +0000</pubDate></item><item><title>value</title><link>https://0x1042.github.io//post/49.html</link><description># value
 

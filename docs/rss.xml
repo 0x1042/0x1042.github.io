@@ -1,5 +1,335 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sun, 26 Oct 2025 07:09:27 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>Cmake Presets</title><link>https://0x1042.github.io//post/55.html</link><description># 配置
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Fri, 14 Nov 2025 16:47:02 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>ios</title><link>https://0x1042.github.io//post/57.html</link><description># 数据结构
+
+```mermaid
+classDiagram
+    %% 基础类
+    class ios_base {
+        &lt;&lt;base class&gt;&gt;
+        +iostate rdstate()
+        +void setstate(iostate)
+        +void clear(iostate)
+        +bool good()
+        +bool eof()
+        +bool fail()
+        +bool bad()
+        +fmtflags flags()
+        +streamsize precision()
+        +streamsize width()
+    }
+
+    %% 模板基类
+    class basic_ios~CharT, Traits~ {
+        &lt;&lt;template class&gt;&gt;
+        +char_type fill()
+        +void fill(char_type)
+        +basic_ostream* tie()
+        +basic_streambuf* rdbuf()
+        +bool operator!()
+        +operator bool()
+    }
+
+    %% 输入流
+    class basic_istream~CharT, Traits~ {
+        &lt;&lt;template class&gt;&gt;
+        +basic_istream&amp; operator&gt;&gt;(int&amp;)
+        +basic_istream&amp; operator&gt;&gt;(double&amp;)
+        +basic_istream&amp; get(char_type&amp;)
+        +basic_istream&amp; getline(char_type*, streamsize)
+        +basic_istream&amp; read(char_type*, streamsize)
+        +streamsize gcount()
+        +int peek()
+        +basic_istream&amp; ignore()
+    }
+
+    %% 输出流
+    class basic_ostream~CharT, Traits~ {
+        &lt;&lt;template class&gt;&gt;
+        +basic_ostream&amp; operator&lt;&lt;(int)
+        +basic_ostream&amp; operator&lt;&lt;(double)
+        +basic_ostream&amp; put(char_type)
+        +basic_ostream&amp; write(char_type*, streamsize)
+        +basic_ostream&amp; flush()
+        +pos_type tellp()
+        +basic_ostream&amp; seekp(pos_type)
+    }
+
+    %% 双向流
+    class basic_iostream~CharT, Traits~ {
+        &lt;&lt;template class&gt;&gt;
+        +继承输入输出功能
+    }
+
+    %% 文件流基类
+    class basic_filebuf~CharT, Traits~ {
+        &lt;&lt;template class&gt;&gt;
+        +basic_filebuf* open(const char*, ios_base::openmode)
+        +basic_filebuf* close()
+        +bool is_open()
+    }
+
+    class basic_ifstream~CharT, Traits~ {
+        &lt;&lt;template class&gt;&gt;
+        +basic_ifstream()
+        +basic_ifstream(const char*, openmode)
+        +void open(const char*, openmode)
+        +void close()
+        +basic_filebuf* rdbuf()
+    }
+
+    class basic_ofstream~CharT, Traits~ {
+        &lt;&lt;template class&gt;&gt;
+        +basic_ofstream()
+        +basic_ofstream(const char*, openmode)
+        +void open(const char*, openmode)
+        +void close()
+        +basic_filebuf* rdbuf()
+    }
+
+    class basic_fstream~CharT, Traits~ {
+        &lt;&lt;template class&gt;&gt;
+        +basic_fstream()
+        +basic_fstream(const char*, openmode)
+        +void open(const char*, openmode)
+        +void close()
+        +basic_filebuf* rdbuf()
+    }
+
+    %% 字符串流
+    class basic_stringbuf~CharT, Traits, Allocator~ {
+        &lt;&lt;template class&gt;&gt;
+        +basic_string str()
+        +void str(const basic_string&amp;)
+    }
+
+    class basic_istringstream~CharT, Traits, Allocator~ {
+        &lt;&lt;template class&gt;&gt;
+        +basic_istringstream()
+        +basic_istringstream(const basic_string&amp;)
+        +basic_string str()
+        +void str(const basic_string&amp;)
+        +basic_stringbuf* rdbuf()
+    }
+
+    class basic_ostringstream~CharT, Traits, Allocator~ {
+        &lt;&lt;template class&gt;&gt;
+        +basic_ostringstream()
+        +basic_ostringstream(const basic_string&amp;)
+        +basic_string str()
+        +void str(const basic_string&amp;)
+        +basic_stringbuf* rdbuf()
+    }
+
+    class basic_stringstream~CharT, Traits, Allocator~ {
+        &lt;&lt;template class&gt;&gt;
+        +basic_stringstream()
+        +basic_stringstream(const basic_string&amp;)
+        +basic_string str()
+        +void str(const basic_string&amp;)
+        +basic_stringbuf* rdbuf()
+    }
+
+    %% 具体类型别名
+    class istream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_istream~char~
+    }
+
+    class ostream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_ostream~char~
+    }
+
+    class iostream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_iostream~char~
+    }
+
+    class ifstream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_ifstream~char~
+    }
+
+    class ofstream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_ofstream~char~
+    }
+
+    class fstream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_fstream~char~
+    }
+
+    class istringstream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_istringstream~char~
+    }
+
+    class ostringstream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_ostringstream~char~
+    }
+
+    class stringstream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_stringstream~char~
+    }
+
+    %% 宽字符版本
+    class wistream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_istream~wchar_t~
+    }
+
+    class wostream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_ostream~wchar_t~
+    }
+
+    class wiostream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_iostream~wchar_t~
+    }
+
+    class wifstream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_ifstream~wchar_t~
+    }
+
+    class wofstream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_ofstream~wchar_t~
+    }
+
+    class wfstream {
+        &lt;&lt;typedef&gt;&gt;
+        basic_fstream~wchar_t~
+    }
+
+    %% 继承关系
+    basic_ios --|&gt; ios_base
+    basic_istream --|&gt; basic_ios
+    basic_ostream --|&gt; basic_ios
+    basic_iostream --|&gt; basic_istream
+    basic_iostream --|&gt; basic_ostream
+    
+    basic_ifstream --|&gt; basic_istream
+    basic_ofstream --|&gt; basic_ostream
+    basic_fstream --|&gt; basic_iostream
+    
+    basic_istringstream --|&gt; basic_istream
+    basic_ostringstream --|&gt; basic_ostream
+    basic_stringstream --|&gt; basic_iostream
+
+    %% 类型别名关系
+    istream ..|&gt; basic_istream : char特化
+    ostream ..|&gt; basic_ostream : char特化
+    iostream ..|&gt; basic_iostream : char特化
+    ifstream ..|&gt; basic_ifstream : char特化
+    ofstream ..|&gt; basic_ofstream : char特化
+    fstream ..|&gt; basic_fstream : char特化
+    istringstream ..|&gt; basic_istringstream : char特化
+    ostringstream ..|&gt; basic_ostringstream : char特化
+    stringstream ..|&gt; basic_stringstream : char特化
+
+    wistream ..|&gt; basic_istream : wchar_t特化
+    wostream ..|&gt; basic_ostream : wchar_t特化
+    wiostream ..|&gt; basic_iostream : wchar_t特化
+    wifstream ..|&gt; basic_ifstream : wchar_t特化
+    wofstream ..|&gt; basic_ofstream : wchar_t特化
+    wfstream ..|&gt; basic_fstream : wchar_t特化
+```
+
+# 常用 
+
+|头文件|关键类/对象|数据源/目的地|主要用途|一句话比喻|
+|----|----|----|----|----|
+|`&lt;iostream&gt;`|`cin, cout, cerr, clog`|	标准设备（键盘、屏幕）|	与用户进行交互式输入输出|	与人对话的窗口|
+|`&lt;fstream&gt;`|`ifstream, ofstream, fstream`|	磁盘上的文件|永久性地存储和读取数据|	读写硬盘的笔记本|
+|`&lt;sstream&gt;`|`istringstream, ostringstream, stringstream`|内存中的 std::string|格式化字符串、解析字符串、类型转换|内存中的虚拟文件|
+
+## 读写文件 `fstream -&gt; file stream `
+
+- 读文件 `ifstream -&gt; input file stream`
+
+```c++
+auto read_file(const std::string &amp; file) -&gt; std::string {
+    std::ifstream input(file);
+    if (input.is_open()) {
+        std::stringstream buffer;
+        buffer &lt;&lt; input.rdbuf();
+        return buffer.str();
+    }
+    return '';
+}
+```
+
+- 写文件 `ofstream -&gt; output file stream`
+
+```c++
+void write_file(const std::string &amp; file, const std::string &amp; content) {
+    std::ofstream out(file);
+    if (out.is_open()) {
+        out &lt;&lt; content;
+        out.close();
+    }
+}
+```
+
+## `sstream -&gt; string stream`
+
+- 从字符串读取
+
+```c++
+struct User {
+    std::string name;
+    int age = 0;
+    double score = 0;
+};
+
+auto from_str(const std::string &amp; str) -&gt; User {
+    User user;
+    std::istringstream iss(str);
+    iss &gt;&gt; user.name;
+    iss &gt;&gt; user.age &gt;&gt; user.score;
+    return user;
+}
+
+    std::string data = 'Alice 30 95.5';
+    auto &amp;&amp; user = from_str(data);
+```
+
+- 输出到字符串
+
+```c++
+auto to_str(const User &amp; user) -&gt; std::string {
+    std::ostringstream oss;
+    oss &lt;&lt; user.name &lt;&lt; '\t';
+    oss &lt;&lt; user.age &lt;&lt; '\t';
+    oss &lt;&lt; user.score &lt;&lt; '\t';
+    return oss.str();
+}
+```
+
+## 格式控制 `&lt;iomanip&gt;`
+
+```c++
+auto to_str_V2(const User &amp; user) -&gt; std::string {
+    std::ostringstream oss;
+
+    oss &lt;&lt; std::left &lt;&lt; std::setw(20) &lt;&lt; 'name' &lt;&lt; user.name &lt;&lt; '\n';
+    oss &lt;&lt; std::left &lt;&lt; std::setw(20) &lt;&lt; 'age' &lt;&lt; user.age &lt;&lt; '\n';
+    oss &lt;&lt; std::left &lt;&lt; std::setw(20) &lt;&lt; 'score' &lt;&lt; user.score &lt;&lt; '\n';
+    return oss.str();
+}
+```
+
+- `std::left` 设置左对齐 
+- `std::setw(20)` 设置下一个输出的宽度，下一个输出的长度不足则补齐，只对下一个输出有效 
+
+
+
+。</description><guid isPermaLink="true">https://0x1042.github.io//post/57.html</guid><pubDate>Fri, 14 Nov 2025 16:46:40 +0000</pubDate></item><item><title>Cmake Presets</title><link>https://0x1042.github.io//post/55.html</link><description># 配置
 
 `CMakePresets.json
 `

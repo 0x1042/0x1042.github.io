@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sat, 15 Nov 2025 08:14:17 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>static &amp;&amp; exit</title><link>https://0x1042.github.io//post/58.html</link><description># 静态变量
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sun, 30 Nov 2025 08:29:50 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>static &amp;&amp; exit</title><link>https://0x1042.github.io//post/58.html</link><description># 静态变量
 
 ## 分类 
 
@@ -4720,162 +4720,162 @@ void logEnv2() {&#13;
 &#13;
 ## 训练过程 &#13;
 &#13;
-&gt; 训练模型的目标是从所有样本中找到一组平均损失“较小”的权重（w）和偏差（b）。</description><guid isPermaLink="true">https://0x1042.github.io//post/15.html</guid><pubDate>Sun, 10 Dec 2023 14:15:07 +0000</pubDate></item><item><title>智能指针以及new</title><link>https://0x1042.github.io//post/14.html</link><description># 智能指针自定义deleter&#13;
-&#13;
-- [智能指针自定义deleter](#智能指针自定义deleter)&#13;
-  - [函数指针](#函数指针)&#13;
-  - [函数对象](#函数对象)&#13;
-  - [`lambda`函数](#lambda函数)&#13;
-- [对象池](#对象池)&#13;
-- [`new`](#new)&#13;
-  - [`new operator` 是关键字](#new-operator-是关键字)&#13;
-  - [`operator new` 是一个函数](#operator-new-是一个函数)&#13;
-  - [`placement new` 是`operator new`的重载](#placement-new-是operator-new的重载)&#13;
-&#13;
-## 函数指针 &#13;
-&#13;
-```cpp&#13;
-void deleteVec(int * ptr) {&#13;
-    delete[] ptr;&#13;
-}&#13;
-&#13;
-TEST_CASE('test deleter', '[fb_pointer]') {&#13;
-    std::unique_ptr&lt;int, decltype(&amp;deleteVec)&gt; my_ptr(new int[5], deleteVec);&#13;
-}&#13;
-```&#13;
-## 函数对象 &#13;
-&#13;
-```cpp&#13;
-template &lt;typename T&gt;&#13;
-struct CustomDeleter {&#13;
-    void operator()(T * t) const {&#13;
-        delete t;&#13;
-        std::clog &lt;&lt; 'CustomDeleter run... delete type is ' &lt;&lt; infra::Name&lt;T&gt;().name &lt;&lt; '\n';&#13;
-    }&#13;
-};&#13;
-&#13;
-TEST_CASE('test deleter', '[fb_obj]') {&#13;
-    std::unique_ptr&lt;int, CustomDeleter&lt;int&gt;&gt; int_ptr(new int);&#13;
-    std::unique_ptr&lt;double, CustomDeleter&lt;double&gt;&gt; double_ptr(new double);&#13;
-}&#13;
-```&#13;
-&#13;
-## `lambda`函数&#13;
-&#13;
-```cpp&#13;
-TEST_CASE('test deleter', '[lambda]') {&#13;
-    auto deleter = [](int * ptr) {&#13;
-        delete[] ptr;&#13;
-        std::clog &lt;&lt; ' delete by lambda ...' &lt;&lt; '\n';&#13;
-    };&#13;
-    std::unique_ptr&lt;int, decltype(deleter)&gt; arr(new int[5], deleter);&#13;
-}&#13;
-```&#13;
-&#13;
-# 对象池&#13;
-&#13;
-&#13;
-- 要缓存的对象&#13;
-&#13;
-```cpp&#13;
-class Object {&#13;
-public:&#13;
-    Object(const Object &amp;) = default;&#13;
-    Object(Object &amp;&amp;) = delete;&#13;
-    auto operator=(const Object &amp;) -&gt; Object &amp; = default;&#13;
-    auto operator=(Object &amp;&amp;) -&gt; Object &amp; = delete;&#13;
-    explicit Object(int id) : id(id) { std::clog &lt;&lt; 'Object ' &lt;&lt; id &lt;&lt; ' is created.\n'; }&#13;
-&#13;
-    ~Object() { std::cout &lt;&lt; 'Object ' &lt;&lt; id &lt;&lt; ' is destroyed.\n'; }&#13;
-&#13;
-    void doSomething() const;&#13;
-&#13;
-    [[nodiscard]] auto getId() const -&gt; int;&#13;
-    void setId(int id_);&#13;
-&#13;
-private:&#13;
-    int id;&#13;
-};&#13;
-```&#13;
-&#13;
-- 定义对象池 &#13;
-&#13;
-```cpp&#13;
-&#13;
-// pool.h &#13;
-class ObjectPool {&#13;
-public:&#13;
-    struct ObjectDeleter {&#13;
-        void operator()(Object * obj) {&#13;
-            std::clog &lt;&lt; 'fake delete ' &lt;&lt; obj-&gt;getId() &lt;&lt; '\n';&#13;
-            obj-&gt;setId(0);&#13;
-            pool.push_back(obj);&#13;
-        }&#13;
-    };&#13;
-&#13;
-    static auto acquire() -&gt; std::unique_ptr&lt;Object, ObjectDeleter&gt;;&#13;
-&#13;
-    static auto size() -&gt; size_t;&#13;
-&#13;
-private:&#13;
-    inline static std::vector&lt;Object *&gt; pool; // 对象池&#13;
-};&#13;
-&#13;
-// pool.cpp&#13;
-auto ObjectPool::acquire() -&gt; std::unique_ptr&lt;Object, ObjectDeleter&gt; {&#13;
-    if (pool.empty()) {&#13;
-        // return std::unique_ptr&lt;Object, ObjectDeleter&gt;(new Object(0), ObjectDeleter());&#13;
-        return {new Object(0), ObjectDeleter()};&#13;
-    }&#13;
-    Object * obj = pool.back();&#13;
-    pool.pop_back();&#13;
-    // return std::unique_ptr&lt;Object, ObjectDeleter&gt;(obj, ObjectDeleter());&#13;
-    return {obj, ObjectDeleter()};&#13;
-}&#13;
-&#13;
-auto ObjectPool::size() -&gt; size_t {&#13;
-    return pool.size();&#13;
-}&#13;
-```&#13;
-&#13;
-&#13;
-# `new`&#13;
-&#13;
-## `new operator` 是关键字 &#13;
-&#13;
-就是`new` 关键字 `T *t = new T();` 背后包含两个动作&#13;
-&#13;
-1. 调用 `operator new` 分配内存 ,并返回指向该对象的指针 &#13;
-2. 调用`T`的构造函数 &#13;
-3. 不可被重载 &#13;
-&#13;
-&#13;
-## `operator new` 是一个函数 &#13;
-&#13;
-是一个动态内存分配的函数 &#13;
-&#13;
-```cpp&#13;
-void* operator new(std::size_t size);&#13;
-```&#13;
-&#13;
-- 只分配所要求的空间，不调用相关对象的构造函数&#13;
-- 当无法满足所要求分配的空间时&#13;
-  - 如果有`new_handler`，则调用`new_handler`&#13;
-  - 否则如果没要求不抛出异常（以nothrow参数表达），则执行bad_alloc异常，否则&#13;
-  - 否则返回0&#13;
-- 可以被重载，重载时，返回类型必须声明为`void*`&#13;
-- 第一个参数类型必须为表达要求分配空间的大小（字节），类型为size_t,可以有其他参数&#13;
-&#13;
-&#13;
-## `placement new` 是`operator new`的重载&#13;
-&#13;
-&gt; 原型&#13;
-&#13;
-```cpp&#13;
-void *operator new( size_t, void * p ) throw() { return p; }&#13;
-```&#13;
-&#13;
-1. 是重载`operator new`的一个标准、全局的版本，它不能够被自定义的版本代替(不像普通版本的operator new和operator delete能够被替换)&#13;
+&gt; 训练模型的目标是从所有样本中找到一组平均损失“较小”的权重（w）和偏差（b）。</description><guid isPermaLink="true">https://0x1042.github.io//post/15.html</guid><pubDate>Sun, 10 Dec 2023 14:15:07 +0000</pubDate></item><item><title>智能指针以及new</title><link>https://0x1042.github.io//post/14.html</link><description># 智能指针自定义deleter
+
+- [智能指针自定义deleter](#智能指针自定义deleter)
+  - [函数指针](#函数指针)
+  - [函数对象](#函数对象)
+  - [`lambda`函数](#lambda函数)
+- [对象池](#对象池)
+- [`new`](#new)
+  - [`new operator` 是关键字](#new-operator-是关键字)
+  - [`operator new` 是一个函数](#operator-new-是一个函数)
+  - [`placement new` 是`operator new`的重载](#placement-new-是operator-new的重载)
+
+## 函数指针 
+
+```cpp
+void deleteVec(int * ptr) {
+    delete[] ptr;
+}
+
+TEST_CASE('test deleter', '[fb_pointer]') {
+    std::unique_ptr&lt;int, decltype(&amp;deleteVec)&gt; my_ptr(new int[5], deleteVec);
+}
+```
+## 函数对象 
+
+```cpp
+template &lt;typename T&gt;
+struct CustomDeleter {
+    void operator()(T * t) const {
+        delete t;
+        std::clog &lt;&lt; 'CustomDeleter run... delete type is ' &lt;&lt; infra::Name&lt;T&gt;().name &lt;&lt; '\n';
+    }
+};
+
+TEST_CASE('test deleter', '[fb_obj]') {
+    std::unique_ptr&lt;int, CustomDeleter&lt;int&gt;&gt; int_ptr(new int);
+    std::unique_ptr&lt;double, CustomDeleter&lt;double&gt;&gt; double_ptr(new double);
+}
+```
+
+## `lambda`函数
+
+```cpp
+TEST_CASE('test deleter', '[lambda]') {
+    auto deleter = [](int * ptr) {
+        delete[] ptr;
+        std::clog &lt;&lt; ' delete by lambda ...' &lt;&lt; '\n';
+    };
+    std::unique_ptr&lt;int, decltype(deleter)&gt; arr(new int[5], deleter);
+}
+```
+
+# 对象池
+
+
+- 要缓存的对象
+
+```cpp
+class Object {
+public:
+    Object(const Object &amp;) = default;
+    Object(Object &amp;&amp;) = delete;
+    auto operator=(const Object &amp;) -&gt; Object &amp; = default;
+    auto operator=(Object &amp;&amp;) -&gt; Object &amp; = delete;
+    explicit Object(int id) : id(id) { std::clog &lt;&lt; 'Object ' &lt;&lt; id &lt;&lt; ' is created.\n'; }
+
+    ~Object() { std::cout &lt;&lt; 'Object ' &lt;&lt; id &lt;&lt; ' is destroyed.\n'; }
+
+    void doSomething() const;
+
+    [[nodiscard]] auto getId() const -&gt; int;
+    void setId(int id_);
+
+private:
+    int id;
+};
+```
+
+- 定义对象池 
+
+```cpp
+
+// pool.h 
+class ObjectPool {
+public:
+    struct ObjectDeleter {
+        void operator()(Object * obj) {
+            std::clog &lt;&lt; 'fake delete ' &lt;&lt; obj-&gt;getId() &lt;&lt; '\n';
+            obj-&gt;setId(0);
+            pool.push_back(obj);
+        }
+    };
+
+    static auto acquire() -&gt; std::unique_ptr&lt;Object, ObjectDeleter&gt;;
+
+    static auto size() -&gt; size_t;
+
+private:
+    inline static std::vector&lt;Object *&gt; pool; // 对象池
+};
+
+// pool.cpp
+auto ObjectPool::acquire() -&gt; std::unique_ptr&lt;Object, ObjectDeleter&gt; {
+    if (pool.empty()) {
+        // return std::unique_ptr&lt;Object, ObjectDeleter&gt;(new Object(0), ObjectDeleter());
+        return {new Object(0), ObjectDeleter()};
+    }
+    Object * obj = pool.back();
+    pool.pop_back();
+    // return std::unique_ptr&lt;Object, ObjectDeleter&gt;(obj, ObjectDeleter());
+    return {obj, ObjectDeleter()};
+}
+
+auto ObjectPool::size() -&gt; size_t {
+    return pool.size();
+}
+```
+
+
+# `new`
+
+## `new operator` 是关键字 
+
+就是`new` 关键字 `T *t = new T();` 背后包含两个动作
+
+1. 调用 `operator new` 分配内存 ,并返回指向该对象的指针 
+2. 调用`T`的构造函数 
+3. 不可被重载 
+
+
+## `operator new` 是一个函数 
+
+是一个动态内存分配的函数 
+
+```cpp
+void* operator new(std::size_t size);
+```
+
+- 只分配所要求的空间，不调用相关对象的构造函数
+- 当无法满足所要求分配的空间时
+  - 如果有`new_handler`，则调用`new_handler`
+  - 否则如果没要求不抛出异常（以nothrow参数表达），则执行bad_alloc异常，否则
+  - 否则返回0
+- 可以被重载，重载时，返回类型必须声明为`void*`
+- 第一个参数类型必须为表达要求分配空间的大小（字节），类型为size_t,可以有其他参数
+
+
+## `placement new` 是`operator new`的重载
+
+&gt; 原型
+
+```cpp
+void *operator new( size_t, void * p ) throw() { return p; }
+```
+
+1. 是重载`operator new`的一个标准、全局的版本，它不能够被自定义的版本代替(不像普通版本的operator new和operator delete能够被替换)
 2. 执行忽略`size_t`参数，只返回第二个参数。</description><guid isPermaLink="true">https://0x1042.github.io//post/14.html</guid><pubDate>Fri, 01 Dec 2023 14:56:01 +0000</pubDate></item><item><title>c++中获取类定义的完整名字</title><link>https://0x1042.github.io//post/13.html</link><description># 说明&#13;
 &#13;
 &gt; 仅限于读取类定义&#13;

@@ -545,7 +545,64 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 
     <span class="pl-c"><span class="pl-c">//</span> 注意：在使用了 placement new 后，应该手动调用对象的析构函数</span>
     obj-&gt;<span class="pl-en">~Object</span>();
-}</pre></div></div>
+}</pre></div>
+<h1>汇总对比</h1>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>expr</th>
+<th>类型</th>
+<th>Syntax</th>
+<th>析构</th>
+<th>是否分配内存</th>
+<th>是否构造对象</th>
+<th>是否可重载</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">new</code></td>
+<td>语法</td>
+<td><code class="notranslate">auto* ptr = new T(args);</code></td>
+<td><code class="notranslate">delete or delete[]</code></td>
+<td>是</td>
+<td>是</td>
+<td>否</td>
+<td>创建对象最常用方式</td>
+</tr>
+<tr>
+<td><code class="notranslate">operator new</code></td>
+<td>函数</td>
+<td><code class="notranslate">operator new(sizeof(T));</code></td>
+<td><code class="notranslate">operator delete</code></td>
+<td>是</td>
+<td>否</td>
+<td>是</td>
+<td>替换 malloc 逻辑，内存池</td>
+</tr>
+<tr>
+<td>类内<code class="notranslate">operator new</code></td>
+<td>函数</td>
+<td><code class="notranslate">operator new(sizeof(T));</code></td>
+<td><code class="notranslate">operator delete</code></td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+<td>控制类对象的分配策略</td>
+</tr>
+<tr>
+<td><code class="notranslate">placement new</code></td>
+<td>语法</td>
+<td><code class="notranslate">T* p = new(buffer) T(args);</code></td>
+<td>手动调用<code class="notranslate">p-&gt;~T();</code></td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+<td>在指定内存构造对象</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table></div>
 <div style="font-size:small;margin-top:8px;float:right;"></div>
 
 <button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>

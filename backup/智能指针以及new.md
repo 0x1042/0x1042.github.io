@@ -174,6 +174,16 @@ TEST_CASE("test deleter", "[operator new]") {
 
 # 汇总对比
 
+```C++
+void* raw_mem = ::operator new(sizeof(T)); // 1. 分配
+try {
+    T* p = new(raw_mem) T();               // 2. placement new 构造
+} catch (...) {
+    ::operator delete(raw_mem);            // 异常安全处理
+    throw;
+}
+```
+
 | expr               | 类型 | Syntax                     | 析构                 | 是否分配内存 | 是否构造对象 | 是否可重载 | 典型用途                 |
 | ------------------ | ---- | -------------------------- | -------------------- | ------------ | ------------ | ---------- | ------------------------ |
 | `new`              | 语法 | `auto* ptr = new T(args);` | `delete or delete[]` | 是           | 是           | 否         | 创建对象最常用方式       |

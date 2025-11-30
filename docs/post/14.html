@@ -547,6 +547,13 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
     obj-&gt;<span class="pl-en">~Object</span>();
 }</pre></div>
 <h1>汇总对比</h1>
+<div class="highlight highlight-source-c++"><pre class="notranslate"><span class="pl-k">void</span>* raw_mem = ::<span class="pl-k">operator</span> <span class="pl-k">new</span>(<span class="pl-k">sizeof</span>(T)); <span class="pl-c"><span class="pl-c">//</span> 1. 分配</span>
+<span class="pl-k">try</span> {
+    T* p = <span class="pl-k">new</span>(raw_mem) <span class="pl-c1">T</span>();               <span class="pl-c"><span class="pl-c">//</span> 2. placement new 构造</span>
+} <span class="pl-k">catch</span> (...) {
+    ::<span class="pl-k">operator</span> <span class="pl-smi">delete</span>(raw_mem);            <span class="pl-c"><span class="pl-c">//</span> 异常安全处理</span>
+    <span class="pl-k">throw</span>;
+}</pre></div>
 <markdown-accessiblity-table><table role="table">
 <thead>
 <tr>

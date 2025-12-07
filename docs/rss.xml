@@ -1,5 +1,87 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sun, 30 Nov 2025 08:29:50 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>static &amp;&amp; exit</title><link>https://0x1042.github.io//post/58.html</link><description># 静态变量
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>Daily</title><link>https://0x1042.github.io/</link><description>我自倾怀，君且随意。</description><copyright>Daily</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://raw.githubusercontent.com/0x1042/0x1042.github.io/master/synthwave_option_4.png</url><title>avatar</title><link>https://0x1042.github.io/</link></image><lastBuildDate>Sun, 07 Dec 2025 13:12:07 +0000</lastBuildDate><managingEditor>Daily</managingEditor><ttl>60</ttl><webMaster>Daily</webMaster><item><title>format</title><link>https://0x1042.github.io//post/59.html</link><description># formatter 
+
+&lt;ins&gt;**为自定义类型实现formater的方式是特化`std::formatter&lt;Type,CharT&gt;`**&lt;/ins&gt;
+
+- 实现`parse` 函数, 解析格式字符串中的说明符(即冒号 : 后面的部分) 
+- 实现`format` 函数, 执行实际的格式化输出
+
+## 基础`struct` 
+
+```C++
+struct Tag {
+    std::string key;
+    std::string val;
+};
+
+template &lt;&gt;
+struct std::formatter&lt;Tag&gt; {
+    // 1. parse: 解析格式字符串
+    // 上下文 ctx 包含了格式字符串的迭代器
+    static constexpr auto parse(std::format_parse_context&amp; ctx) { return ctx.begin(); }
+
+    // 2. format: 输出内容
+    // const Point&amp; p: 要格式化的对象
+    // FormatContext&amp; ctx: 格式化上下文，提供输出迭代器
+    static auto format(const Tag&amp; tag, std::format_context&amp; ctx) {
+        // std::format_to 向 ctx.out() 写入数据
+        return std::format_to(ctx.out(), '({} -&gt; {})', tag.key, tag.val);
+    }
+};
+```
+
+## 容器 
+
+```C++
+template &lt;typename V&gt;
+struct RangeFormatter {
+    constexpr auto parse(std::format_parse_context&amp; ctx) { return ctx.begin(); }
+
+    static auto format(const V&amp; range, std::format_context&amp; ctx) {
+        auto out = ctx.out();
+        out = std::format_to(out, '[');
+        bool first = true;
+        for (const auto&amp; tmp : range) {
+            if (!first) {
+                out = std::format_to(out, ', ');
+            }
+            first = false;
+            // 递归格式化元素：item 会自动寻找它自己的 formatter
+            out = std::format_to(out, '{}', tmp);
+        }
+        return std::format_to(out, ']');
+    }
+};
+
+template &lt;&gt;
+struct std::formatter&lt;std::vector&lt;Tag&gt;&gt; : RangeFormatter&lt;std::vector&lt;Tag&gt;&gt; {};
+```
+
+## 嵌套
+
+```C++
+struct Item {
+    int64_t id = 0;
+    std::string brand;
+    double coef = 1.0;
+    std::vector&lt;Tag&gt; tags;
+};
+
+template &lt;&gt;
+struct std::formatter&lt;Item&gt; {
+    static constexpr auto parse(std::format_parse_context&amp; ctx) { return ctx.begin(); }
+
+    static auto format(const Item&amp; item, std::format_context&amp; ctx) {
+        auto out = ctx.out();
+        out = std::format_to(out, 'id:{} brand:{} coef:{} ', item.id, item.brand, item.coef);
+        return std::format_to(out, 'tags:{}', item.tags);
+    }
+};
+```
+
+## log
+
+- `std::make_format_args`: 将变参模板参数包转换为类型擦除的参数包。</description><guid isPermaLink="true">https://0x1042.github.io//post/59.html</guid><pubDate>Sun, 07 Dec 2025 13:11:40 +0000</pubDate></item><item><title>static &amp;&amp; exit</title><link>https://0x1042.github.io//post/58.html</link><description># 静态变量
 
 ## 分类 
 
